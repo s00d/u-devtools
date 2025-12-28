@@ -4,13 +4,13 @@ import ConsolePanel from './ui/ConsolePanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Console',
-  icon: 'i-carbon-terminal',
+  icon: 'CommandLine',
 
   commands: [
     {
       id: 'console.clear',
       label: 'Clear Console',
-      icon: 'i-carbon-clean',
+      icon: 'Trash',
       action: () => {
         clearSignal.value();
       },

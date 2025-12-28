@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const vueRouterPlugin = (): DevToolsPlugin => ({
   name: 'Vue Router',
-  clientPath: path.resolve(__dirname, './client.ts'),
-  appPath: path.resolve(__dirname, './app.ts'),
+  clientPath: path.resolve(__dirname, '../src/client.ts'),
+  appPath: path.resolve(__dirname, '../src/app.ts'),
 });
 

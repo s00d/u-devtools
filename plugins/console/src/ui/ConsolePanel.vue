@@ -81,7 +81,7 @@ onUnmounted(() => {
   <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
     <!-- Toolbar -->
     <div class="p-2 border-b border-udt-c-border bg-gray-50 dark:bg-gray-800 flex gap-2 items-center">
-      <UButton icon="i-carbon-clean" size="sm" @click="clear" title="Clear" />
+      <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
       <UInput v-model="filter" placeholder="Filter logs..." class="w-64" />
       <select
         v-model="levelFilter"
@@ -123,7 +123,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <UEmpty v-if="filteredLogs.length === 0" icon="i-carbon-terminal" title="No logs to display" description="Console logs will appear here" />
+      <UEmpty v-if="filteredLogs.length === 0" icon="CommandLine" title="No logs to display" description="Console logs will appear here" />
     </div>
   </div>
 </template>

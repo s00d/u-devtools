@@ -9,22 +9,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.26"
+    "pinia": "^3.0.4",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@u-devtools/vite": "workspace:*",
     "@u-devtools/plugin-i18n": "workspace:*",
-    "@u-devtools/plugin-network": "workspace:*",
     "@u-devtools/plugin-inspector": "workspace:*",
-    "@u-devtools/plugin-terminal": "workspace:*",
-    "@u-devtools/plugin-storage": "workspace:*",
+    "@u-devtools/plugin-network": "workspace:*",
     "@u-devtools/plugin-package-inspector": "workspace:*",
-    "@u-devtools/plugin-vue-router": "workspace:*",
+    "@u-devtools/plugin-storage": "workspace:*",
+    "@u-devtools/plugin-terminal": "workspace:*",
     "@u-devtools/plugin-vite-inspector": "workspace:*",
+    "@u-devtools/plugin-vue-router": "workspace:*",
+    "@u-devtools/vite": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.3",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
     "vue-tsc": "^3.2.1"
   }
 }
-

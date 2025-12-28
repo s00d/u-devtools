@@ -4,6 +4,7 @@ import { UTable, UBadge, UButton, UInput, UEmpty } from '@u-devtools/ui';
 import { AppBridge } from '@u-devtools/core';
 
 const props = defineProps<{
+  api?: any; // ClientApi
   onRegisterClear?: (fn: () => void) => void;
 }>();
 
@@ -20,6 +21,11 @@ interface NetRequest {
 const requests = ref<NetRequest[]>([]);
 const filter = ref('');
 const bridge = new AppBridge('network');
+
+// Читаем настройки
+const maxRequests = computed(() => 
+  props.api?.storage?.get('settings:maxRequests', 100) ?? 100
+);
 
 const clear = () => {
   requests.value = [];
@@ -48,7 +54,7 @@ onMounted(() => {
         timestamp: data.startTime,
         status: 0,
       });
-      if (requests.value.length > 100) {
+      if (requests.value.length > maxRequests.value) {
         requests.value.pop();
       }
     })
@@ -90,7 +96,7 @@ onUnmounted(() => {
   <div class="h-full flex flex-col">
     <!-- Toolbar -->
     <div class="p-2 border-b bg-gray-50 flex gap-2">
-      <UButton icon="i-carbon-clean" size="sm" @click="clear" title="Clear" />
+      <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
       <UInput v-model="filter" placeholder="Filter URLs..." class="w-64" />
     </div>
 
@@ -123,7 +129,7 @@ onUnmounted(() => {
           <span v-else class="text-gray-300">-</span>
         </template>
       </UTable>
-      <UEmpty v-else icon="i-carbon-network-4" title="No network requests" description="Network requests will appear here when you make HTTP calls" />
+      <UEmpty v-else icon="GlobeAlt" title="No network requests" description="Network requests will appear here when you make HTTP calls" />
     </div>
   </div>
 </template>

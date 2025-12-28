@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, onErrorCaptured } from 'vue';
 import type { ClientApi, UnmountFn } from '@u-devtools/core';
+import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
   api: ClientApi;
@@ -37,7 +38,7 @@ const mount = () => {
         container.value.innerHTML = `
           <div class="p-4 border border-red-300 rounded bg-red-50 dark:bg-red-900/20 dark:border-red-800">
             <div class="flex items-center gap-2 mb-2">
-              <div class="i-carbon-warning text-red-600 dark:text-red-400" />
+              <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
               <h3 class="font-semibold text-red-800 dark:text-red-200">Plugin Error</h3>
             </div>
             <p class="text-sm text-red-700 dark:text-red-300">${err.message}</p>
@@ -59,7 +60,7 @@ onErrorCaptured((err) => {
     container.value.innerHTML = `
       <div class="p-4 border border-red-300 rounded bg-red-50 dark:bg-red-900/20 dark:border-red-800">
         <div class="flex items-center gap-2 mb-2">
-          <div class="i-carbon-warning text-red-600 dark:text-red-400" />
+          <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
           <h3 class="font-semibold text-red-800 dark:text-red-200">Plugin Crashed</h3>
         </div>
         <p class="text-sm text-red-700 dark:text-red-300">${err.message}</p>

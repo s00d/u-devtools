@@ -107,7 +107,7 @@ onMounted(() => {
 
         <UEmpty
           v-else
-          icon="i-carbon-box"
+          icon="Cube"
           :title="`No ${activeTab} found`"
           description="This package has no dependencies in this category"
         />

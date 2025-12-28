@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import type { ClientApi } from '@u-devtools/core';
 import { AppBridge } from '@u-devtools/core';
-import { UTable, UBadge, UButton, UEmpty } from '@u-devtools/ui';
+import { UTable, UBadge, UButton, UEmpty, UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{ api: ClientApi }>();
 
@@ -77,7 +77,7 @@ onUnmounted(() => {
     <!-- Error Banner -->
     <div v-if="error" class="p-4 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
       <div class="flex items-center gap-2 text-red-800 dark:text-red-200">
-        <div class="i-carbon-warning text-lg" />
+        <UIcon name="ExclamationTriangle" class="w-5 h-5" />
         <div class="text-sm font-mono">{{ error }}</div>
       </div>
       <div class="text-xs text-red-600 dark:text-red-400 mt-2">
@@ -149,7 +149,7 @@ onUnmounted(() => {
           <template #cell-actions="{ row }">
             <UButton
               variant="ghost"
-              icon="i-carbon-arrow-right"
+              icon="ArrowRight"
               size="sm"
               @click="navigateToRoute((row as RouteInfo).path)"
               title="Navigate"
@@ -158,7 +158,7 @@ onUnmounted(() => {
         </UTable>
       </div>
 
-      <UEmpty v-if="routes.length === 0 && !error" icon="i-carbon-route" title="No routes found" description="Vue Router routes will appear here" />
+      <UEmpty v-if="routes.length === 0 && !error" icon="Map" title="No routes found" description="Vue Router routes will appear here" />
     </div>
   </div>
 </template>

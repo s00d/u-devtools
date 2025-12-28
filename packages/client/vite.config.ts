@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import UnoCSS from 'unocss/vite';
+import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   clearScreen: false,
-  plugins: [vue(), UnoCSS()],
+  plugins: [vue(), tailwindcss()],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),

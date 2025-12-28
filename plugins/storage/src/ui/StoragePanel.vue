@@ -85,7 +85,7 @@ onUnmounted(() => {
         :model-value="activeTab"
         @update:model-value="(v) => activeTab = v as typeof activeTab"
       />
-      <UButton variant="danger" icon="i-carbon-trash-can" size="sm" @click="clear" class="ml-auto">
+      <UButton variant="danger" icon="Trash" size="sm" @click="clear" class="ml-auto">
         Clear All
       </UButton>
     </div>
@@ -113,7 +113,7 @@ onUnmounted(() => {
         <template #cell-actions="{ row }">
           <UButton
             variant="ghost"
-            icon="i-carbon-trash-can"
+            icon="Trash"
             size="sm"
             @click="deleteItem((row as StorageItem).key)"
             title="Delete"
@@ -121,7 +121,7 @@ onUnmounted(() => {
         </template>
       </UTable>
 
-      <UEmpty v-if="currentItems.length === 0" icon="i-carbon-data-base" :title="`No items in ${activeTab}`" description="Storage items will appear here when they are created" />
+      <UEmpty v-if="currentItems.length === 0" icon="ServerStack" :title="`No items in ${activeTab}`" description="Storage items will appear here when they are created" />
     </div>
   </div>
 </template>

@@ -148,7 +148,7 @@ onMounted(() => {
         />
         <UButton
           variant="ghost"
-          icon="i-carbon-renew"
+          icon="ArrowPath"
           size="sm"
           :disabled="loading"
           @click="loadData"
@@ -156,7 +156,7 @@ onMounted(() => {
         />
       </div>
 
-      <UButton variant="primary" icon="i-carbon-save" :loading="isSaving" @click="save">
+      <UButton variant="primary" icon="Check" :loading="isSaving" @click="save">
         Save Changes
       </UButton>
     </div>
@@ -169,7 +169,7 @@ onMounted(() => {
           :key="key"
           variant="ghost"
           size="sm"
-          icon="i-carbon-document"
+          icon="DocumentText"
           @click="openInEditor(key)"
           :title="`Open ${key} in editor (line ${loc.line})`"
         >
@@ -183,6 +183,6 @@ onMounted(() => {
       ></textarea>
     </div>
     <ULoading v-else-if="loading" text="Loading translations..." />
-    <UEmpty v-else icon="i-carbon-document" title="No file selected" description="Select a locale file from the dropdown above" />
+    <UEmpty v-else icon="DocumentText" title="No file selected" description="Select a locale file from the dropdown above" />
   </div>
 </template>

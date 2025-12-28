@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UIcon from './UIcon.vue';
+
 defineProps<{
   text?: string;
   size?: 'sm' | 'md' | 'lg';
@@ -14,12 +16,10 @@ defineProps<{
       size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : '',
     ]"
   >
-    <div
-      :class="[
-        'i-carbon-circle-dash animate-spin',
-        size === 'sm' ? 'text-base' : size === 'lg' ? 'text-3xl' : 'text-2xl',
-        'text-indigo-500',
-      ]"
+    <UIcon
+      name="ArrowPath"
+      :size="size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-12 h-12' : 'w-8 h-8'"
+      class="animate-spin text-indigo-500"
     />
     <span v-if="text">{{ text }}</span>
   </div>

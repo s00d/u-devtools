@@ -4,7 +4,7 @@ import InspectorPanel from './ui/InspectorPanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Inspector',
-  icon: 'i-carbon-search-locate',
+  icon: 'MagnifyingGlass',
 
   renderMain(el, api) {
     const app = createApp(InspectorPanel);

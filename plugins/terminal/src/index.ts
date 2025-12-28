@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const clientPath = path.resolve(__dirname, './client.ts');
+// ИСПРАВЛЕНИЕ: Выходим из dist (..) и идем в src
+const clientPath = path.resolve(__dirname, '../src/client.ts');
 
 export const terminalPlugin = (): DevToolsPlugin => ({
   name: 'Terminal',

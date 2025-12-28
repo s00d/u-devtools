@@ -6,13 +6,33 @@ const clearSignal = { value: () => {} };
 
 const plugin: PluginClientInstance = {
   name: 'Network',
-  icon: 'i-carbon-network-4',
+  icon: 'GlobeAlt',
+
+  // --- ДОБАВЛЯЕМ НАСТРОЙКИ ---
+  settings: {
+    preserveLog: {
+      label: 'Preserve Log',
+      type: 'boolean',
+      default: false
+    },
+    maxRequests: {
+      label: 'History Limit',
+      type: 'select',
+      default: 100,
+      options: [
+        { label: '50 Requests', value: 50 },
+        { label: '100 Requests', value: 100 },
+        { label: '500 Requests', value: 500 },
+      ]
+    }
+  },
+  // ---------------------------
 
   commands: [
     {
       id: 'net.clear',
       label: 'Clear Requests',
-      icon: 'i-carbon-clean',
+      icon: 'Trash',
       action: () => {
         clearSignal.value();
       },
@@ -21,6 +41,7 @@ const plugin: PluginClientInstance = {
 
   renderMain(el, api) {
     const app = createApp(NetworkPanel, {
+      api, // Передаем API, чтобы компонент мог читать настройки
       onRegisterClear: (fn: () => void) => {
         clearSignal.value = fn;
       },

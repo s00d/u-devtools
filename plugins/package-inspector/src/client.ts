@@ -4,7 +4,7 @@ import PackagePanel from './ui/PackagePanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Package Inspector',
-  icon: 'i-carbon-box',
+  icon: 'Cube',
 
   renderMain(container, api) {
     const app = createApp(PackagePanel, { api });

@@ -4,13 +4,13 @@ import ViteInspectorPanel from './ui/ViteInspectorPanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Vite Inspector',
-  icon: 'i-carbon-flash',
+  icon: 'Bolt',
 
   commands: [
     {
       id: 'vite.restart',
       label: 'Restart Vite Server',
-      icon: 'i-carbon-restart',
+      icon: 'ArrowPath',
       action: () => {
         // Будет привязано в компоненте через сигнал
         restartSignal.value();
@@ -19,7 +19,7 @@ const plugin: PluginClientInstance = {
     {
       id: 'vite.clearCache',
       label: 'Clear Vite Cache',
-      icon: 'i-carbon-trash-can',
+      icon: 'Trash',
       action: () => {
         clearCacheSignal.value();
       },

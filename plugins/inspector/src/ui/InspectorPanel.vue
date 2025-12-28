@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { UButton, UJsonTree, UEmpty } from '@u-devtools/ui';
+import { UButton, UJsonTree, UEmpty, UIcon } from '@u-devtools/ui';
 import { AppBridge } from '@u-devtools/core';
 import type { ClientApi } from '@u-devtools/core';
 
@@ -74,7 +74,7 @@ onUnmounted(() => {
     <!-- Toolbar -->
     <div class="p-3 border-b border-udt-c-border flex items-center justify-between bg-gray-50 dark:bg-gray-800 flex-none">
       <div class="flex items-center gap-3">
-        <UButton :variant="isInspecting ? 'primary' : 'secondary'" icon="i-carbon-search-locate" @click="toggle">
+        <UButton :variant="isInspecting ? 'primary' : 'secondary'" icon="MagnifyingGlass" @click="toggle">
           {{ isInspecting ? 'Inspecting...' : 'Select Element' }}
         </UButton>
         <div v-if="data" class="flex items-center gap-2 text-sm font-mono">
@@ -89,7 +89,7 @@ onUnmounted(() => {
         v-if="data?.component"
         variant="ghost"
         size="sm"
-        icon="i-carbon-code"
+        icon="CodeBracket"
         @click="openInEditor"
         title="Open Component Source"
       >
@@ -105,9 +105,9 @@ onUnmounted(() => {
           v-if="data.component"
           class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-3 flex items-start gap-3"
         >
-          <div
-            :class="data.component.framework === 'Vue' ? 'i-carbon-logo-vue' : 'i-carbon-logo-react'"
-            class="text-2xl text-indigo-500 mt-0.5"
+          <UIcon
+            :name="data.component.framework === 'Vue' ? 'Cube' : 'Cube'"
+            class="w-8 h-8 text-indigo-500 mt-0.5"
           />
           <div class="flex-1">
             <div class="font-bold text-indigo-900 dark:text-indigo-100">{{ data.component.name }}</div>
@@ -183,7 +183,7 @@ onUnmounted(() => {
     </div>
 
     <!-- Empty State -->
-    <UEmpty v-else icon="i-carbon-search" title="Select an element to inspect" description="Click 'Select Element' button and then select an element on the page" />
+    <UEmpty v-else icon="MagnifyingGlass" title="Select an element to inspect" description="Click 'Select Element' button and then select an element on the page" />
 
     <!-- Breadcrumbs Footer -->
     <div
@@ -198,7 +198,7 @@ onUnmounted(() => {
         <span class="font-bold">{{ crumb.tagName }}</span>
         <span v-if="crumb.id" class="text-yellow-600 dark:text-yellow-400">#{{ crumb.id }}</span>
         <span v-if="crumb.class" class="text-green-600 dark:text-green-400 max-w-[100px] truncate">.{{ crumb.class }}</span>
-        <div v-if="idx < data.breadcrumbs.length - 1" class="i-carbon-chevron-right text-gray-400 ml-1" />
+        <UIcon v-if="idx < data.breadcrumbs.length - 1" name="ChevronRight" class="w-4 h-4 text-gray-400 ml-1" />
       </div>
     </div>
   </div>

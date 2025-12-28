@@ -12,6 +12,22 @@ try {
   // Ignore
 }
 
+// Также читаем настройки из useSettings
+try {
+  const settingsRaw = localStorage.getItem('u-devtools-settings');
+  if (settingsRaw) {
+    const settings = JSON.parse(settingsRaw);
+    // Копируем настройки в storageState с правильным префиксом
+    for (const key in settings) {
+      if (key.includes(':')) {
+        storageState[key] = settings[key];
+      }
+    }
+  }
+} catch {
+  // Ignore
+}
+
 watch(
   storageState,
   () => {
@@ -24,10 +40,23 @@ export function createPluginStorage(pluginName: string): StorageApi {
   const prefix = `${pluginName}:`;
 
   return {
-      get<T>(key: string, def: T): T {
-        const val = storageState[prefix + key];
-        return val === undefined ? def : (val as T);
-      },
+    get<T>(key: string, def: T): T {
+      // Сначала проверяем storage
+      let val = storageState[prefix + key];
+      // Если не найдено, проверяем настройки (settings используют формат plugin:key)
+      if (val === undefined) {
+        try {
+          const settingsRaw = localStorage.getItem('u-devtools-settings');
+          if (settingsRaw) {
+            const settings = JSON.parse(settingsRaw);
+            val = settings[prefix + key];
+          }
+        } catch {
+          // Ignore
+        }
+      }
+      return val === undefined ? def : (val as T);
+    },
     set<T>(key: string, value: T) {
       storageState[prefix + key] = value;
     },

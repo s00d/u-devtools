@@ -6,13 +6,13 @@ const refreshSignal = { value: () => {} };
 
 const plugin: PluginClientInstance = {
   name: 'i18n',
-  icon: 'i-carbon-translate',
+  icon: 'Language',
 
   commands: [
     {
       id: 'i18n.refresh',
       label: 'Refresh Translations',
-      icon: 'i-carbon-renew',
+      icon: 'ArrowPath',
       action: () => {
         refreshSignal.value();
       },

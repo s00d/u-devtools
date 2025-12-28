@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import UIcon from './UIcon.vue';
 
 defineProps<{
   label: string;
@@ -41,7 +42,7 @@ const copy = async (text: string) => {
         class="flex-shrink-0 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
         title="Copy to clipboard"
       >
-        <div :class="copied ? 'i-carbon-checkmark' : 'i-carbon-copy'" />
+        <UIcon :name="copied ? 'Check' : 'Clipboard'" class="w-4 h-4" />
       </button>
     </div>
   </div>

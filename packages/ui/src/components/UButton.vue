@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UIcon from './UIcon.vue';
+
 defineProps<{
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md';
@@ -26,8 +28,8 @@ defineEmits<{
     ]"
     @click="$emit('click', $event)"
   >
-    <div v-if="loading" class="i-carbon-circle-dash animate-spin" />
-    <div v-else-if="icon" :class="icon" />
+    <UIcon v-if="loading" name="ArrowPath" class="animate-spin" />
+    <UIcon v-else-if="icon" :name="icon" class="mr-2" />
     <slot />
   </button>
 </template>

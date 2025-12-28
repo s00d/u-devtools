@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UIcon from './UIcon.vue';
+
 defineProps<{
   visible: boolean;
   title?: string;
@@ -28,8 +30,10 @@ defineSlots<{
           <span class="dark:text-white">{{ title }}</span>
           <button
             @click="$emit('close')"
-            class="i-carbon-close text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition"
-          />
+            class="text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition"
+          >
+            <UIcon name="XMark" class="w-5 h-5" />
+          </button>
         </div>
         <div class="p-6 overflow-auto flex-1">
           <slot />

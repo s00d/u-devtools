@@ -4,13 +4,13 @@ import StoragePanel from './ui/StoragePanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Storage',
-  icon: 'i-carbon-data-base',
+  icon: 'ServerStack',
 
   commands: [
     {
       id: 'storage.clear',
       label: 'Clear All Storage',
-      icon: 'i-carbon-clean',
+      icon: 'Trash',
       action: () => {
         clearSignal.value();
       },

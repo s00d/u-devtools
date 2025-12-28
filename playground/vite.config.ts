@@ -27,7 +27,7 @@ export default defineConfig({
         // Плагин инспектора: позволяет выбирать элементы
         inspectorPlugin(),
         
-        // Плагин терминала: запуск npm скриптов
+        // Плагин терминала: полноценный терминал с поддержкой любых команд
         terminalPlugin(),
         
         // Плагин хранилища: просмотр LocalStorage/SessionStorage/Cookies

@@ -112,7 +112,7 @@ onMounted(() => {
         @update:model-value="(v) => activeTab = v as typeof activeTab"
       />
 
-      <UButton size="sm" variant="ghost" icon="i-carbon-renew" @click="load" title="Refresh Data" />
+      <UButton size="sm" variant="ghost" icon="ArrowPath" @click="load" title="Refresh Data" />
     </div>
 
     <!-- Content -->
@@ -135,7 +135,7 @@ onMounted(() => {
                 v-if="info.configFile"
                 size="sm"
                 variant="ghost"
-                icon="i-carbon-launch"
+                icon="ArrowTopRightOnSquare"
                 @click="openConfig"
                 title="Open in editor"
               />
@@ -155,8 +155,8 @@ onMounted(() => {
         </div>
 
         <div class="flex gap-4 pt-4">
-          <UButton variant="primary" icon="i-carbon-restart" @click="restartServer"> Restart Server </UButton>
-          <UButton variant="danger" icon="i-carbon-trash-can" @click="clearCache"> Force Clear Cache </UButton>
+          <UButton variant="primary" icon="ArrowPath" @click="restartServer"> Restart Server </UButton>
+          <UButton variant="danger" icon="Trash" @click="clearCache"> Force Clear Cache </UButton>
         </div>
       </div>
 
@@ -193,7 +193,7 @@ onMounted(() => {
             <span class="text-xs text-gray-600 dark:text-gray-400">{{ val }}</span>
           </template>
         </UTable>
-        <UEmpty v-else icon="i-carbon-plug" title="No plugins found" description="No Vite plugins are configured" />
+        <UEmpty v-else icon="PuzzlePiece" title="No plugins found" description="No Vite plugins are configured" />
       </div>
 
       <!-- TAB: Env -->
@@ -216,7 +216,7 @@ onMounted(() => {
             <span class="font-mono text-gray-600 dark:text-gray-300 break-all text-sm">{{ val }}</span>
           </template>
         </UTable>
-        <UEmpty v-else icon="i-carbon-settings" title="No environment variables" description="No VITE_* environment variables found" />
+        <UEmpty v-else icon="Cog6Tooth" title="No environment variables" description="No VITE_* environment variables found" />
       </div>
     </div>
   </div>

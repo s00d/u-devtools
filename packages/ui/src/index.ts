@@ -17,3 +17,4 @@ export { default as UCard } from './components/UCard.vue';
 export { default as UKeyValue } from './components/UKeyValue.vue';
 export { default as UTabButtons } from './components/UTabButtons.vue';
 export { default as UStat } from './components/UStat.vue';
+export { default as UForm } from './components/UForm.vue';

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UIcon from './UIcon.vue';
+
 defineProps<{
   icon?: string;
   title?: string;
@@ -18,12 +20,13 @@ defineProps<{
       v-if="icon"
       :class="[
         'opacity-30',
-        size === 'sm' ? 'text-4xl' : size === 'lg' ? 'text-6xl' : 'text-5xl',
-        icon,
+        size === 'sm' ? 'w-16 h-16' : size === 'lg' ? 'w-24 h-24' : 'w-20 h-20',
       ]"
-    />
+    >
+      <UIcon :name="icon" :size="size === 'sm' ? 'w-16 h-16' : size === 'lg' ? 'w-24 h-24' : 'w-20 h-20'" />
+    </div>
     <div v-else class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center opacity-30">
-      <div :class="['i-carbon-search', size === 'sm' ? 'text-2xl' : 'text-3xl']" />
+      <UIcon name="MagnifyingGlass" :size="size === 'sm' ? 'w-8 h-8' : 'w-12 h-12'" />
     </div>
     <div class="text-center">
       <p v-if="title" class="font-semibold text-gray-500 dark:text-gray-400 mb-1">{{ title }}</p>

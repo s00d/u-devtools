@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue';
 import type { PluginCommand, PluginClientInstance } from '@u-devtools/core';
+import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
   visible: boolean;
@@ -80,7 +81,7 @@ onMounted(() => {
     >
       <div class="p-3 border-b">
         <div class="relative">
-          <div class="absolute left-3 top-2.5 text-gray-400 i-carbon-search text-lg" />
+          <UIcon name="MagnifyingGlass" class="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
           <input
             ref="inputRef"
             v-model="search"
@@ -104,7 +105,7 @@ onMounted(() => {
           @click="execute(cmd)"
           @mousemove="selectedIndex = idx"
         >
-          <div :class="[cmd.icon || 'i-carbon-terminal', 'text-lg opacity-70']" />
+          <UIcon :name="cmd.icon || 'CommandLine'" class="w-5 h-5 opacity-70" />
           <div class="flex-1">
             <div class="font-medium text-sm">{{ cmd.label }}</div>
             <div class="text-[10px] opacity-60 uppercase tracking-wider">{{ cmd.pluginName }}</div>

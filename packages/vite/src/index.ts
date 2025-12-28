@@ -16,19 +16,35 @@ const RESOLVED_APP_ID = `\0${VIRTUAL_APP_ID}`;
 export interface DevToolsOptions {
   base?: string;
   plugins?: DevToolsPlugin[];
+  /**
+   * Enable or disable DevTools.
+   * @default true
+   */
+  enabled?: boolean;
 }
 
 export function createDevTools(options: DevToolsOptions = {}): PluginOption {
-  const plugins = options.plugins || [];
-  let rpcServer: ViteRpcServer;
-  const base = options.base || '/__devtools';
+  const { 
+    base = '/__devtools', 
+    plugins = [], 
+    enabled = true
+  } = options;
+
+  // --- ЛОГИКА ОТКЛЮЧЕНИЯ ---
+  if (!enabled) {
+    return {
+      name: 'u-devtools',
+      apply: 'serve',
+      // Возвращаем пустой плагин, чтобы Vite не ругался, но ничего не происходило
+    };
+  }
 
   // Пытаемся найти путь к клиенту
   let CLIENT_ROOT = '';
   try {
     const clientPkgPath = require.resolve('@u-devtools/client/package.json');
     CLIENT_ROOT = path.dirname(clientPkgPath);
-  } catch (e) {
+  } catch {
     // Fallback для разработки внутри монорепозитория
     CLIENT_ROOT = path.resolve(path.dirname(require.resolve('../../package.json')), 'packages/client');
   }
@@ -37,7 +53,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
     name: 'u-devtools',
     apply: 'serve',
 
-    config(config) {
+    config() {
       return {
         resolve: {
           alias: {
@@ -76,7 +92,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
     },
 
     configureServer(server: ViteDevServer) {
-      rpcServer = new ViteRpcServer(server.ws);
+      const rpcServer = new ViteRpcServer(server.ws);
       const ctx = { root: server.config.root, server };
 
       plugins.forEach((p) => {
@@ -84,8 +100,8 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
       });
 
       rpcServer.handle('sys:getPlugins', () => plugins.map((p) => ({ name: p.name })));
-      rpcServer.handle('sys:openFile', async (payload: any) => {
-        const { file, line = 1, column = 1 } = payload;
+      rpcServer.handle('sys:openFile', async (payload: unknown) => {
+        const { file, line = 1, column = 1 } = payload as { file: string; line?: number; column?: number };
         const filePath = path.resolve(ctx.root, file);
         const open = (await import('launch-editor')).default;
         open(filePath, `:${line}:${column}`);
@@ -116,140 +132,189 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
       const appPlugins = plugins.filter((p) => p.appPath);
       const appScript = appPlugins.length > 0 ? `<script type="module" src="${VIRTUAL_APP_ID}"></script>` : '';
 
-      // Логика кнопки-слайдера
-      const launcherScript = `
+      const loaderScript = `
         <script>
           (function() {
-            // Защита от дублей
-            if (document.getElementById('udt-launcher')) return;
+            if (document.getElementById('udt-container')) return;
 
-            // --- Контейнер кнопки ---
-            const container = document.createElement('div');
-            container.id = 'udt-launcher';
-            // Позиционирование
-            container.style.cssText = 'position:fixed; bottom:30px; right:0; z-index:99999; display:flex; align-items:center; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; transform: translateX(calc(100% - 12px)); opacity: 0.8;';
-            
-            // --- Сама кнопка ---
-            const btn = document.createElement('button');
-            btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
-            btn.setAttribute('aria-label', 'Open DevTools');
-            // Стили кнопки
-            btn.style.cssText = 'background:#18181b; color:#fff; border:1px solid #333; border-right:none; border-radius: 8px 0 0 8px; cursor:pointer; padding:10px 12px 10px 16px; display:flex; align-items:center; gap:8px; box-shadow: -4px 4px 10px rgba(0,0,0,0.2); font-family: sans-serif; font-weight: 600; font-size: 14px; white-space: nowrap;';
-            
-            // Текст внутри кнопки (логотип)
-            const label = document.createElement('span');
-            label.innerText = 'DevTools';
-            btn.appendChild(label);
-            
-            container.appendChild(btn);
-            document.body.appendChild(container);
+            const STATE_KEY = 'u-devtools-state';
+            const loadState = () => {
+              try { return JSON.parse(localStorage.getItem(STATE_KEY)) || { height: 400, isOpen: false }; }
+              catch { return { height: 400, isOpen: false }; }
+            };
+            const saveState = (state) => localStorage.setItem(STATE_KEY, JSON.stringify(state));
 
-            // --- Логика поведения ---
-            let hideTimeout;
-            let isHovered = false;
-            let isOpen = false;
+            const state = loadState();
+            
+            // --- 1. Контейнер Iframe ---
+            const iframeContainer = document.createElement('div');
+            iframeContainer.id = 'udt-container';
+            iframeContainer.style.cssText = \`
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: \${state.height}px;
+              z-index: 2147483647;
+              display: \${state.isOpen ? 'block' : 'none'};
+              background: transparent;
+              box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            \`;
 
-            const show = () => {
-              container.style.transform = 'translateX(0)';
-              container.style.opacity = '1';
+            // --- 2. Ручка ресайза (Resizer) ---
+            const resizer = document.createElement('div');
+            resizer.style.cssText = 'position: absolute; top: -5px; left: 0; width: 100%; height: 10px; cursor: row-resize; z-index: 2147483648; background: transparent;';
+            
+            // Визуальная полоска
+            const resizerLine = document.createElement('div');
+            resizerLine.style.cssText = 'width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin-top: 4px; transition: background 0.2s, height 0.2s;';
+            resizer.appendChild(resizerLine);
+            
+            let isResizing = false;
+            resizer.onmouseenter = () => { 
+              if (!isResizing) {
+                resizerLine.style.background = '#6366f1'; 
+                resizerLine.style.height = '2px'; 
+              }
+            };
+            resizer.onmouseleave = () => { 
+              if (!isResizing) { 
+                resizerLine.style.background = 'rgba(0,0,0,0.1)'; 
+                resizerLine.style.height = '1px'; 
+              } 
             };
 
-            const hide = () => {
-              if (isOpen || isHovered) return;
-              // Скрываем, оставляя 12 пикселей торчать
-              container.style.transform = 'translateX(calc(100% - 12px))';
-              container.style.opacity = '0.6';
+            const iframe = document.createElement('iframe');
+            iframe.src = '${base}/index.html';
+            iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: white;';
+            // Поддержка темной темы для фона iframe до загрузки контента
+            if (localStorage.getItem('u-devtools-theme') === 'dark') {
+               iframe.style.background = '#0f172a';
+            }
+
+            iframeContainer.appendChild(resizer);
+            iframeContainer.appendChild(iframe);
+            document.body.appendChild(iframeContainer);
+
+            // --- Функция обновления отступа body ---
+            const updateBodyPadding = () => {
+              if (state.isOpen) {
+                document.body.style.paddingBottom = iframeContainer.style.height;
+              } else {
+                document.body.style.paddingBottom = '0';
+              }
             };
 
-            // Показываем при наведении
-            container.addEventListener('mouseenter', () => {
-              isHovered = true;
-              clearTimeout(hideTimeout);
-              show();
+            // --- 3. Логика Ресайза ---
+            let startY = 0;
+            let startHeight = 0;
+            const overlay = document.createElement('div'); // Перекрывает iframe во время ресайза
+            overlay.style.cssText = 'position: fixed; inset: 0; z-index: 2147483649; display: none; cursor: row-resize;';
+            document.body.appendChild(overlay);
+
+            resizer.onmousedown = (e) => {
+              isResizing = true;
+              startY = e.clientY;
+              startHeight = parseInt(iframeContainer.style.height, 10);
+              overlay.style.display = 'block'; // Включаем перекрытие, чтобы мышь не падала в iframe
+              resizerLine.style.background = '#6366f1';
+              resizerLine.style.height = '2px';
+              document.body.style.userSelect = 'none';
+            };
+
+            document.addEventListener('mousemove', (e) => {
+              if (!isResizing) return;
+              const delta = startY - e.clientY;
+              const newHeight = Math.max(100, Math.min(window.innerHeight - 50, startHeight + delta));
+              iframeContainer.style.height = newHeight + 'px';
+              updateBodyPadding();
             });
 
-            // Прячем при уходе мыши (с задержкой)
-            container.addEventListener('mouseleave', () => {
-              isHovered = false;
-              if (!isOpen) {
-                hideTimeout = setTimeout(hide, 1500); // Ждем 1.5 сек перед скрытием
+            document.addEventListener('mouseup', () => {
+              if (isResizing) {
+                isResizing = false;
+                overlay.style.display = 'none';
+                document.body.style.userSelect = '';
+                resizerLine.style.background = 'rgba(0,0,0,0.1)';
+                resizerLine.style.height = '1px';
+                state.height = parseInt(iframeContainer.style.height, 10);
+                updateBodyPadding();
+                saveState(state);
               }
             });
 
-            // Начальная анимация (показать и спрятать через 2 сек)
-            setTimeout(show, 500);
-            setTimeout(hide, 2500);
+            // --- 4. Плавающая кнопка (Launcher) ---
+            const btnContainer = document.createElement('div');
+            btnContainer.style.cssText = \`
+              position: fixed; bottom: 20px; right: 0; z-index: 2147483646;
+              transition: transform 0.3s ease, opacity 0.3s;
+              transform: translateX(\${state.isOpen ? '100%' : 'calc(100% - 8px)'});
+              opacity: \${state.isOpen ? '0' : '0.6'};
+            \`;
 
-            // --- Клик (открытие iframe) ---
-            btn.onclick = () => {
-              const existingIframe = document.getElementById('u-devtools-iframe');
-              
-              if (existingIframe) {
-                // Toggle visibility
-                if (existingIframe.style.display === 'none') {
-                  existingIframe.style.display = 'block';
-                  isOpen = true;
-                  show();
-                } else {
-                  existingIframe.style.display = 'none';
-                  isOpen = false;
-                  // При закрытии можно сразу не прятать кнопку, пусть юзер сам уберет мышь
-                }
-                return;
+            const btn = document.createElement('div');
+            btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
+            btn.style.cssText = 'background: #18181b; color: white; padding: 10px 12px 10px 14px; border-radius: 8px 0 0 8px; cursor: pointer; display: flex; align-items: center; box-shadow: -2px 2px 10px rgba(0,0,0,0.2);';
+            
+            btnContainer.appendChild(btn);
+            document.body.appendChild(btnContainer);
+
+            // Логика наведения
+            btnContainer.onmouseenter = () => {
+              if (!state.isOpen) {
+                btnContainer.style.transform = 'translateX(0)';
+                btnContainer.style.opacity = '1';
               }
-
-              // Create Iframe
-              const iframe = document.createElement('iframe');
-              iframe.id = 'u-devtools-iframe';
-              iframe.src = '${base}/index.html';
-              iframe.style.cssText = 'position:fixed; inset:0; width:100%; height:100%; z-index:100000; border:none; background:transparent;';
-              document.body.appendChild(iframe);
-              isOpen = true;
-              show();
-
-              // Кнопка закрытия внутри Iframe (или поверх)
-              // В нашем случае Iframe перекрывает все, поэтому кнопку закрытия лучше рендерить ВНУТРИ Iframe (в Shell)
-              // Или добавить кнопку поверх Iframe здесь:
-              
-              const closeBtn = document.createElement('button');
-              closeBtn.innerHTML = '✕';
-              closeBtn.style.cssText = 'position:fixed; top:20px; right:20px; z-index:100001; width:36px; height:36px; border-radius:50%; background:#ef4444; color:#fff; border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s;';
-              closeBtn.onmouseenter = () => closeBtn.style.transform = 'scale(1.1)';
-              closeBtn.onmouseleave = () => closeBtn.style.transform = 'scale(1)';
-              
-              closeBtn.onclick = () => {
-                iframe.style.display = 'none';
-                closeBtn.style.display = 'none';
-                isOpen = false;
-                hideTimeout = setTimeout(hide, 1000);
-              };
-              
-              // Хак: сохраняем ссылку на кнопку закрытия, чтобы показывать её при повторном открытии
-              iframe.dataset.hasCloseBtn = 'true';
-              
-              // Модифицируем btn.onclick для повторного открытия, чтобы он показывал и кнопку закрытия
-              const originalClick = btn.onclick;
-              btn.onclick = () => {
-                 if (iframe.style.display === 'none') {
-                    iframe.style.display = 'block';
-                    closeBtn.style.display = 'flex';
-                    isOpen = true;
-                    show();
-                 } else {
-                    iframe.style.display = 'none';
-                    closeBtn.style.display = 'none';
-                    isOpen = false;
-                 }
-              };
-
-              document.body.appendChild(closeBtn);
             };
+            btnContainer.onmouseleave = () => {
+              if (!state.isOpen) {
+                btnContainer.style.transform = 'translateX(calc(100% - 8px))';
+                btnContainer.style.opacity = '0.6';
+              }
+            };
+
+            // Логика клика
+            const toggleDevTools = () => {
+              state.isOpen = !state.isOpen;
+              iframeContainer.style.display = state.isOpen ? 'block' : 'none';
+              
+              if (state.isOpen) {
+                btnContainer.style.transform = 'translateX(100%)'; // Прячем кнопку совсем
+                btnContainer.style.opacity = '0';
+              } else {
+                btnContainer.style.transform = 'translateX(calc(100% - 8px))';
+                btnContainer.style.opacity = '0.6';
+              }
+              updateBodyPadding();
+              saveState(state);
+            };
+
+            btn.onclick = toggleDevTools;
+
+            // --- 5. Слушаем команды закрытия изнутри Iframe ---
+            window.addEventListener('message', (e) => {
+              if (e.data === 'u-devtools:close') {
+                toggleDevTools();
+              }
+            });
+
+            // --- 6. Инициализация отступа при загрузке ---
+            if (state.isOpen) {
+              updateBodyPadding();
+            }
+
+            // --- 7. Обработка ресайза окна ---
+            window.addEventListener('resize', () => {
+              if (state.isOpen) {
+                updateBodyPadding();
+              }
+            });
 
           })();
         </script>
       `;
 
-      return `${html}${appScript}${launcherScript}`;
+      return `${html}${appScript}${loaderScript}`;
     },
   };
 }

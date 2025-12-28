@@ -4,7 +4,7 @@ import RouterPanel from './ui/RouterPanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Vue Router',
-  icon: 'i-carbon-logo-vue',
+  icon: 'Cube',
 
   renderMain(container, api) {
     const app = createApp(RouterPanel, { api });

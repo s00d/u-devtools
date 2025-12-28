@@ -36,13 +36,23 @@ export interface ClientApi {
 // --- Plugin Interfaces ---
 export type UnmountFn = () => void;
 
+export type SettingType = 'string' | 'number' | 'boolean' | 'select' | 'array';
+
+export interface SettingSchemaDef {
+  label: string;
+  description?: string;
+  type: SettingType;
+  default?: unknown;
+  // Для select
+  options?: { label: string; value: unknown }[];
+  // Для array: описывает структуру элемента массива
+  items?: Record<string, SettingSchemaDef>;
+  // Или если массив примитивов (строк)
+  itemType?: 'string' | 'number';
+}
+
 export interface PluginSettingsSchema {
-  [key: string]: {
-    type: 'string' | 'number' | 'boolean' | 'select';
-    label: string;
-    default?: unknown;
-    options?: { label: string; value: unknown }[];
-  };
+  [key: string]: SettingSchemaDef;
 }
 
 export interface PluginClientInstance {
