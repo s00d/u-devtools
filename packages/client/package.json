@@ -1,0 +1,31 @@
+{
+  "name": "@u-devtools/client",
+  "version": "0.1.0",
+  "description": "Client-side UI shell for Universal DevTools",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/bridge": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "vue": "^3.5.26"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.3",
+    "@unocss/preset-icons": "^66.5.11",
+    "typescript": "^5.9.3",
+    "unocss": "^66.5.11",
+    "vite": "^7.3.0",
+    "vue-tsc": "^3.2.1"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules
+dist
+.idea
+.vscode
+*.log
+.DS_Store
+playground/dist
+coverage
+*.tsbuildinfo
+*.timestamp-*.mjs

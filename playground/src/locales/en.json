@@ -1,0 +1,15 @@
+{
+  "app": {
+    "title": "DevTools Playground",
+    "subtitle": "Test your plugins here"
+  },
+  "buttons": {
+    "save": "Save Changes",
+    "cancel": "Cancel Action"
+  },
+  "messages": {
+    "welcome": "Welcome to the demo app!",
+    "error": "Something went wrong"
+  }
+}
+

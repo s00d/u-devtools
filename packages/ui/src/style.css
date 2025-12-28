@@ -1,0 +1,31 @@
+:root {
+  --udt-c-primary: #6366f1;
+  --udt-c-primary-hover: #4f46e5;
+  --udt-bg: #ffffff;
+  --udt-bg-soft: #f9fafb;
+  --udt-border: #e5e7eb;
+  --udt-text: #1f2937;
+  --udt-text-dim: #6b7280;
+  --udt-radius: 4px;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html.dark {
+  --udt-bg: #111827;
+  --udt-bg-soft: #1f2937;
+  --udt-border: #374151;
+  --udt-text: #f9fafb;
+  --udt-text-dim: #9ca3af;
+}
+
+body {
+  background-color: var(--udt-bg);
+  color: var(--udt-text);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.udt-reset * {
+  box-sizing: border-box;
+}

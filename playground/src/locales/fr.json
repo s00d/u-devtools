@@ -1,0 +1,15 @@
+{
+  "app": {
+    "title": "Terrain de Jeux DevTools",
+    "subtitle": "Testez vos plugins ici"
+  },
+  "buttons": {
+    "save": "Sauvegarder",
+    "cancel": "Annuler"
+  },
+  "messages": {
+    "welcome": "Bienvenue dans l'application de démonstration!",
+    "error": "Quelque chose a mal tourné"
+  }
+}
+

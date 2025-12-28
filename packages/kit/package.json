@@ -1,0 +1,27 @@
+{
+  "name": "@u-devtools/kit",
+  "version": "0.1.0",
+  "description": "SDK for creating Universal DevTools plugins",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/bridge": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "typescript": "^5.9.3"
+  }
+}

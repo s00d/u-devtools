@@ -1,0 +1,50 @@
+{
+  "name": "@u-devtools/vite",
+  "version": "0.1.0",
+  "description": "Universal DevTools Kit for Vite applications",
+  "keywords": [
+    "vite",
+    "devtools",
+    "plugin",
+    "dx",
+    "debug"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/u-devtools.git",
+    "directory": "packages/vite"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/bridge": "workspace:*",
+    "launch-editor": "^2.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

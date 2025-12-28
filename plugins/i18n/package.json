@@ -1,0 +1,32 @@
+{
+  "name": "@u-devtools/plugin-i18n",
+  "version": "0.1.0",
+  "description": "i18n plugin for Universal DevTools",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "json-to-ast": "^2.1.0",
+    "vue": "^3.5.26"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}
