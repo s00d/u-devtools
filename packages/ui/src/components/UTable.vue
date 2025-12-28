@@ -6,25 +6,25 @@ defineProps<{
 </script>
 
 <template>
-  <div class="w-full overflow-auto border border-gray-200 rounded">
+  <div class="w-full overflow-auto border border-gray-200 dark:border-gray-700 rounded">
     <table class="w-full text-left text-sm whitespace-nowrap">
-      <thead class="bg-gray-50 border-b border-gray-200 font-semibold text-gray-600">
+      <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-600 dark:text-gray-200">
         <tr>
           <th v-for="col in columns" :key="col.key" class="px-4 py-2" :style="{ width: col.width }">
             {{ col.label }}
           </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-100 bg-white">
-        <tr v-for="(row, idx) in rows" :key="idx" class="hover:bg-gray-50 transition-colors">
-          <td v-for="col in columns" :key="col.key" class="px-4 py-2">
+      <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-900">
+        <tr v-for="(row, idx) in rows" :key="idx" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          <td v-for="col in columns" :key="col.key" class="px-4 py-2 text-gray-900 dark:text-gray-100">
             <slot :name="`cell-${col.key}`" :row="row" :val="(row as Record<string, unknown>)[col.key]">
               {{ (row as Record<string, unknown>)[col.key] }}
             </slot>
           </td>
         </tr>
         <tr v-if="rows.length === 0">
-          <td :colspan="columns.length" class="px-4 py-8 text-center text-gray-400">No data</td>
+          <td :colspan="columns.length" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">No data</td>
         </tr>
       </tbody>
     </table>

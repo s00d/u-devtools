@@ -17,6 +17,8 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
+      // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
+      // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
       external: ['vue', 'virtual:u-devtools-plugins'],
       output: {
         globals: {

@@ -2,31 +2,49 @@
  * AppBridge provides a standardized way for plugins to communicate
  * between the application runtime (window) and the DevTools iframe.
  */
-export class AppBridge<T = unknown> {
+export class AppBridge<ToClientEvents = Record<string, any>, ToAppEvents = Record<string, any>> {
   private channel: BroadcastChannel;
+  private listeners = new Map<string, Set<Function>>();
 
-  constructor(name: string) {
-    this.channel = new BroadcastChannel(`u-devtools-${name}`);
-  }
+  constructor(public namespace: string) {
+    // Автоматическое пространство имен
+    this.channel = new BroadcastChannel(`u-devtools:${namespace}`);
 
-  send(event: string, data: T) {
-    this.channel.postMessage({ type: event, data });
-  }
-
-  on<D = T>(event: string, cb: (data: D) => void): () => void {
-    const handler = (e: MessageEvent) => {
-      if (e.data.type === event) {
-        cb(e.data.data as D);
+    this.channel.onmessage = (e) => {
+      const { event, data } = e.data as { event: string; data: unknown };
+      const handlers = this.listeners.get(event);
+      if (handlers) {
+        handlers.forEach((fn) => fn(data));
       }
     };
-    this.channel.addEventListener('message', handler);
+  }
+
+  /**
+   * Отправить событие "на ту сторону".
+   */
+  send(event: string, data?: any): void {
+    this.channel.postMessage({ event, data });
+  }
+
+  /**
+   * Слушать события "с той стороны".
+   */
+  on<T = any>(event: string, cb: (data: T) => void): () => void {
+    const eventStr = String(event);
+    if (!this.listeners.has(eventStr)) {
+      this.listeners.set(eventStr, new Set());
+    }
+    this.listeners.get(eventStr)!.add(cb);
+
+    // Возвращаем функцию отписки
     return () => {
-      this.channel.removeEventListener('message', handler);
+      this.listeners.get(eventStr)?.delete(cb);
     };
   }
 
   close() {
     this.channel.close();
+    this.listeners.clear();
   }
 }
 

@@ -1,18 +1,31 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true,
+    "jsx": "preserve",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "baseUrl": ".",
+    // ПРИМЕЧАНИЕ: paths используются только для IDE (Go to Definition, автодополнение)
+    // Vite резолвит модули через package.json автоматически
+    "paths": {
+      "@u-devtools/core": ["packages/core/src/index.ts"],
+      "@u-devtools/bridge": ["packages/bridge/src/index.ts"],
+      "@u-devtools/ui": ["packages/ui/src/index.ts"],
+      "@u-devtools/vite": ["packages/vite/src/index.ts"],
+      "@u-devtools/client": ["packages/client/src/main.ts"],
+      "@u-devtools/plugin-i18n": ["plugins/i18n/src/index.ts"],
+      "@u-devtools/plugin-network": ["plugins/network/src/index.ts"],
+      "@u-devtools/plugin-inspector": ["plugins/inspector/src/index.ts"],
+      "@u-devtools/plugin-terminal": ["plugins/terminal/src/index.ts"],
+      "@u-devtools/plugin-storage": ["plugins/storage/src/index.ts"],
+      "@u-devtools/plugin-package-inspector": ["plugins/package-inspector/src/index.ts"],
+      "@u-devtools/plugin-vue-router": ["plugins/vue-router/src/index.ts"],
+      "@u-devtools/plugin-vite-inspector": ["plugins/vite-inspector/src/index.ts"],
+      "@u-devtools/plugin-console": ["plugins/console/src/index.ts"]
+    }
   },
-  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

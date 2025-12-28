@@ -16,30 +16,33 @@
     "url": "git+https://github.com/username/u-devtools.git",
     "directory": "packages/vite"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
     }
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@u-devtools/core": "workspace:*",
     "@u-devtools/bridge": "workspace:*",
-    "launch-editor": "^2.12.0"
+    "@u-devtools/core": "workspace:*",
+    "launch-editor": "^2.12.0",
+    "magicast": "^0.5.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.27",

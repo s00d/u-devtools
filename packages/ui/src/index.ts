@@ -1,4 +1,6 @@
-import './style.css';
+// Стили импортируются через packages/client/src/style.css
+// Это позволяет правильно настроить @source директивы для Tailwind v4
+// import './style.css'; // Удалено - теперь импортируется из клиента
 
 export { default as UButton } from './components/UButton.vue';
 export { default as UIcon } from './components/UIcon.vue';

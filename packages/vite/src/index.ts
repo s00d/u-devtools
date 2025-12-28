@@ -2,10 +2,16 @@ import type { PluginOption, ViteDevServer } from 'vite';
 import { ViteRpcServer } from '@u-devtools/bridge';
 import type { DevToolsPlugin } from '@u-devtools/core';
 import * as path from 'node:path';
+import * as fs from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import https from 'node:https';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Используем createRequire для надежного резолвинга в монорепо и node_modules
 const require = createRequire(import.meta.url);
+
 
 // Идентификаторы
 const VIRTUAL_MODULE_ID = 'virtual:u-devtools-plugins';
@@ -39,14 +45,26 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
     };
   }
 
-  // Пытаемся найти путь к клиенту
-  let CLIENT_ROOT = '';
+  // --- СУПЕР ПРОСТОЙ ПОИСК ---
+  // Используем стандартный механизм Node.js резолвинга через package.json
+  // В dev-режиме (workspace) package.json.main указывает на src/main.ts
+  // В prod-режиме (npm) publishConfig.main указывает на dist/main.js
+  let clientEntryPath: string;
+
   try {
+    // 1. Спрашиваем Node.js, где лежит package.json клиента
     const clientPkgPath = require.resolve('@u-devtools/client/package.json');
-    CLIENT_ROOT = path.dirname(clientPkgPath);
-  } catch {
-    // Fallback для разработки внутри монорепозитория
-    CLIENT_ROOT = path.resolve(path.dirname(require.resolve('../../package.json')), 'packages/client');
+    const clientRoot = path.dirname(clientPkgPath);
+
+    // 2. Читаем package.json, чтобы узнать entry point ("main")
+    // В dev-режиме это будет "./src/main.ts", в prod (из npm) - "./dist/main.js"
+    const clientPkg = require(clientPkgPath);
+
+    // 3. Собираем полный путь
+    clientEntryPath = path.resolve(clientRoot, clientPkg.main);
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    throw new Error(`[@u-devtools/vite] Failed to resolve client: ${errorMessage}`);
   }
 
   return {
@@ -54,18 +72,8 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
     apply: 'serve',
 
     config() {
-      return {
-        resolve: {
-          alias: {
-            '@u-devtools/client': CLIENT_ROOT,
-          },
-        },
-        server: {
-          fs: {
-            allow: [CLIENT_ROOT],
-          },
-        },
-      };
+      // Vite автоматически резолвит через package.json, алиасы не нужны
+      return {};
     },
 
     resolveId(id) {
@@ -107,9 +115,218 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
         open(filePath, `:${line}:${column}`);
       });
 
+      // --- PLUGIN MANAGER CORE LOGIC ---
+
+      // 1. Получение списка плагинов
+      rpcServer.handle('sys:plugins:list', () => {
+        return plugins.map((p) => ({
+          name: p.name,
+          // Если метаданных нет, пытаемся угадать, является ли плагин встроенным
+          isCore: p.name.startsWith('I18n') || p.name.startsWith('Network') || p.name.startsWith('Inspector') || p.name.startsWith('Vite') || p.name.startsWith('Terminal') || !p.meta,
+          meta: p.meta || {
+            name: 'unknown',
+            version: '0.0.0',
+            description: 'No description provided',
+          },
+        }));
+      });
+
+      // --- PLUGIN MANAGER: MARKETPLACE ---
+
+      // 1. Поиск плагинов в NPM (Marketplace)
+      rpcServer.handle('sys:plugins:search', async (payload: unknown) => {
+        const query = payload as string;
+        const text = query || 'keywords:u-devtools-plugin';
+        return new Promise((resolve) => {
+          https.get(
+            `https://registry.npmjs.org/-/v1/search?text=${encodeURIComponent(text)}&size=20`,
+            { headers: { 'User-Agent': 'u-devtools' } },
+            (res) => {
+              let data = '';
+              res.on('data', (chunk) => {
+                data += chunk;
+              });
+              res.on('end', () => {
+                try {
+                  const json = JSON.parse(data);
+                  const results = json.objects.map((obj: { package: { name: string; version: string; description?: string; publisher?: { username: string }; links?: { npm?: string } } }) => ({
+                    name: obj.package.name,
+                    version: obj.package.version,
+                    description: obj.package.description || 'No description',
+                    author: obj.package.publisher?.username || 'Unknown',
+                    homepage: obj.package.links?.npm || `https://www.npmjs.com/package/${obj.package.name}`,
+                  }));
+                  resolve(results);
+                } catch {
+                  resolve([]);
+                }
+              });
+            }
+          ).on('error', () => resolve([]));
+        });
+      });
+
+      // 2. Установка плагина
+      rpcServer.handle('sys:plugins:install', async (payload: unknown) => {
+        const pkgName = payload as string;
+        // Динамический импорт для избежания проблем с ESM
+        const { loadFile, writeFile, builders } = await import('magicast');
+        const { exec } = await import('node:child_process');
+        const { promisify } = await import('node:util');
+        const execAsync = promisify(exec);
+
+        // Хелпер для определения пакетного менеджера
+        const getPackageManager = () => {
+          const userAgent = process.env.npm_config_user_agent;
+          if (userAgent?.startsWith('pnpm')) return 'pnpm';
+          if (userAgent?.startsWith('yarn')) return 'yarn';
+          return 'npm';
+        };
+
+        // Хелпер для преобразования имени пакета в имя переменной
+        const packageToImportName = (pkgName: string): string => {
+          const name = pkgName.split('/').pop()?.replace('plugin-', '') || '';
+          return name.replace(/-(\w)/g, (_, c) => c.toUpperCase()) + 'Plugin';
+        };
+
+        const pm = getPackageManager();
+        const cmd = pm === 'npm' ? `npm install -D ${pkgName}` : `${pm} add -D ${pkgName}`;
+
+        try {
+          // 1. Установка пакета
+          await execAsync(cmd, { cwd: ctx.root });
+
+          // 2. Модификация vite.config.ts
+          const configPath = path.resolve(ctx.root, 'vite.config.ts');
+          if (fs.existsSync(configPath)) {
+            try {
+              const mod = await loadFile(configPath);
+              const importName = packageToImportName(pkgName);
+
+              // Добавляем импорт
+              mod.imports.$add({
+                from: pkgName,
+                imported: importName,
+              });
+
+              // Добавляем в массив plugins
+              const configObj =
+                mod.exports.default.$type === 'function-call'
+                  ? mod.exports.default.$args[0]
+                  : mod.exports.default;
+
+              if (configObj?.plugins) {
+                const pluginsArray = configObj.plugins;
+                if (Array.isArray(pluginsArray)) {
+                  pluginsArray.push(builders.functionCall(importName, []));
+                } else if (pluginsArray.$type === 'array') {
+                  pluginsArray.push(builders.functionCall(importName, []));
+                }
+              } else {
+                console.warn(
+                  `[u-devtools] Could not auto-inject plugin "${pkgName}" into vite.config.ts. Please add it manually.`
+                );
+              }
+
+              await writeFile(mod, configPath);
+            } catch (configError: unknown) {
+              const message = configError instanceof Error ? configError.message : String(configError);
+              console.warn(
+                `[u-devtools] Failed to modify vite.config.ts: ${message}. Plugin installed, but you may need to add it manually.`
+              );
+            }
+          }
+
+          return { success: true };
+        } catch (e: unknown) {
+          const message = e instanceof Error ? e.message : String(e);
+          return { success: false, error: message };
+        }
+      });
+
+      // 3. Удаление плагина
+      rpcServer.handle('sys:plugins:uninstall', async (payload: unknown) => {
+        const pkgName = payload as string;
+        const { exec } = await import('node:child_process');
+        const { promisify } = await import('node:util');
+        const execAsync = promisify(exec);
+
+        // Хелпер для определения пакетного менеджера
+        const getPackageManager = () => {
+          const userAgent = process.env.npm_config_user_agent;
+          if (userAgent?.startsWith('pnpm')) return 'pnpm';
+          if (userAgent?.startsWith('yarn')) return 'yarn';
+          return 'npm';
+        };
+
+        const pm = getPackageManager();
+        const cmd = pm === 'npm' ? `npm uninstall ${pkgName}` : `${pm} remove ${pkgName}`;
+
+        try {
+          // Удаление пакета
+          await execAsync(cmd, { cwd: ctx.root });
+
+          // Примечание: Автоматическое удаление из vite.config.ts через magicast сложно,
+          // так как нужно найти и удалить конкретный вызов функции из массива.
+          // Для MVP просто удаляем пакет, а пользователь может почистить конфиг вручную.
+
+          return { success: true };
+        } catch (e: unknown) {
+          const message = e instanceof Error ? e.message : String(e);
+          return { success: false, error: message };
+        }
+      });
+
+      // 4. Проверка обновлений (NPM Registry)
+      rpcServer.handle('sys:plugins:checkUpdates', async (payload: unknown) => {
+        const packages = payload as string[];
+        const updates: Record<string, string> = {};
+
+        await Promise.all(
+          packages.map(
+            (pkgName) =>
+              new Promise<void>((resolve) => {
+                if (!pkgName || pkgName === 'unknown') {
+                  resolve();
+                  return;
+                }
+
+                const req = https.get(
+                  `https://registry.npmjs.org/${pkgName}/latest`,
+                  { headers: { 'User-Agent': 'u-devtools' } },
+                  (res) => {
+                    let data = '';
+                    res.on('data', (chunk) => {
+                      data += chunk;
+                    });
+                    res.on('end', () => {
+                      try {
+                        if (res.statusCode === 200) {
+                          const info = JSON.parse(data);
+                          updates[pkgName] = info.version;
+                        }
+                      } catch {
+                        // ignore parse errors
+                      }
+                      resolve();
+                    });
+                  }
+                );
+
+                req.on('error', () => resolve());
+                req.end();
+              })
+          )
+        );
+
+        return updates;
+      });
+
       // 3. Обслуживание Shell (оболочки)
       server.middlewares.use(`${base}/index.html`, (_req, res) => {
         res.setHeader('Content-Type', 'text/html');
+        // Используем вычисленный путь clientEntryPath
+        const normalizedPath = clientEntryPath.replace(/\\/g, '/');
         res.end(`
           <!DOCTYPE html>
           <html lang="en">
@@ -121,7 +338,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption {
             </head>
             <body>
               <div id="app"></div>
-              <script type="module" src="/@fs/${path.join(CLIENT_ROOT, 'src/main.ts')}"></script>
+              <script type="module" src="/@fs/${normalizedPath}"></script>
             </body>
           </html>
         `);

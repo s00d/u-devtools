@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="relative group bg-gray-900 rounded-md overflow-hidden text-gray-100 font-mono text-sm">
+  <div class="relative group bg-gray-900 dark:bg-gray-950 rounded-md overflow-hidden text-gray-100 dark:text-gray-200 font-mono text-sm border border-gray-800 dark:border-gray-800">
     <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
       <slot name="actions" />
     </div>

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx --tsconfig tsconfig.json node_modules/vite/bin/vite.js",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
@@ -14,6 +14,7 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "@u-devtools/plugin-i18n": "workspace:*",
     "@u-devtools/plugin-inspector": "workspace:*",
     "@u-devtools/plugin-network": "workspace:*",
@@ -24,6 +25,7 @@
     "@u-devtools/plugin-vue-router": "workspace:*",
     "@u-devtools/vite": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.3",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
     "vue-tsc": "^3.2.1"

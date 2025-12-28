@@ -10,7 +10,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -18,7 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "@u-devtools/core": "workspace:*",
-    "@u-devtools/bridge": "workspace:*"
+    "@u-devtools/bridge": "workspace:*",
+    "tsup": "^8.0.0",
+    "vue": "^3.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
