@@ -255,11 +255,30 @@ bridge.on<{ state: boolean }>('toggle-inspector', (data) => {
   toggleInspector(data.state);
 });
 
-document.addEventListener('mouseover', onMouseOver, true);
-document.addEventListener('click', onClick, true);
-document.addEventListener('keydown', (e) => {
+const onKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'Escape' && isActive) {
     toggleInspector(false);
     bridge.send('inspector-cancelled', {});
   }
-});
+};
+
+document.addEventListener('mouseover', onMouseOver, true);
+document.addEventListener('click', onClick, true);
+document.addEventListener('keydown', onKeyDown);
+
+// --- CLEANUP (ВАЖНО!) ---
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    // Удаляем элементы из DOM
+    const overlay = document.getElementById('u-devtools-overlay-container');
+    if (overlay) overlay.remove();
+
+    // Удаляем слушатели
+    document.removeEventListener('mouseover', onMouseOver, true);
+    document.removeEventListener('click', onClick, true);
+    document.removeEventListener('keydown', onKeyDown);
+    
+    // Закрываем канал
+    bridge.close();
+  });
+}

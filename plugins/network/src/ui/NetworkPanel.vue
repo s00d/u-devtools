@@ -24,7 +24,7 @@ const bridge = new AppBridge('network');
 
 // Читаем настройки
 const maxRequests = computed(() => 
-  props.api?.storage?.get('settings:maxRequests', 100) ?? 100
+  props.api?.settings?.get('maxRequests', 100) ?? 100
 );
 
 const clear = () => {
@@ -95,13 +95,13 @@ onUnmounted(() => {
 <template>
   <div class="h-full flex flex-col">
     <!-- Toolbar -->
-    <div class="p-2 border-b bg-gray-50 flex gap-2">
+    <div class="p-2 border-b bg-gray-800 flex gap-2">
       <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
       <UInput v-model="filter" placeholder="Filter URLs..." class="w-64" />
     </div>
 
     <!-- Table -->
-    <div class="flex-1 overflow-hidden bg-white">
+    <div class="flex-1 overflow-hidden bg-gray-900">
       <UTable
         v-if="filteredRequests.length > 0"
         :rows="filteredRequests"

@@ -156,13 +156,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-white dark:bg-[#111827]">
+  <div class="h-full flex flex-col bg-[#111827]">
     <!-- Header -->
     <div
-      class="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50"
+      class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50"
     >
       <div class="flex items-center gap-4">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
           <UIcon name="Squares2X2" class="w-6 h-6 text-indigo-500" />
           Plugin Manager
         </h2>
@@ -186,7 +186,7 @@ onMounted(() => {
             @keydown.enter="searchMarket"
           >
             <template #suffix>
-              <button @click="searchMarket" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+              <button @click="searchMarket" class="p-1 hover:bg-gray-700 rounded">
                 <UIcon name="MagnifyingGlass" class="w-4 h-4" />
               </button>
             </template>
@@ -209,11 +209,11 @@ onMounted(() => {
       <!-- Loading overlay -->
       <div
         v-if="loading"
-        class="absolute inset-0 bg-white/80 dark:bg-gray-900/80 flex items-center justify-center z-10"
+        class="absolute inset-0 bg-gray-900/80 flex items-center justify-center z-10"
       >
         <div class="text-center">
-          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 dark:border-indigo-400 mb-2"></div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Loading...</p>
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-400 mb-2"></div>
+          <p class="text-sm text-gray-400">Loading...</p>
         </div>
       </div>
 
@@ -222,17 +222,17 @@ onMounted(() => {
         <div
           v-for="plugin in installedPlugins"
           :key="plugin.name"
-          class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex flex-col"
+          class="border border-gray-700 rounded-xl p-5 bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex flex-col"
         >
           <div class="flex justify-between items-start mb-3">
             <div class="flex items-center gap-3">
               <div
-                class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
+                class="p-2 rounded-lg bg-indigo-900/30 text-indigo-400"
               >
                 <UIcon name="Cube" class="w-6 h-6" />
               </div>
               <div>
-                <h3 class="font-bold text-gray-900 dark:text-white text-lg">{{ plugin.name }}</h3>
+                <h3 class="font-bold text-white text-lg">{{ plugin.name }}</h3>
                 <div class="flex items-center gap-2 mt-1">
                   <UBadge v-if="plugin.isCore" color="blue" size="xs">CORE</UBadge>
                   <UBadge v-else color="gray" size="xs">USER</UBadge>
@@ -242,28 +242,28 @@ onMounted(() => {
             </div>
 
             <div v-if="hasUpdate(plugin.meta.version, plugin.latestVersion)" class="flex flex-col items-end">
-              <span class="text-xs text-green-600 dark:text-green-400 font-bold mb-1"
+              <span class="text-xs text-green-400 font-bold mb-1"
                 >New version available</span
               >
               <UBadge color="green" size="xs">v{{ plugin.latestVersion }}</UBadge>
             </div>
           </div>
 
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 flex-1">
+          <p class="text-gray-400 text-sm mb-4 flex-1">
             {{ plugin.meta.description || 'No description provided.' }}
           </p>
 
           <div
-            class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700 mt-auto"
+            class="flex items-center justify-between pt-4 border-t border-gray-700 mt-auto"
           >
-            <div class="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
+            <div class="flex gap-4 text-xs text-gray-400">
               <span v-if="plugin.meta.author" class="flex items-center gap-1">
                 <UIcon name="User" class="w-3 h-3" />
                 {{ plugin.meta.author }}
               </span>
               <span
                 v-if="plugin.meta.name && plugin.meta.name !== 'unknown'"
-                class="font-mono text-gray-400 dark:text-gray-500"
+                class="font-mono text-gray-500"
               >
                 {{ plugin.meta.name }}
               </span>
@@ -275,7 +275,7 @@ onMounted(() => {
                 :href="plugin.meta.homepage"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-gray-400 hover:text-indigo-500 transition dark:text-gray-500 dark:hover:text-indigo-400"
+                class="text-gray-500 hover:text-indigo-400 transition"
                 title="Website"
               >
                 <UIcon name="GlobeAlt" class="w-5 h-5" />
@@ -285,7 +285,7 @@ onMounted(() => {
                 :href="`https://www.npmjs.com/package/${plugin.meta.name}`"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-gray-400 hover:text-red-500 transition dark:text-gray-500 dark:hover:text-red-400"
+                class="text-gray-500 hover:text-red-400 transition"
                 title="NPM"
               >
                 <UIcon name="ArchiveBox" class="w-5 h-5" />
@@ -316,20 +316,20 @@ onMounted(() => {
         <div
           v-for="p in marketPlugins"
           :key="p.name"
-          class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex justify-between items-center"
+          class="border border-gray-700 rounded-xl p-5 bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex justify-between items-center"
         >
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
               <div
-                class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
+                class="p-2 rounded-lg bg-indigo-900/30 text-indigo-400"
               >
                 <UIcon name="Cube" class="w-6 h-6" />
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="font-bold text-lg text-gray-900 dark:text-white">{{ p.name }}</span>
+                  <span class="font-bold text-lg text-white">{{ p.name }}</span>
                   <span
-                    class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-600 dark:text-gray-400"
+                    class="text-xs bg-gray-700 px-2 py-0.5 rounded text-gray-400"
                   >
                     v{{ p.version }}
                   </span>
@@ -345,8 +345,8 @@ onMounted(() => {
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{{ p.description }}</p>
-            <div class="flex gap-3 text-xs text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-gray-400 mb-3">{{ p.description }}</p>
+            <div class="flex gap-3 text-xs text-gray-400">
               <span class="flex items-center gap-1">
                 <UIcon name="User" class="w-3 h-3" />
                 {{ p.author }}
@@ -355,7 +355,7 @@ onMounted(() => {
                 :href="p.homepage"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hover:text-indigo-500 dark:hover:text-indigo-400 transition flex items-center gap-1"
+                class="hover:text-indigo-400 transition flex items-center gap-1"
               >
                 <UIcon name="ArchiveBox" class="w-3 h-3" />
                 View on NPM

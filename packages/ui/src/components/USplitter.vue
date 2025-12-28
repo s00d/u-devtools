@@ -51,7 +51,7 @@ onUnmounted(() => {
       <slot name="left" />
     </div>
     <div
-      class="w-1 bg-gray-200 dark:bg-gray-700 cursor-col-resize hover:bg-indigo-500 transition-colors flex-shrink-0"
+      class="w-1 bg-gray-700 cursor-col-resize hover:bg-indigo-500 transition-colors flex-shrink-0"
       @mousedown="startDrag"
     />
     <div class="flex-1 min-w-0">

@@ -79,7 +79,7 @@ onUnmounted(() => {
 <template>
   <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
     <!-- Toolbar -->
-    <div class="p-4 border-b border-udt-c-border bg-gray-50 dark:bg-gray-800 flex gap-2 items-center">
+    <div class="p-4 border-b border-udt-c-border bg-gray-800 flex gap-2 items-center">
       <UTabs
         :items="['localStorage', 'sessionStorage', 'cookies']"
         :model-value="activeTab"

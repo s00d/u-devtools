@@ -41,10 +41,10 @@ watch(
     @close="handleConfirm(false)"
   >
     <div class="p-6">
-      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+      <h3 class="text-lg font-bold text-white mb-2">
         {{ dialogState.confirm.value.title }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">{{ dialogState.confirm.value.message }}</p>
+      <p class="text-gray-400 mb-6">{{ dialogState.confirm.value.message }}</p>
       <div class="flex justify-end gap-3">
         <UButton variant="ghost" @click="handleConfirm(false)">
           {{ dialogState.confirm.value.cancelText || 'Cancel' }}
@@ -63,10 +63,10 @@ watch(
     @close="handlePrompt(null)"
   >
     <div class="p-6">
-      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+      <h3 class="text-lg font-bold text-white mb-2">
         {{ dialogState.prompt.value.title }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">{{ dialogState.prompt.value.message }}</p>
+      <p class="text-gray-400 mb-4">{{ dialogState.prompt.value.message }}</p>
       <UInput v-model="promptValue" class="mb-6" @keyup.enter="handlePrompt(promptValue)" />
       <div class="flex justify-end gap-3">
         <UButton variant="ghost" @click="handlePrompt(null)">Cancel</UButton>

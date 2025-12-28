@@ -53,23 +53,23 @@ const updatePrimitiveItem = (index: number, value: unknown) => {
 </script>
 
 <template>
-  <div class="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
+  <div class="border border-gray-700 rounded-md overflow-hidden">
     <div
-      class="bg-gray-50 dark:bg-gray-800 px-3 py-2 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
+      class="bg-gray-800 px-3 py-2 border-b border-gray-700 flex justify-between items-center"
     >
-      <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">List Items</span>
+      <span class="text-xs font-bold text-gray-400 uppercase">List Items</span>
       <UButton size="sm" icon="Plus" @click="addItem">Add</UButton>
     </div>
 
     <div class="p-2 space-y-2">
-      <div v-if="!modelValue || modelValue.length === 0" class="text-center text-sm text-gray-400 dark:text-gray-500 py-2">
+      <div v-if="!modelValue || modelValue.length === 0" class="text-center text-sm text-gray-500 py-2">
         No items defined
       </div>
 
       <div
         v-for="(item, idx) in modelValue"
         :key="idx"
-        class="flex gap-2 items-start bg-gray-50 dark:bg-gray-800/50 p-2 rounded"
+        class="flex gap-2 items-start bg-gray-800/50 p-2 rounded"
       >
         <!-- Primitive Array (String/Number) -->
         <div v-if="itemType" class="flex-1">

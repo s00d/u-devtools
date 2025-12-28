@@ -105,7 +105,7 @@ onMounted(() => {
 <template>
   <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
     <!-- Toolbar / Tabs -->
-    <div class="border-b border-udt-c-border bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-between flex-none">
+    <div class="border-b border-udt-c-border bg-gray-800 p-2 flex items-center justify-between flex-none">
       <UTabs
         :items="['dashboard', 'config', 'plugins', 'env']"
         :model-value="activeTab"
@@ -127,10 +127,10 @@ onMounted(() => {
         </div>
 
         <div class="border border-udt-c-border rounded overflow-hidden bg-udt-c-bg divide-y divide-udt-c-border">
-          <div class="flex items-center gap-2 py-2 px-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <div class="font-medium text-gray-500 dark:text-gray-400 w-32 flex-shrink-0">Config File</div>
+          <div class="flex items-center gap-2 py-2 px-4 hover:bg-gray-800 transition-colors">
+            <div class="font-medium text-gray-400 w-32 flex-shrink-0">Config File</div>
             <div class="flex-1 flex items-center gap-2 min-w-0">
-              <span class="font-mono text-sm text-gray-900 dark:text-gray-100">{{ info.configFile || 'Not found' }}</span>
+              <span class="font-mono text-sm text-gray-100">{{ info.configFile || 'Not found' }}</span>
               <UButton
                 v-if="info.configFile"
                 size="sm"
@@ -142,8 +142,8 @@ onMounted(() => {
             </div>
           </div>
           <UKeyValue label="Root" :value="info.root || ''" copyable />
-          <div class="flex items-start gap-4 py-2 px-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <div class="font-medium text-gray-500 dark:text-gray-400 w-32 flex-shrink-0">Mode</div>
+          <div class="flex items-start gap-4 py-2 px-4 hover:bg-gray-800 transition-colors">
+            <div class="font-medium text-gray-400 w-32 flex-shrink-0">Mode</div>
             <div class="flex-1">
               <UBadge color="blue">{{ info.mode || 'development' }}</UBadge>
             </div>
@@ -167,7 +167,7 @@ onMounted(() => {
 
       <!-- TAB: Plugins -->
       <div v-else-if="activeTab === 'plugins'">
-        <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+        <div class="mb-4 text-sm text-gray-400">
           {{ pluginsData.length }} plugins loaded (order: pre → normal → post)
         </div>
         <UTable
@@ -184,13 +184,13 @@ onMounted(() => {
             <span class="text-xs text-gray-400 font-mono">#{{ val }}</span>
           </template>
           <template #cell-name="{ val }">
-            <span class="font-bold text-gray-800 dark:text-gray-200">{{ val }}</span>
+            <span class="font-bold text-gray-200">{{ val }}</span>
           </template>
           <template #cell-enforce="{ val }">
             <UBadge :color="val === 'pre' ? 'yellow' : val === 'post' ? 'blue' : 'gray'">{{ val }}</UBadge>
           </template>
           <template #cell-apply="{ val }">
-            <span class="text-xs text-gray-600 dark:text-gray-400">{{ val }}</span>
+            <span class="text-xs text-gray-400">{{ val }}</span>
           </template>
         </UTable>
         <UEmpty v-else icon="PuzzlePiece" title="No plugins found" description="No Vite plugins are configured" />
@@ -198,7 +198,7 @@ onMounted(() => {
 
       <!-- TAB: Env -->
       <div v-else-if="activeTab === 'env'">
-        <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+        <div class="mb-4 text-sm text-gray-400">
           {{ Object.keys(envData).length }} environment variables (VITE_* only)
         </div>
         <UTable
@@ -210,10 +210,10 @@ onMounted(() => {
           ]"
         >
           <template #cell-key="{ val }">
-            <span class="font-mono text-purple-700 dark:text-purple-400 font-semibold">{{ val }}</span>
+            <span class="font-mono text-purple-400 font-semibold">{{ val }}</span>
           </template>
           <template #cell-value="{ val }">
-            <span class="font-mono text-gray-600 dark:text-gray-300 break-all text-sm">{{ val }}</span>
+            <span class="font-mono text-gray-300 break-all text-sm">{{ val }}</span>
           </template>
         </UTable>
         <UEmpty v-else icon="Cog6Tooth" title="No environment variables" description="No VITE_* environment variables found" />

@@ -19,13 +19,17 @@ const plugin: PluginClientInstance = {
     },
   ],
 
+  settings: {
+    itemsPerPage: {
+      label: 'Items Per Page',
+      type: 'number',
+      default: 30,
+    },
+  },
+
   renderMain(container, api) {
     const app = createApp(I18nPanel, {
-      rpc: api.rpc,
-      notify: api.notify,
-      storage: api.storage,
-      openFile: (file: string, line: number, column: number) =>
-        api.rpc.call('sys:openFile', { file, line, column }),
+      api,
       onRegisterRefresh: (fn: () => void) => {
         refreshSignal.value = fn;
       },

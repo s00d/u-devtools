@@ -17,6 +17,7 @@ const meta: DevToolsPlugin['meta'] = {
 
 export interface I18nPluginOptions {
   dir: string;
+  defaultLocale?: string;
 }
 
 export const i18nPlugin = (options: I18nPluginOptions): DevToolsPlugin => ({

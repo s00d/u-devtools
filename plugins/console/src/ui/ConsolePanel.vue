@@ -80,7 +80,7 @@ onUnmounted(() => {
 <template>
   <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
     <!-- Toolbar -->
-    <div class="p-2 border-b border-udt-c-border bg-gray-50 dark:bg-gray-800 flex gap-2 items-center">
+    <div class="p-2 border-b border-udt-c-border bg-gray-800 flex gap-2 items-center">
       <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
       <UInput v-model="filter" placeholder="Filter logs..." class="w-64" />
       <select
@@ -102,10 +102,10 @@ onUnmounted(() => {
       <div
         v-for="log in filteredLogs"
         :key="log.id"
-        class="p-2 rounded border border-udt-c-border hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        class="p-2 rounded border border-udt-c-border hover:bg-gray-800 transition-colors"
         :class="{
-          'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-800': log.level === 'error',
-          'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-800': log.level === 'warn',
+          'bg-red-900/20 border-red-800': log.level === 'error',
+          'bg-yellow-900/20 border-yellow-800': log.level === 'warn',
         }"
       >
         <div class="flex items-start gap-2">

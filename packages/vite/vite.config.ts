@@ -26,7 +26,19 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vite', '@u-devtools/bridge', '@u-devtools/core', 'launch-editor', 'node:path', 'node:url', 'node:module', 'node:fs', 'node:https'],
+      external: [
+        'vite',
+        '@u-devtools/bridge',
+        '@u-devtools/core',
+        'launch-editor',
+        'node:path',
+        'node:url',
+        'node:module',
+        'node:fs',
+        'node:https',
+        'node:child_process',
+        'node:util',
+      ],
       output: {
         globals: {},
       },

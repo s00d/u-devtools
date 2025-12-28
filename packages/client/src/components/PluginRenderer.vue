@@ -36,15 +36,15 @@ const mount = () => {
       console.error('Plugin render error:', err);
       if (container.value) {
         container.value.innerHTML = `
-          <div class="p-4 border border-red-300 rounded bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+          <div class="p-4 border border-red-800 rounded bg-red-900/20">
             <div class="flex items-center gap-2 mb-2">
-              <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
-              <h3 class="font-semibold text-red-800 dark:text-red-200">Plugin Error</h3>
+              <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-400" />
+              <h3 class="font-semibold text-red-200">Plugin Error</h3>
             </div>
-            <p class="text-sm text-red-700 dark:text-red-300">${err.message}</p>
+            <p class="text-sm text-red-300">${err.message}</p>
             <details class="mt-2">
-              <summary class="text-xs text-red-600 dark:text-red-400 cursor-pointer">Stack trace</summary>
-              <pre class="mt-1 text-xs text-red-600 dark:text-red-400 font-mono">${err.stack || 'No stack trace available'}</pre>
+              <summary class="text-xs text-red-400 cursor-pointer">Stack trace</summary>
+              <pre class="mt-1 text-xs text-red-400 font-mono">${err.stack || 'No stack trace available'}</pre>
             </details>
           </div>
         `;
@@ -58,12 +58,12 @@ onErrorCaptured((err) => {
   console.error('Plugin error captured:', err);
   if (container.value && !container.value.innerHTML.includes('Plugin Error')) {
     container.value.innerHTML = `
-      <div class="p-4 border border-red-300 rounded bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+      <div class="p-4 border border-red-800 rounded bg-red-900/20">
         <div class="flex items-center gap-2 mb-2">
-          <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
-          <h3 class="font-semibold text-red-800 dark:text-red-200">Plugin Crashed</h3>
+          <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-400" />
+          <h3 class="font-semibold text-red-200">Plugin Crashed</h3>
         </div>
-        <p class="text-sm text-red-700 dark:text-red-300">${err.message}</p>
+        <p class="text-sm text-red-300">${err.message}</p>
       </div>
     `;
   }

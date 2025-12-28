@@ -31,10 +31,10 @@ const updateField = (key: string, value: unknown) => {
     <div v-for="(def, key) in schema" :key="key" class="space-y-2">
       <!-- Label & Desc -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+        <label class="text-sm font-medium text-gray-200">
           {{ def.label }}
         </label>
-        <span v-if="def.description" class="text-xs text-gray-500 dark:text-gray-400">
+        <span v-if="def.description" class="text-xs text-gray-400">
           {{ def.description }}
         </span>
       </div>
@@ -58,9 +58,9 @@ const updateField = (key: string, value: unknown) => {
           type="checkbox"
           :checked="Boolean(modelValue[key] ?? def.default)"
           @change="(e: Event) => updateField(key, (e.target as HTMLInputElement).checked)"
-          class="rounded text-indigo-600 focus:ring-indigo-500 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+          class="rounded text-indigo-600 focus:ring-indigo-500 bg-gray-800 border-gray-600"
         />
-        <span class="text-sm text-gray-600 dark:text-gray-400">Enabled</span>
+        <span class="text-sm text-gray-400">Enabled</span>
       </label>
 
       <!-- Select -->

@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 
-// Импортируем локальный файл стилей, в котором настроены @source и импорты
+// Импортируем только локальный файл, который уже настроен 
+// (в нем есть @import "../../ui/src/style.css" и tailwind)
 import './style.css';
 
 const app = createApp(App);

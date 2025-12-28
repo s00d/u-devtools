@@ -17,13 +17,8 @@ const plugin: PluginClientInstance = {
     },
     maxRequests: {
       label: 'History Limit',
-      type: 'select',
-      default: 100,
-      options: [
-        { label: '50 Requests', value: 50 },
-        { label: '100 Requests', value: 100 },
-        { label: '500 Requests', value: 500 },
-      ]
+      type: 'number',
+      default: 100
     }
   },
   // ---------------------------

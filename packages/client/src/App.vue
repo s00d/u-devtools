@@ -35,7 +35,19 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
 </script>
 
 <template>
-  <div class="flex h-screen w-screen bg-white text-gray-800 font-sans overflow-hidden udt-reset dark:bg-gray-900 dark:text-gray-200">
+  <!-- 
+    Убираем жесткие цвета фона. 
+    bg-transparent позволяет видеть цвет body, который мы настроили в CSS.
+    text-gray-800 и dark:text... заменяем на text-[var(--udt-text)] или просто наследуем.
+    Применяем масштаб и прозрачность через CSS переменные.
+  -->
+  <div 
+    class="flex h-screen w-screen font-sans overflow-hidden udt-reset bg-[var(--udt-bg)] text-[var(--udt-text)]"
+    :style="{ 
+      zoom: 'var(--udt-scale)',
+      opacity: 'var(--udt-opacity)'
+    }"
+  >
     <ActivityBar />
     <PluginSidebar />
     <MainView />

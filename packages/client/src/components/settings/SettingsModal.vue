@@ -1,47 +1,120 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useDark } from '@vueuse/core';
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import { createSettingsApi } from '../../modules/settings';
-import { UForm, UIcon } from '@u-devtools/ui';
+import { UForm, UIcon, UButton } from '@u-devtools/ui';
 import type { PluginSettingsSchema } from '@u-devtools/core';
 
 const { showSettings, plugins } = useDevToolsState();
 const activeSettingsTab = ref('General');
 
-// --- ТЕМИЗАЦИЯ И ОБЩИЕ НАСТРОЙКИ ---
+// --- ОБЩИЕ НАСТРОЙКИ ---
 const generalSettingsSchema: PluginSettingsSchema = {
-  theme: {
-    label: 'Appearance',
+  scale: {
+    label: 'UI Scale',
     type: 'select',
-    default: 'dark',
+    default: '1',
     options: [
-      { label: 'Dark', value: 'dark' },
-      { label: 'Light', value: 'light' },
+      { label: 'Tiny (85%)', value: '0.85' },
+      { label: 'Compact (90%)', value: '0.9' },
+      { label: 'Normal (100%)', value: '1' },
+      { label: 'Large (110%)', value: '1.1' },
+      { label: 'Huge (125%)', value: '1.25' }
     ]
+  },
+  opacity: {
+    label: 'Panel Opacity',
+    type: 'select',
+    default: '1',
+    options: [
+      { label: 'Solid (100%)', value: '1' },
+      { label: 'Slightly Transparent (95%)', value: '0.95' },
+      { label: 'Glass (90%)', value: '0.9' },
+      { label: 'Ghost (80%)', value: '0.8' }
+    ]
+  },
+  notifications: {
+    label: 'Enable Notifications',
+    type: 'boolean',
+    default: true
+  },
+  reducedMotion: {
+    label: 'Reduced Motion',
+    type: 'boolean',
+    default: false
   }
 };
 
 // Инициализируем дефолты для General
 const generalApi = createSettingsApi('general');
-if (!generalApi.get('theme')) {
-  generalApi.set('theme', 'dark');
-}
+const defaults = {
+  scale: '1',
+  opacity: '1',
+  notifications: true,
+  reducedMotion: false
+};
 
-// VueUse хук для управления классом .dark на html
+Object.entries(defaults).forEach(([k, v]) => {
+  if (generalApi.get(k) === undefined) {
+    generalApi.set(k, v);
+  }
+});
+
+// VueUse хук для управления классом .dark на html (всегда темная тема)
 const isDark = useDark({
-  storageKey: null, // Отключаем встроенное сохранение useDark, управляем через наш стор
+  selector: 'html',
+  storageKey: null,
   attribute: 'class',
   valueDark: 'dark',
   valueLight: '',
 });
 
-// Синхронизация: Настройка -> UI
-const currentTheme = computed(() => generalApi.get('theme', 'dark'));
-watch(currentTheme, (val) => {
-  isDark.value = val === 'dark';
+// Всегда устанавливаем темную тему
+onMounted(() => {
+  isDark.value = true;
+});
+
+// --- ПРИМЕНЕНИЕ НАСТРОЕК ---
+
+// 1. Масштаб и Прозрачность (через CSS переменные)
+const currentScale = computed(() => generalApi.get('scale', '1'));
+const currentOpacity = computed(() => generalApi.get('opacity', '1'));
+
+watch([currentScale, currentOpacity], ([scale, opacity]) => {
+  document.documentElement.style.setProperty('--udt-scale', String(scale));
+  document.documentElement.style.setProperty('--udt-opacity', String(opacity));
 }, { immediate: true });
-// -------------------------------------
+
+// 2. Reduced Motion
+const reducedMotion = computed(() => generalApi.get('reducedMotion', false));
+watch(reducedMotion, (val) => {
+  if (val) {
+    document.documentElement.classList.add('udt-reduce-motion');
+  } else {
+    document.documentElement.classList.remove('udt-reduce-motion');
+  }
+}, { immediate: true });
+
+// 3. Notifications (проверяется в useNotifications)
+
+// --- СБРОС НАСТРОЕК ---
+const resetAllSettings = () => {
+  if (!confirm('Are you sure you want to reset all DevTools settings? This will reload the page.')) {
+    return;
+  }
+  
+  // Удаляем все настройки из localStorage
+  const keys = Object.keys(localStorage);
+  keys.forEach(key => {
+    if (key.startsWith('u-devtools-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  
+  // Перезагружаем страницу
+  window.location.reload();
+};
 
 watch(showSettings, (val) => {
   if (val) activeSettingsTab.value = 'General';
@@ -54,16 +127,16 @@ watch(showSettings, (val) => {
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" 
     @click.self="showSettings = false"
   >
-    <div class="bg-white dark:bg-[#111827] rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div class="bg-[#111827] rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-gray-700">
       
       <!-- Sidebar -->
-      <div class="w-64 bg-gray-50 dark:bg-[#1f2937] border-r border-gray-200 dark:border-gray-700 flex flex-col shrink-0">
-        <div class="p-4 font-bold text-lg dark:text-white border-b border-gray-200 dark:border-gray-700">Settings</div>
+      <div class="w-64 bg-[#1f2937] border-r border-gray-700 flex flex-col shrink-0">
+        <div class="p-4 font-bold text-lg text-white border-b border-gray-700">Settings</div>
         <div class="flex-1 overflow-y-auto p-2 space-y-1">
           <button 
             @click="activeSettingsTab = 'General'" 
             class="w-full text-left px-3 py-2 rounded-md text-sm flex items-center gap-2 transition-colors" 
-            :class="activeSettingsTab === 'General' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
+            :class="activeSettingsTab === 'General' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-400 hover:bg-gray-700'"
           >
             <UIcon name="Cog6Tooth" class="w-4 h-4" /> 
             General
@@ -73,7 +146,7 @@ watch(showSettings, (val) => {
             :key="plugin.name" 
             @click="activeSettingsTab = plugin.name" 
             class="w-full text-left px-3 py-2 rounded-md text-sm flex items-center gap-2 transition-colors" 
-            :class="activeSettingsTab === plugin.name ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
+            :class="activeSettingsTab === plugin.name ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-400 hover:bg-gray-700'"
           >
             <UIcon :name="plugin.icon" class="w-4 h-4" /> 
             {{ plugin.name }}
@@ -83,9 +156,9 @@ watch(showSettings, (val) => {
 
       <!-- Content -->
       <div class="flex-1 flex flex-col min-w-0">
-        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-white dark:bg-[#111827]">
-          <h2 class="font-bold text-gray-900 dark:text-white">{{ activeSettingsTab }}</h2>
-          <button @click="showSettings = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+        <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-[#111827]">
+          <h2 class="font-bold text-white">{{ activeSettingsTab }}</h2>
+          <button @click="showSettings = false" class="text-gray-400 hover:text-gray-200">
             <UIcon name="XMark" class="w-6 h-6" />
           </button>
         </div>
@@ -96,6 +169,17 @@ watch(showSettings, (val) => {
               :model-value="generalApi.all" 
               @update:model-value="(vals) => Object.entries(vals).forEach(([k,v]) => generalApi.set(k, v))" 
             />
+            
+            <!-- Danger Zone: Factory Reset -->
+            <div class="mt-8 pt-6 border-t border-gray-700">
+              <h3 class="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
+              <div class="flex items-center justify-between">
+                <p class="text-xs text-gray-400">Reset all settings (general and plugins) to default.</p>
+                <UButton variant="danger" size="sm" @click="resetAllSettings">
+                  Factory Reset
+                </UButton>
+              </div>
+            </div>
           </div>
           <template v-for="plugin in plugins" :key="plugin.name">
             <div v-if="activeSettingsTab === plugin.name && plugin.settings">

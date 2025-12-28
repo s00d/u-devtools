@@ -39,12 +39,13 @@ function sendAll() {
 sendAll();
 
 // Слушаем изменения localStorage/sessionStorage
-window.addEventListener('storage', (e) => {
+const storageHandler = () => {
   sendAll();
-});
+};
+window.addEventListener('storage', storageHandler);
 
 // Периодически проверяем (так как storage event срабатывает только между вкладками)
-setInterval(sendAll, 2000);
+const intervalId = setInterval(sendAll, 2000);
 
 // Перехватываем изменения через Proxy (опционально, для отслеживания изменений в текущей вкладке)
 const originalSetItem = Storage.prototype.setItem;
@@ -65,4 +66,23 @@ Storage.prototype.clear = function() {
   originalClear.call(this);
   sendAll();
 };
+
+// --- CLEANUP (ВАЖНО!) ---
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    // Восстанавливаем оригинальные методы Storage
+    Storage.prototype.setItem = originalSetItem;
+    Storage.prototype.removeItem = originalRemoveItem;
+    Storage.prototype.clear = originalClear;
+    
+    // Удаляем слушатель storage event
+    window.removeEventListener('storage', storageHandler);
+    
+    // Останавливаем интервал
+    clearInterval(intervalId);
+    
+    // Закрываем канал
+    bridge.close();
+  });
+}
 

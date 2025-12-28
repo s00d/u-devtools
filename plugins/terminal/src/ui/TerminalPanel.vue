@@ -14,16 +14,17 @@ const containerRef = ref<HTMLElement | null>(null);
 const history = ref<string[]>([]);
 const historyIndex = ref(-1);
 
-// Читаем настройки (storage API уже добавляет префикс плагина)
+// Читаем настройки через settings API (который синхронизирован с модалкой настроек)
+// Используем computed с api.settings.get() для реактивности (как в NetworkPanel)
 const quickCommands = computed(() => {
-  const commands = props.api.storage.get('quickCommands', [
+  const commands = props.api.settings.get<Array<{ label: string; cmd: string }>>('quickCommands', [
     { label: 'List Files', cmd: 'ls -la' },
     { label: 'Build', cmd: 'npm run build' }
   ]);
   return Array.isArray(commands) ? commands : [];
 });
 
-const fontSize = computed(() => props.api.storage.get('fontSize', 13));
+const fontSize = computed(() => props.api.settings.get<number>('fontSize', 13));
 
 const runQuick = (cmd: string) => {
   input.value = cmd;
@@ -107,19 +108,19 @@ onUnmounted(() => {
 
 <template>
   <div 
-    class="h-full flex flex-col bg-[#1e1e1e] text-gray-300 font-mono text-sm overflow-hidden"
+    class="h-full flex flex-col bg-[#111827] text-gray-300 font-mono text-sm overflow-hidden"
     @click="inputRef?.focus()"
   >
     <!-- Quick Actions Toolbar -->
     <div
       v-if="quickCommands.length"
-      class="flex gap-2 px-4 py-2 border-b border-[#333] bg-[#252526] overflow-x-auto"
+      class="flex gap-2 px-4 py-2 border-b border-gray-700 bg-gray-800 overflow-x-auto"
     >
       <button
         v-for="(qc, idx) in quickCommands"
         :key="idx"
         @click="runQuick(qc.cmd)"
-        class="text-xs px-2 py-1 bg-[#333] hover:bg-[#444] rounded text-gray-300 border border-[#444] transition whitespace-nowrap"
+        class="text-xs px-2 py-1 bg-gray-700 hover:bg-indigo-600 rounded text-gray-300 border border-gray-600 hover:border-indigo-500 transition whitespace-nowrap"
         :title="qc.cmd"
       >
         {{ qc.label }}
@@ -127,11 +128,11 @@ onUnmounted(() => {
     </div>
 
     <!-- Toolbar -->
-    <div class="flex justify-between items-center px-4 py-2 bg-[#252526] border-b border-[#333]">
+    <div class="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-700">
       <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Terminal</div>
       <button
         @click.stop="clear"
-        class="text-gray-400 hover:text-white transition p-1 rounded hover:bg-[#333]"
+        class="text-gray-400 hover:text-white transition p-1 rounded hover:bg-gray-700"
         title="Clear Console"
       >
         <UIcon name="Trash" class="w-4 h-4" />
@@ -148,15 +149,15 @@ onUnmounted(() => {
     </div>
 
     <!-- Input Area -->
-    <div class="flex items-center gap-2 p-3 bg-[#252526] border-t border-[#333]">
-      <span class="text-green-500 font-bold select-none">➜</span>
+    <div class="flex items-center gap-2 p-3 bg-gray-800 border-t border-gray-700">
+      <span class="text-indigo-400 font-bold select-none">➜</span>
       <input
         ref="inputRef"
         v-model="input"
         @keydown.enter="execute"
         @keydown="onKeyDown"
         type="text"
-        class="flex-1 bg-transparent border-none outline-none text-white placeholder-gray-600"
+        class="flex-1 bg-transparent border-none outline-none text-gray-200 placeholder-gray-500"
         placeholder="Type command..."
         autocomplete="off"
         spellcheck="false"
@@ -171,13 +172,13 @@ onUnmounted(() => {
   height: 8px;
 }
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: #1e1e1e;
+  background: #111827;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #424242;
+  background: #4b5563;
   border-radius: 4px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #4f4f4f;
+  background: #6366f1;
 }
 </style>

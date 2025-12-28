@@ -1,16 +1,19 @@
-/* Подключаем Tailwind v4 */
 @import "tailwindcss";
 
 /* 
-  ВАЖНО: Явно указываем Tailwind v4, где искать классы.
-  Это работает и при локальной разработке через алиасы, 
-  и при сборке пакета клиента.
+  1. Определяем темную тему (чтобы работали dark: классы внутри UI компонентов) 
+*/
+@variant dark (&:where(.dark, .dark *));
+
+/* 
+  2. Сканируем ТОЛЬКО компоненты этого пакета.
+  UI кит не должен знать о клиенте или плагинах.
 */
 @source "./components/**/*.vue";
 
-/* Включаем ручное переключение темы через класс .dark */
-@custom-variant dark (&:where(.dark, .dark *));
-
+/* 
+  3. Переменные темы
+*/
 :root {
   --udt-c-primary: #6366f1;
   --udt-c-primary-hover: #4f46e5;
@@ -23,23 +26,13 @@
   font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
-/* Стили для темной темы */
-html.dark {
-  --udt-bg: #0f172a; /* Slate 900 */
-  --udt-bg-soft: #1e293b; /* Slate 800 */
+:root:where(.dark, .dark *) {
+  --udt-bg: #0f172a;
+  --udt-bg-soft: #1e293b;
   --udt-border: #334155;
   --udt-text: #f8fafc;
   --udt-text-dim: #94a3b8;
-  
-  color-scheme: dark; /* Важно для скроллбаров и нативных элементов */
-}
-
-body {
-  background-color: var(--udt-bg);
-  color: var(--udt-text);
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+  color-scheme: dark;
 }
 
 .udt-reset * {

@@ -11,8 +11,8 @@ defineProps<{
 <template>
   <div
     :class="[
-      'flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400',
-      fullscreen ? 'fixed inset-0 bg-white/50 dark:bg-gray-900/50 z-50' : '',
+      'flex items-center justify-center gap-2 text-gray-400',
+      fullscreen ? 'fixed inset-0 bg-gray-900/50 z-50' : '',
       size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : '',
     ]"
   >

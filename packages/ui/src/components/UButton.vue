@@ -19,12 +19,12 @@ defineEmits<{
     :class="[
       size === 'sm' ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm',
       variant === 'primary'
-        ? 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
+        ? 'bg-indigo-500 text-white hover:bg-indigo-600'
         : variant === 'ghost'
-          ? 'bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+          ? 'bg-transparent text-gray-300 hover:bg-gray-800'
           : variant === 'danger'
-            ? 'bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700'
-            : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600',
+            ? 'bg-red-600 text-white hover:bg-red-700'
+            : 'border border-gray-600 bg-gray-700 text-gray-200 hover:bg-gray-600',
     ]"
     @click="$emit('click', $event)"
   >

@@ -100,3 +100,13 @@ function tryInit() {
 // Начинаем попытки инициализации
 setTimeout(tryInit, 100);
 
+// --- CLEANUP (ВАЖНО!) ---
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    bridge.close();
+    // Router хуки (afterEach) сложнее удалить, так как Vue Router возвращает функцию отписки,
+    // которую мы не сохраняли в прошлом коде. 
+    // В идеале init() должен сохранять unregister hook.
+  });
+}
+

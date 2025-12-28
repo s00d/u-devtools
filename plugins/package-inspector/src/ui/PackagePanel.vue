@@ -55,7 +55,7 @@ onMounted(() => {
 <template>
   <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
     <!-- Toolbar -->
-    <div class="p-4 border-b border-udt-c-border bg-gray-50 dark:bg-gray-800">
+    <div class="p-4 border-b border-udt-c-border bg-gray-800">
       <div class="flex items-center gap-4 mb-4">
         <div class="flex-1">
           <h2 class="text-lg font-bold mb-1">{{ packageInfo?.name || 'Package' }}</h2>

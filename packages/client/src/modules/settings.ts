@@ -53,6 +53,8 @@ export function createSettingsApi(pluginName: string): SettingsApi {
   return {
     get<T>(key: string, defaultValue?: T): T {
       const fullKey = `${pluginName}:${key}`;
+      // Доступ к reactive объекту через индексацию отслеживается Vue автоматически
+      // при использовании внутри computed или template
       return (globalState[fullKey] !== undefined ? globalState[fullKey] : defaultValue) as T;
     },
 
@@ -63,15 +65,17 @@ export function createSettingsApi(pluginName: string): SettingsApi {
 
     // Геттер для получения всех настроек (нужен для UForm, чтобы видеть реактивные изменения)
     get all() {
-      // Возвращаем срез глобального стейта, относящийся к этому плагину
+      // Возвращаем срез глобального стейта, относящийся к этому плагина
       // В Vue 3 это будет работать реактивно, если использовать внутри computed/template
+      // Важно: обращаемся к globalState напрямую, чтобы Vue отслеживал изменения
       const result: Record<string, unknown> = {};
-      Object.keys(globalState).forEach((k) => {
+      // Используем Object.keys для итерации, но обращаемся к globalState[k] для реактивности
+      for (const k in globalState) {
         if (k.startsWith(`${pluginName}:`)) {
           const shortKey = k.replace(`${pluginName}:`, '');
-          result[shortKey] = globalState[k];
+          result[shortKey] = globalState[k]; // Это отслеживается Vue
         }
-      });
+      }
       return result;
     },
   };

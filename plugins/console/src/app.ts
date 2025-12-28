@@ -61,3 +61,17 @@ if (typeof window !== 'undefined') {
   });
 }
 
+// --- CLEANUP (ВАЖНО!) ---
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    // Восстанавливаем консоль
+    console.log = originalLog;
+    console.warn = originalWarn;
+    console.error = originalError;
+    console.info = originalInfo;
+    console.debug = originalDebug;
+    
+    bridge.close();
+  });
+}
+
