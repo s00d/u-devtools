@@ -21,6 +21,14 @@ export interface PluginCommand {
   shortcut?: string[];
 }
 
+export interface LauncherMenuItem {
+  id: string;
+  label: string;
+  icon: string; // Heroicons icon name
+  action: () => void | Promise<void>;
+  separator?: boolean; // Добавить разделитель перед пунктом
+}
+
 export interface StorageApi {
   get<T>(key: string, def: T): T;
   set<T>(key: string, value: T): void;
@@ -161,9 +169,11 @@ export interface PluginClientInstance {
 
   settings?: PluginSettingsSchema;
   commands?: PluginCommand[];
+  launcherMenuItems?: LauncherMenuItem[]; // Пункты меню для launcher button
 
   renderSidebar?: (el: HTMLElement, api: ClientApi) => UnmountFn;
   renderMain?: (el: HTMLElement, api: ClientApi) => UnmountFn;
+  renderSettings?: (el: HTMLElement, api: ClientApi) => UnmountFn;
 }
 
 export interface ServerContext {
@@ -191,6 +201,11 @@ export interface DevToolsPlugin {
   appPath?: string;
   setupServer?: (rpc: RpcServerInterface, ctx: ServerContext) => void;
   meta?: PluginMetadata;
+  /**
+   * Optional Vite plugins to be added to the Vite config
+   * These plugins will be merged with the main DevTools plugin
+   */
+  vitePlugins?: (() => import('vite').PluginOption | import('vite').PluginOption[])[];
 }
 
 export interface InspectorEvent {

@@ -23,6 +23,7 @@
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
     "json-to-ast": "^2.1.0",
     "vue": "^3.5.26"
   },

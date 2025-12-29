@@ -13,3 +13,13 @@ app.config.errorHandler = (err) => {
 };
 
 app.mount('#app');
+
+// Скрываем лоадер после монтирования Vue приложения
+const loader = document.getElementById('udt-loader');
+if (loader) {
+  loader.classList.add('hidden');
+  // Удаляем элемент после завершения анимации
+  setTimeout(() => {
+    loader.remove();
+  }, 300);
+}

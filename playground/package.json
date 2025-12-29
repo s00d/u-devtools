@@ -22,7 +22,7 @@
     "@u-devtools/plugin-storage": "workspace:*",
     "@u-devtools/plugin-terminal": "workspace:*",
     "@u-devtools/plugin-vite-inspector": "workspace:*",
-    "@u-devtools/plugin-vue-router": "workspace:*",
+    "@u-devtools/plugin-vue-inspector": "workspace:*",
     "@u-devtools/vite": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.3",
     "tsx": "^4.21.0",

@@ -14,7 +14,7 @@ const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
     <div class="h-10 border-b border-gray-700 flex items-center px-4 font-semibold text-xs uppercase tracking-wider text-gray-400 bg-gray-800">
       {{ currentPlugin.name }} Menu
     </div>
-    <div class="flex-1 overflow-hidden relative">
+    <div class="flex-1 overflow-hidden relative min-w-0 min-h-0">
       <PluginRenderer :renderer="currentPlugin.renderSidebar" :api="createApiForPlugin(currentPlugin.name)" />
     </div>
   </div>

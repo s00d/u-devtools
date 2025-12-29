@@ -11,7 +11,7 @@ export declare class ViteRpcClient {
         on: (event: string, handler: (data: unknown) => void) => void;
     });
     call<T = unknown>(method: string, payload?: unknown): Promise<T>;
-    on(event: string, fn: (data: unknown) => void): void;
+    on(event: string, fn: (data: unknown) => void): () => void;
     off(event: string, fn: (data: unknown) => void): void;
 }
 /**
@@ -29,4 +29,7 @@ export declare class ViteRpcServer {
     });
     handle(method: string, fn: (payload: unknown) => Promise<unknown> | unknown): void;
     broadcast(event: string, payload?: unknown): void;
+    getMethodsCount(): number;
+    getMethods(): string[];
 }
+//# sourceMappingURL=index.d.ts.map

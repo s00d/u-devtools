@@ -9,6 +9,7 @@ export { default as UCodeBlock } from './components/UCodeBlock.vue';
 export { default as UBadge } from './components/UBadge.vue';
 export { default as UTable } from './components/UTable.vue';
 export { default as UTabs } from './components/UTabs.vue';
+export { default as UVirtualList } from './components/UVirtualList.vue';
 export { default as UModal } from './components/UModal.vue';
 export { default as USplitter } from './components/USplitter.vue';
 export { default as UJsonTree } from './components/UJsonTree.vue';

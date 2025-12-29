@@ -14,7 +14,9 @@ export class AppBridge<ToClientEvents = Record<string, any>, ToAppEvents = Recor
       const { event, data } = e.data as { event: string; data: unknown };
       const handlers = this.listeners.get(event);
       if (handlers) {
-        handlers.forEach((fn) => fn(data));
+        handlers.forEach((fn) => {
+          fn(data);
+        });
       }
     };
   }
@@ -23,7 +25,16 @@ export class AppBridge<ToClientEvents = Record<string, any>, ToAppEvents = Recor
    * Отправить событие "на ту сторону".
    */
   send(event: string, data?: any): void {
-    this.channel.postMessage({ event, data });
+    try {
+      this.channel.postMessage({ event, data });
+    } catch (e) {
+      // Ignore errors if channel is closed
+      if (e instanceof DOMException && (e.name === 'InvalidStateError' || e.message?.includes('closed'))) {
+        console.warn(`[AppBridge] Cannot send event "${event}": channel is closed`);
+        return;
+      }
+      throw e;
+    }
   }
 
   /**

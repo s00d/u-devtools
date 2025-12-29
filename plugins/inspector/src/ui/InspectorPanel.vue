@@ -1,219 +1,127 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { UButton, UJsonTree, UEmpty, UIcon } from '@u-devtools/ui';
-import { AppBridge } from '@u-devtools/core';
+import { UButton, UEmpty, UIcon, UTabs, USplitter } from '@u-devtools/ui';
 import type { ClientApi } from '@u-devtools/core';
+import { useInspector } from '../composables/useInspector';
+import { useElementData, type ElementInfo } from '../composables/useElementData';
+import DomTree from './components/DomTree.vue';
+import ComputedTab from './tabs/ComputedTab.vue';
+import StylesTab from './tabs/StylesTab.vue';
+import A11yTab from './tabs/A11yTab.vue';
 
 const props = defineProps<{ api: ClientApi }>();
 
-interface ComponentInfo {
-  framework: 'Vue' | 'React';
-  name: string;
-  file: string;
-  line?: number;
-}
+const { isInspecting, toggleInspect, selectNode, bridge } = useInspector();
+const { data, updateStyle, updateAttr, addAttr, deleteAttr, addClass, removeClass, updateClasses } = useElementData(bridge);
 
-interface ElementInfo {
-  tagName: string;
-  id: string;
-  classes: string[];
-  attrs: Record<string, string>;
-  innerText?: string;
-  rect: { x: number; y: number; width: number; height: number };
-  computed: Record<string, string>;
-  component: ComponentInfo | null;
-  breadcrumbs: Array<{ tagName: string; id: string; class: string }>;
-}
+const activeTab = ref('Computed');
 
-const isInspecting = ref(false);
-const data = ref<ElementInfo | null>(null);
-const bridge = new AppBridge('inspector');
-
-const toggle = () => {
-  isInspecting.value = !isInspecting.value;
-  bridge.send('toggle-inspector', { state: isInspecting.value });
+const handleSelectNode = (payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => {
+  // Передаем информацию о текущем элементе для поиска, если currentTarget не установлен
+  // Преобразуем массив classes в строку для сериализации через BroadcastChannel
+  const currentElement = data.value ? {
+    tagName: data.value.tagName,
+    id: data.value.id,
+    classes: Array.isArray(data.value.classes) ? data.value.classes.join(' ') : data.value.classes
+  } : undefined;
+  
+  selectNode(payload.type, payload.index, currentElement);
 };
 
-const openInEditor = async () => {
-  if (data.value?.component?.file) {
-    try {
-      await props.api.rpc.call('sys:openFile', {
-        file: data.value.component.file,
-        line: data.value.component.line || 1,
-        column: 1,
-      });
-    } catch (e) {
-      props.api.notify(`Failed to open file: ${e}`, 'error');
-    }
-  }
-};
-
-let unsubscribe: (() => void) | undefined;
-let unsubscribeCancel: (() => void) | undefined;
-
+// Обработка событий от bridge
 onMounted(() => {
-  unsubscribe = bridge.on<ElementInfo>('element-picked', (elementData) => {
+  // Обработка выбора элемента (из режима Pick Element или из дерева DOM)
+  bridge.on<ElementInfo>('element-picked', (elementData) => {
     data.value = elementData;
-    isInspecting.value = false;
+    isInspecting.value = false; // Отключаем режим инспектирования
   });
-
-  unsubscribeCancel = bridge.on('inspector-cancelled', () => {
+  
+  bridge.on('inspector-cancelled', () => {
     isInspecting.value = false;
   });
 });
 
 onUnmounted(() => {
-  if (unsubscribe) unsubscribe();
-  if (unsubscribeCancel) unsubscribeCancel();
   bridge.close();
 });
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
+  <div class="h-full flex flex-col bg-gray-900 text-gray-200">
+    
     <!-- Toolbar -->
-    <div class="p-3 border-b border-udt-c-border flex items-center justify-between bg-gray-800 flex-none">
-      <div class="flex items-center gap-3">
-        <UButton :variant="isInspecting ? 'primary' : 'secondary'" icon="MagnifyingGlass" @click="toggle">
-          {{ isInspecting ? 'Inspecting...' : 'Select Element' }}
-        </UButton>
-        <div v-if="data" class="flex items-center gap-2 text-sm font-mono">
-          <span class="text-indigo-600 font-bold">&lt;{{ data.tagName }}&gt;</span>
-          <span v-if="data.id" class="text-yellow-600">#{{ data.id }}</span>
-          <span v-for="cls in data.classes.slice(0, 3)" :key="cls" class="text-green-600">.{{ cls }}</span>
-          <span v-if="data.classes.length > 3" class="text-gray-400">+{{ data.classes.length - 3 }}</span>
-        </div>
-      </div>
-
-      <UButton
-        v-if="data?.component"
-        variant="ghost"
+    <div class="h-10 border-b border-gray-800 flex items-center px-3 gap-2 bg-gray-800 flex-none">
+      <UButton 
+        :variant="isInspecting ? 'primary' : 'ghost'" 
+        icon="MagnifyingGlass" 
         size="sm"
-        icon="CodeBracket"
-        @click="openInEditor"
-        title="Open Component Source"
+        @click="toggleInspect"
+        :class="{ 'animate-pulse': isInspecting }"
       >
-        {{ data.component.name }}
+        {{ isInspecting ? 'Pick Element...' : '' }}
       </UButton>
-    </div>
-
-    <!-- Content -->
-    <div v-if="data" class="flex-1 flex flex-col overflow-hidden">
-      <div class="flex-1 overflow-auto p-4 space-y-6">
-        <!-- Component Banner -->
-        <div
-          v-if="data.component"
-          class="bg-indigo-50 bg-indigo-900/20 border border-indigo-200 border-indigo-800 rounded-lg p-3 flex items-start gap-3"
-        >
-          <UIcon
-            :name="data.component.framework === 'Vue' ? 'Cube' : 'Cube'"
-            class="w-8 h-8 text-indigo-500 mt-0.5"
-          />
-          <div class="flex-1">
-            <div class="font-bold text-indigo-900 text-indigo-100">{{ data.component.name }}</div>
-            <div class="text-xs text-indigo-600 text-indigo-400 font-mono mt-0.5">{{ data.component.file }}</div>
-            <div v-if="data.component.line" class="text-xs text-indigo-500 text-indigo-500 mt-0.5">
-              Line {{ data.component.line }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Box Model Visualizer -->
-        <div class="flex justify-center py-4 select-none text-[10px] text-gray-400">
-          <div
-            class="bg-orange-100 bg-orange-900/30 border border-orange-300 border-orange-700 p-6 relative"
-            title="Margin"
-          >
-            <span class="absolute top-1 left-2 font-semibold">margin</span>
-            <div
-              class="bg-yellow-100 bg-yellow-900/30 border border-yellow-300 border-yellow-700 p-6 relative"
-              title="Border"
-            >
-              <span class="absolute top-1 left-2 font-semibold">border</span>
-              <div
-                class="bg-green-100 bg-green-900/30 border border-green-300 border-green-700 p-6 relative"
-                title="Padding"
-              >
-                <span class="absolute top-1 left-2 font-semibold">padding</span>
-                <div
-                  class="bg-blue-100 bg-blue-900/30 border border-blue-300 border-blue-700 w-32 h-16 flex items-center justify-center font-mono text-blue-800 text-blue-200"
-                  title="Content"
-                >
-                  {{ Math.round(data.rect.width) }} × {{ Math.round(data.rect.height) }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Attributes -->
-        <div v-if="Object.keys(data.attrs).length > 0">
-          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Attributes</h3>
-          <div class="bg-gray-800 rounded border border-udt-c-border divide-y divide-udt-c-border">
-            <div
-              v-for="(val, key) in data.attrs"
-              :key="key"
-              class="grid grid-cols-3 text-sm hover:bg-gray-700"
-            >
-              <div class="p-2 font-mono text-indigo-400 border-r border-udt-c-border">{{ key }}</div>
-              <div class="p-2 font-mono text-gray-300 col-span-2 break-all">{{ val }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Computed Styles -->
-        <div>
-          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Computed Styles</h3>
-          <div class="grid grid-cols-2 gap-2 text-sm font-mono bg-gray-800 rounded border border-udt-c-border p-3">
-            <div v-for="(val, key) in data.computed" :key="key" class="flex justify-between border-b border-udt-c-border pb-1">
-              <span class="text-gray-400">{{ key }}:</span>
-              <span class="text-gray-100">{{ val }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Text Content -->
-        <div v-if="data.innerText">
-          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Text Content</h3>
-          <div class="p-4 bg-gray-800 rounded border border-udt-c-border font-mono text-sm">
-            {{ data.innerText }}
-          </div>
-        </div>
+      <div class="h-4 w-px bg-gray-700 mx-1"></div>
+      <div v-if="data" class="flex gap-1 text-xs font-mono">
+        <span class="text-indigo-500 font-bold">&lt;{{ data.tagName }}&gt;</span>
+        <span v-if="data.id" class="text-yellow-500">#{{ data.id }}</span>
+        <span v-if="data.classes.length" class="text-blue-500">.{{ data.classes[0] }}</span>
+        <span v-if="data.classes.length > 1" class="text-gray-400">+{{ data.classes.length - 1 }}</span>
       </div>
     </div>
 
-    <!-- Empty State -->
-    <UEmpty v-else icon="MagnifyingGlass" title="Select an element to inspect" description="Click 'Select Element' button and then select an element on the page" />
+    <div v-if="data" class="flex-1 overflow-hidden relative">
+      <USplitter :defaultSize="300" :min="200" :max="600">
+        
+        <!-- LEFT: DOM TREE -->
+        <template #left>
+          <DomTree :domContext="data.domContext" @select-node="handleSelectNode" />
+        </template>
 
-    <!-- Breadcrumbs Footer -->
-    <div
-      v-if="data"
-      class="flex-none border-t border-udt-c-border bg-gray-800 p-2 flex overflow-x-auto gap-1 text-xs whitespace-nowrap"
-    >
-      <div
-        v-for="(crumb, idx) in data.breadcrumbs"
-        :key="idx"
-        class="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-700 cursor-pointer text-gray-300 transition-colors"
-      >
-        <span class="font-bold">{{ crumb.tagName }}</span>
-        <span v-if="crumb.id" class="text-yellow-400">#{{ crumb.id }}</span>
-        <span v-if="crumb.class" class="text-green-400 max-w-[100px] truncate">.{{ crumb.class }}</span>
-        <UIcon v-if="idx < data.breadcrumbs.length - 1" name="ChevronRight" class="w-4 h-4 text-gray-400 ml-1" />
-      </div>
+        <!-- RIGHT: DETAILS PANELS -->
+        <template #right>
+          <div class="h-full flex flex-col bg-gray-900">
+            <!-- Tabs Header -->
+            <div class="px-3 border-b border-gray-800 bg-gray-800 flex-none">
+              <UTabs :items="['Computed', 'Styles', 'A11y']" v-model="activeTab" />
+            </div>
+
+            <div class="flex-1 overflow-auto">
+              
+              <!-- COMPUTED TAB -->
+              <ComputedTab 
+                v-if="activeTab === 'Computed'"
+                :data="data"
+                @update-style="updateStyle"
+              />
+
+              <!-- STYLES TAB -->
+              <StylesTab 
+                v-if="activeTab === 'Styles'"
+                :data="data"
+                @update-classes="updateClasses"
+                @update-attr="(name, value) => updateAttr(name, value)"
+                @delete-attr="deleteAttr"
+                @add-attr="(name, value) => addAttr(name, value)"
+                @add-class="addClass"
+                @remove-class="removeClass"
+              />
+
+              <!-- A11Y TAB -->
+              <A11yTab 
+                v-if="activeTab === 'A11y'"
+                :data="data"
+              />
+
+            </div>
+          </div>
+        </template>
+      </USplitter>
     </div>
+
+    <UEmpty v-else title="Inspect Element" description="Select an element to view details" icon="MagnifyingGlass" />
   </div>
 </template>
 
 <style scoped>
-/* Hide scrollbar but keep functionality */
-.overflow-x-auto::-webkit-scrollbar {
-  height: 4px;
-}
-.overflow-x-auto::-webkit-scrollbar-track {
-  background: transparent;
-}
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
+@reference "tailwindcss";
 </style>

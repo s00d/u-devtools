@@ -1,13 +1,13 @@
 import type { ClientApi, PluginClientInstance } from '@u-devtools/core';
 import { createApp } from 'vue';
-import RouterPanel from './ui/RouterPanel.vue';
+import VueInspectorPanel from './ui/VueInspectorPanel.vue';
 
 const plugin: PluginClientInstance = {
-  name: 'Vue Router',
+  name: 'Vue Inspector',
   icon: 'Cube',
 
   renderMain(container, api) {
-    const app = createApp(RouterPanel, { api });
+    const app = createApp(VueInspectorPanel, { api });
     app.mount(container);
     return () => app.unmount();
   },

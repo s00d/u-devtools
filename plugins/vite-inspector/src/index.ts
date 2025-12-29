@@ -1,16 +1,51 @@
-import type { DevToolsPlugin } from '@u-devtools/core';
+import { definePlugin } from '@u-devtools/kit';
+import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
 import { setupServer } from './server.js';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import type { ResolvedConfig, ViteDevServer } from 'vite';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Храним состояние сервера глобально для этого модуля,
+// чтобы передать его в setupServer
+export let currentConfig: ResolvedConfig | null = null;
+export let currentServer: ViteDevServer | null = null;
 
-// ИСПРАВЛЕНИЕ: Выходим из dist (..) и идем в src
-const clientPath = path.resolve(__dirname, '../src/client.ts');
-
-export const viteInspectorPlugin = (): DevToolsPlugin => ({
+export const viteInspectorPlugin = () => definePlugin({
   name: 'Vite Inspector',
-  clientPath,
-  setupServer: (rpc, ctx) => setupServer(rpc, ctx),
+  root: import.meta.url,
+  client: './client',
+  
+  // --- DEVTOOLS SETUP ---
+  setupServer: (rpc: RpcServerInterface, ctx: ServerContext) => {
+    const server = ctx.server as ViteDevServer;
+    
+    // Проверка наличия сервера
+    if (!server) {
+      console.error('[Vite Inspector] Server not found in context');
+      return;
+    }
+    
+    const config = server.config;
+    
+    // Сохраняем для использования в хуках
+    currentConfig = config;
+    currentServer = server;
+    
+    // Перехватываем HMR обновления через WebSocket
+    server.ws.on('vite:hmr', (payload) => {
+      if (payload && typeof payload === 'object' && 'updates' in payload) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const updates = (payload as any).updates || [];
+        updates.forEach((update: any) => {
+          rpc.broadcast('vite:hmr-log', {
+            file: update.path || update.file || '',
+            timestamp: Date.now(),
+            modules: update.acceptedPath ? [update.acceptedPath] : [],
+            type: 'update'
+          });
+        });
+      }
+    });
+    
+    // Передаем данные в логику сервера
+    setupServer(rpc, ctx, { config, server });
+  }
 });
-

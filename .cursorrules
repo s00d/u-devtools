@@ -1,0 +1,100 @@
+# Universal DevTools Kit - Cursor Rules
+
+## Project Overview
+
+Universal DevTools Kit is a framework-agnostic DevTools system for Vite applications with three execution contexts:
+- **Server** (Node.js) - File system, Vite config, terminal
+- **Client** (Vue 3 iframe) - Plugin UI rendering
+- **App** (Window) - Network interception, DOM inspection
+
+## Architecture
+
+- Monorepo managed with pnpm
+- TypeScript for all code
+- Vue 3 Composition API for UI
+- RPC communication via Vite HMR WebSocket
+- BroadcastChannel for App ↔ Client communication
+
+## Code Style
+
+- Use TypeScript with strict types (avoid `any`)
+- Vue 3 Composition API with `<script setup lang="ts">`
+- Tailwind CSS v4 for styling (dark theme only, no light theme)
+- Always implement HMR cleanup in `app.ts` files
+- Use `@reference "tailwindcss";` in scoped Vue styles
+
+## Plugin Structure
+
+Each plugin must have:
+- `index.ts` - Exports `DevToolsPlugin`
+- `client.ts` - Exports `PluginClientInstance` (default export)
+- `server.ts` - (Optional) Server-side RPC handlers
+- `app.ts` - (Optional) Window injection with HMR cleanup
+- `ui/*.vue` - Vue components using `@u-devtools/ui`
+
+## RPC Patterns
+
+- Method names: `{plugin-name}:{action}` (kebab-case)
+- Always handle errors: `try/catch` around `api.rpc.call()`
+- Use `AppBridge` for App ↔ Client communication
+- Server broadcasts: `rpc.broadcast('event', data)`
+
+## UI Guidelines
+
+- Import components from `@u-devtools/ui`
+- Use Heroicons via `<UIcon name="IconName" />`
+- Dark theme colors: `bg-gray-900`, `text-white`, `border-gray-700`
+- Settings use `api.settings.get/set()` with plugin-scoped keys
+- Storage use `api.storage.get/set()` with plugin-scoped keys
+
+## Best Practices
+
+1. **HMR Cleanup**: Always restore patches in `import.meta.hot.dispose()`
+2. **Isolation**: Each plugin has isolated storage/settings scope
+3. **Error Handling**: Show notifications with `api.notify(message, type)`
+4. **Reactive Settings**: Use `computed(() => api.settings.get('key'))`
+5. **Type Safety**: Import types from `@u-devtools/core`
+
+## Example Plugin
+
+```typescript
+// index.ts
+export const myPlugin = (): DevToolsPlugin => ({
+  name: 'My Plugin',
+  clientPath: path.resolve(__dirname, './client.ts'),
+  setupServer: (rpc, ctx) => {
+    rpc.handle('my-plugin:method', async (payload) => {
+      return { result: 'data' };
+    });
+  }
+});
+
+// client.ts
+const plugin: PluginClientInstance = {
+  name: 'My Plugin',
+  icon: 'Cube',
+  renderMain(container, api) {
+    const app = createApp(MyPanel, { api });
+    app.mount(container);
+    return () => app.unmount();
+  }
+};
+export default plugin;
+```
+
+## Package Structure
+
+- `packages/core` - Interfaces and types
+- `packages/bridge` - RPC implementation
+- `packages/ui` - Vue components
+- `packages/client` - DevTools shell
+- `packages/vite` - Vite plugin
+- `plugins/*` - Individual plugins
+
+## Commands
+
+- Use `pnpm` for package management
+- Build: `pnpm build`
+- Dev: `pnpm dev` (runs playground)
+- Typecheck: `pnpm typecheck`
+

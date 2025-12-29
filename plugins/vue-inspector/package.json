@@ -1,7 +1,7 @@
 {
-  "name": "@u-devtools/plugin-vue-router",
+  "name": "@u-devtools/plugin-vue-inspector",
   "version": "0.1.0",
-  "description": "Vue Router inspector plugin for Universal DevTools",
+  "description": "Vue Inspector plugin for Universal DevTools",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -29,6 +29,10 @@
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
+    "@vue/devtools-core": "^8.0.5",
+    "@vue/devtools-kit": "^8.0.5",
+    "vite-plugin-vue-inspector": "^5.3.2",
     "vue": "^3.5.26"
   },
   "devDependencies": {

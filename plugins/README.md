@@ -18,7 +18,7 @@ These plugins work with any framework or no framework at all:
 
 These plugins require a specific framework:
 
-- **@u-devtools/plugin-vue-router** - Vue Router inspector (Vue only)
+- **@u-devtools/plugin-vue-inspector** - Vue Inspector (Vue only)
 - **@u-devtools/plugin-vue-pinia** - Pinia state inspector (Vue only, planned)
 
 ## Naming Convention
@@ -28,7 +28,7 @@ These plugins require a specific framework:
 
 Examples:
 - `@u-devtools/plugin-network` (universal)
-- `@u-devtools/plugin-vue-router` (Vue-specific)
+- `@u-devtools/plugin-vue-inspector` (Vue-specific)
 - `@u-devtools/plugin-react-router` (React-specific, if created)
 
 ## Icon Guidelines

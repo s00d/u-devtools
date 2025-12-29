@@ -53,13 +53,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
+  <div class="h-full flex flex-col bg-gray-900 text-gray-200">
     <!-- Toolbar -->
-    <div class="p-4 border-b border-udt-c-border bg-gray-800">
+    <div class="p-4 border-b border-gray-700 bg-gray-800">
       <div class="flex items-center gap-4 mb-4">
         <div class="flex-1">
           <h2 class="text-lg font-bold mb-1">{{ packageInfo?.name || 'Package' }}</h2>
-          <p class="text-sm text-gray-500">Version: {{ packageInfo?.version || '-' }}</p>
+          <p class="text-sm text-gray-400">Version: {{ packageInfo?.version || '-' }}</p>
         </div>
         <UBadge color="blue">{{ currentDeps.length }} packages</UBadge>
       </div>
@@ -94,14 +94,14 @@ onMounted(() => {
             <a
               :href="`https://www.npmjs.com/package/${val}`"
               target="_blank"
-              class="text-indigo-600 hover:underline font-mono text-sm"
+              class="text-indigo-400 hover:text-indigo-300 hover:underline font-mono text-sm transition-colors"
             >
               {{ val }}
             </a>
           </template>
 
           <template #cell-version="{ val }">
-            <span class="font-mono text-xs text-gray-600">{{ val }}</span>
+            <span class="font-mono text-xs text-gray-400">{{ val }}</span>
           </template>
         </UTable>
 

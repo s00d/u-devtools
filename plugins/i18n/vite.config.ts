@@ -33,7 +33,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', '@u-devtools/core', '@u-devtools/ui', 'json-to-ast', 'node:fs/promises', 'node:path', 'node:url'],
+      external: ['vue', '@u-devtools/core', '@u-devtools/ui', '@u-devtools/kit', 'json-to-ast', 'node:fs/promises', 'node:path', 'node:url'],
       output: {
         globals: {
           vue: 'Vue',

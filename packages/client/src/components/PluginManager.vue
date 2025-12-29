@@ -156,7 +156,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-[#111827]">
+  <div class="h-full flex flex-col bg-[#111827] min-w-0 min-h-0 overflow-hidden">
     <!-- Header -->
     <div
       class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50"
@@ -205,7 +205,7 @@ onMounted(() => {
     </div>
 
     <!-- Content -->
-    <div class="flex-1 overflow-auto p-6 relative">
+    <div class="flex-1 overflow-auto p-6 relative min-w-0 min-h-0">
       <!-- Loading overlay -->
       <div
         v-if="loading"

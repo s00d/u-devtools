@@ -63,7 +63,14 @@ export class ViteRpcClient {
       setTimeout(() => {
         if (this.handlers.has(id)) {
           this.handlers.delete(id);
-          reject(new Error(`RPC Timeout: ${method}`));
+          const error = new Error(`RPC Timeout: ${method}`);
+          console.error('[RPC Timeout]', {
+            method,
+            payload,
+            stack: error.stack,
+            timestamp: new Date().toISOString(),
+          });
+          reject(error);
         }
       }, 5000);
     });
@@ -118,8 +125,12 @@ export class ViteRpcServer {
         const { id, method, payload } = msg;
 
         try {
-          const fn = this.methods.get(method || '');
-          if (!fn) throw new Error(`Method ${method} not found`);
+          const methodName = method || '';
+          const fn = this.methods.get(methodName);
+          if (!fn) {
+            console.error(`[ViteRpcServer] Method "${methodName}" not found`);
+            throw new Error(`Method ${methodName} not found`);
+          }
 
           const result = await fn(payload);
 
@@ -151,5 +162,13 @@ export class ViteRpcServer {
       method: event,
       payload,
     });
+  }
+
+  getMethodsCount(): number {
+    return this.methods.size;
+  }
+
+  getMethods(): string[] {
+    return Array.from(this.methods.keys());
   }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 import { useDevToolsState } from './composables/useDevToolsState';
+import { useLauncherMenu } from './composables/useLauncherMenu';
 import { initDefaultSettings } from './modules/settings';
 
 // Components
@@ -15,6 +16,9 @@ const { notifications, plugins, showSettings, isPaletteOpen } = useDevToolsState
 
 // Инициализация настроек
 initDefaultSettings(plugins.value);
+
+// Инициализация launcher menu
+useLauncherMenu(plugins);
 
 const onKeyDown = (e: KeyboardEvent) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -42,7 +46,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
     Применяем масштаб и прозрачность через CSS переменные.
   -->
   <div 
-    class="flex h-screen w-screen font-sans overflow-hidden udt-reset bg-[var(--udt-bg)] text-[var(--udt-text)]"
+    class="flex h-screen w-screen font-sans overflow-hidden udt-reset bg-[var(--udt-bg)] text-[var(--udt-text)] min-w-0 min-h-0"
     :style="{ 
       zoom: 'var(--udt-scale)',
       opacity: 'var(--udt-opacity)'

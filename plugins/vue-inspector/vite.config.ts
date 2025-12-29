@@ -12,6 +12,8 @@ export default defineConfig({
       insertTypesEntry: true,
       exclude: ['src/ui/**/*.vue'],
       tsconfigPath: './tsconfig.json',
+      rollupTypes: true,
+      copyDtsFiles: false,
     }),
     cleanTimestampFiles(__dirname),
   ],
@@ -28,12 +30,21 @@ export default defineConfig({
         client: 'src/client.ts',
         app: 'src/app.ts',
       },
-      name: 'UDevToolsVueRouter',
+      name: 'UDevToolsVueInspector',
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', '@u-devtools/core', '@u-devtools/ui', 'node:path', 'node:url'],
+      external: [
+        'vue', 
+        '@u-devtools/core', 
+        '@u-devtools/ui', 
+        '@u-devtools/kit',
+        'node:path', 
+        'node:url',
+        'vite-plugin-vue-inspector',
+        /^vite-plugin-vue-inspector/,
+      ],
       output: {
         globals: {
           vue: 'Vue',

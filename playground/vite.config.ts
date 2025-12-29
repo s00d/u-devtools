@@ -10,7 +10,7 @@ import { inspectorPlugin } from '@u-devtools/plugin-inspector';
 import { terminalPlugin } from '@u-devtools/plugin-terminal';
 import { storagePlugin } from '@u-devtools/plugin-storage';
 import { packageInspectorPlugin } from '@u-devtools/plugin-package-inspector';
-import { vueRouterPlugin } from '@u-devtools/plugin-vue-router';
+import { vueInspectorPlugin } from '@u-devtools/plugin-vue-inspector';
 import { viteInspectorPlugin } from '@u-devtools/plugin-vite-inspector';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -41,8 +41,8 @@ export default defineConfig({
         // Плагин инспектора пакетов: просмотр зависимостей
         packageInspectorPlugin(),
         
-        // Плагин Vue Router: инспектор маршрутов (Vue-specific)
-        vueRouterPlugin(),
+        // Плагин Vue Inspector: инспектор маршрутов (Vue-specific)
+        vueInspectorPlugin(),
         
         // Плагин Vite Inspector: диагностика и управление Vite
         viteInspectorPlugin()
@@ -70,7 +70,7 @@ export default defineConfig({
       '@u-devtools/plugin-terminal',
       '@u-devtools/plugin-storage',
       '@u-devtools/plugin-package-inspector',
-      '@u-devtools/plugin-vue-router',
+      '@u-devtools/plugin-vue-inspector',
       '@u-devtools/plugin-vite-inspector',
     ],
     resolve: {

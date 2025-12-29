@@ -3,8 +3,10 @@ import { ref, watch, computed, onMounted } from 'vue';
 import { useDark } from '@vueuse/core';
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import { createSettingsApi } from '../../modules/settings';
+import { createApiForPlugin } from '../../modules/clientApi';
 import { UForm, UIcon, UButton } from '@u-devtools/ui';
 import type { PluginSettingsSchema } from '@u-devtools/core';
+import PluginRenderer from '../PluginRenderer.vue';
 
 const { showSettings, plugins } = useDevToolsState();
 const activeSettingsTab = ref('General');
@@ -43,6 +45,35 @@ const generalSettingsSchema: PluginSettingsSchema = {
     label: 'Reduced Motion',
     type: 'boolean',
     default: false
+  },
+  launchEditor: {
+    label: 'Editor for "Open in IDE"',
+    description: 'Select your preferred code editor',
+    type: 'select',
+    default: 'code',
+    options: [
+      { label: 'Visual Studio Code', value: 'code' },
+      { label: 'VS Code Insiders', value: 'code-insiders' },
+      { label: 'VSCodium', value: 'codium' },
+      { label: 'Cursor', value: 'cursor' },
+      { label: 'WebStorm', value: 'webstorm' },
+      { label: 'IntelliJ IDEA', value: 'idea' },
+      { label: 'PyCharm', value: 'pycharm' },
+      { label: 'PhpStorm', value: 'phpstorm' },
+      { label: 'CLion', value: 'clion' },
+      { label: 'Rider', value: 'rider' },
+      { label: 'RubyMine', value: 'rubymine' },
+      { label: 'AppCode', value: 'appcode' },
+      { label: 'Sublime Text', value: 'sublime' },
+      { label: 'Zed', value: 'zed' },
+      { label: 'Atom', value: 'atom' },
+      { label: 'Atom Beta', value: 'atom-beta' },
+      { label: 'Brackets', value: 'brackets' },
+      { label: 'Vim', value: 'vim' },
+      { label: 'Emacs', value: 'emacs' },
+      { label: 'Visual Studio', value: 'visualstudio' },
+      { label: 'Notepad++', value: 'notepad++' }
+    ]
   }
 };
 
@@ -52,7 +83,8 @@ const defaults = {
   scale: '1',
   opacity: '1',
   notifications: true,
-  reducedMotion: false
+  reducedMotion: false,
+  launchEditor: 'code'
 };
 
 Object.entries(defaults).forEach(([k, v]) => {
@@ -182,11 +214,19 @@ watch(showSettings, (val) => {
             </div>
           </div>
           <template v-for="plugin in plugins" :key="plugin.name">
-            <div v-if="activeSettingsTab === plugin.name && plugin.settings">
-              <UForm 
+            <div v-if="activeSettingsTab === plugin.name && plugin.settings" class="h-full">
+              <!-- Custom renderSettings if provided by plugin -->
+              <PluginRenderer
+                v-if="plugin.renderSettings"
+                :api="createApiForPlugin(plugin.name)"
+                :renderer="plugin.renderSettings"
+              />
+              <!-- Standard UForm for plugins without custom renderSettings -->
+              <UForm
+                v-else
                 :schema="plugin.settings" 
                 :model-value="createSettingsApi(plugin.name).all" 
-                @update:model-value="(v) => { const api = createSettingsApi(plugin.name); Object.entries(v).forEach(([k,val]) => api.set(k, val)); }" 
+                @update:model-value="(v: Record<string, unknown>) => { const api = createSettingsApi(plugin.name); Object.entries(v).forEach(([k,val]) => api.set(k, val)); }" 
               />
             </div>
           </template>

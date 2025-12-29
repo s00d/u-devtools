@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="container" class="h-full w-full overflow-auto relative">
+  <div ref="container" class="h-full w-full overflow-auto relative min-w-0 min-h-0">
     <!-- Плагин будет рендериться сюда -->
   </div>
 </template>

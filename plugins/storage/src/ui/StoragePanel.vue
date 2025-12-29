@@ -1,128 +1,365 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { ClientApi } from '@u-devtools/core';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import { AppBridge } from '@u-devtools/core';
-import { UTable, UButton, UBadge, UTabs, UEmpty } from '@u-devtools/ui';
-
-const props = defineProps<{
-  api: ClientApi;
-  onRegisterClear: (fn: () => void) => void;
-}>();
+import type { ClientApi } from '@u-devtools/core';
+import { UButton, UInput, UTable, UIcon, UModal, UEmpty, UBadge, USelect } from '@u-devtools/ui';
 
 interface StorageItem {
-  key: string;
-  value: string;
+  key: string | number;
+  value: unknown;
+  httpOnly?: boolean; // Для cookies
+}
+
+interface IDBStore {
+  name: string;
+  entries: StorageItem[];
+}
+
+interface IDBDatabase {
+  name: string;
+  version?: number;
+  stores: IDBStore[];
+  error?: string;
+}
+
+interface CacheEntry {
+  name: string;
+  entries: StorageItem[];
+  error?: string;
 }
 
 interface StorageData {
-  localStorage: StorageItem[];
-  sessionStorage: StorageItem[];
-  cookies: StorageItem[];
+  local: StorageItem[];
+  session: StorageItem[];
+  cookie: StorageItem[];
+  indexeddb: IDBDatabase[];
+  cache: CacheEntry[];
+  opfs: Array<{ name: string; entries: StorageItem[] }>;
 }
 
-const activeTab = ref<'localStorage' | 'sessionStorage' | 'cookies'>('localStorage');
-const storageData = ref<StorageData>({
-  localStorage: [],
-  sessionStorage: [],
-  cookies: [],
+const props = defineProps<{ api: ClientApi }>();
+const bridge = new AppBridge('storage');
+
+// --- State ---
+const storageData = ref<StorageData>({ 
+  local: [], 
+  session: [], 
+  cookie: [], 
+  indexeddb: [], 
+  cache: [],
+  opfs: []
+});
+const activeType = ref<'local' | 'session' | 'cookie' | 'indexeddb' | 'cache' | 'opfs'>('local');
+
+// Для иерархических хранилищ
+const activeDb = ref('');
+const activeStore = ref('');
+
+const filter = ref('');
+const isModalOpen = ref(false);
+const editMode = ref<'add' | 'edit'>('add');
+const editingItem = ref<{ key: string | number; value: string }>({ key: '', value: '' });
+
+// --- Computed Data ---
+const currentList = computed(() => {
+  if (activeType.value === 'indexeddb') {
+    const db = storageData.value.indexeddb.find((d) => d.name === activeDb.value);
+    if (!db) return [];
+    const store = db.stores.find((s) => s.name === activeStore.value);
+    return store ? store.entries : [];
+  }
+  
+  if (activeType.value === 'cache') {
+    if (!activeDb.value && storageData.value.cache.length > 0) {
+      activeDb.value = storageData.value.cache[0].name;
+    }
+    const cache = storageData.value.cache.find(c => c.name === activeDb.value);
+    return cache ? cache.entries : [];
+  }
+
+  if (activeType.value === 'opfs') {
+    return storageData.value.opfs?.[0]?.entries || [];
+  }
+
+  return storageData.value[activeType.value] || [];
 });
 
-const bridge = new AppBridge<StorageData>('storage');
-
-const currentItems = computed(() => {
-  return storageData.value[activeTab.value] || [];
+const filteredList = computed(() => {
+  const list = currentList.value;
+  if (!filter.value) return list;
+  const q = filter.value.toLowerCase();
+  return list.filter((item: StorageItem) => String(item.key).toLowerCase().includes(q));
 });
 
-const clear = () => {
-  if (activeTab.value === 'localStorage') {
-    window.localStorage.clear();
-  } else if (activeTab.value === 'sessionStorage') {
-    window.sessionStorage.clear();
-  } else if (activeTab.value === 'cookies') {
-    document.cookie.split(';').forEach((cookie) => {
-      const key = cookie.trim().split('=')[0];
-      document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
-    });
-  }
-  props.api.notify(`Cleared ${activeTab.value}`, 'success');
+// Проверка, является ли элемент HttpOnly cookie
+const isHttpOnlyCookie = (row: unknown): boolean => {
+  return activeType.value === 'cookie' && (row as StorageItem).httpOnly === true;
 };
 
-const deleteItem = (key: string) => {
-  if (activeTab.value === 'localStorage') {
-    window.localStorage.removeItem(key);
-  } else if (activeTab.value === 'sessionStorage') {
-    window.sessionStorage.removeItem(key);
-  } else if (activeTab.value === 'cookies') {
-    document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+// Автоматически выбираем первый кэш при переключении на cache
+watch(activeType, (newType) => {
+  if (newType === 'cache' && storageData.value.cache.length > 0 && !activeDb.value) {
+    activeDb.value = storageData.value.cache[0].name;
   }
-  props.api.notify(`Deleted ${key}`, 'success');
+  if (newType === 'opfs') {
+    activeDb.value = 'root';
+  }
+});
+
+// --- Actions ---
+const refresh = () => bridge.send('refresh', {});
+
+const save = () => {
+  let val = editingItem.value.value;
+  // Auto JSON parse
+  if (typeof val === 'string' && (val.startsWith('{') || val.startsWith('['))) {
+    try { val = JSON.parse(val); } catch {}
+  }
+
+  bridge.send('save', {
+    type: activeType.value,
+    db: activeDb.value,
+    store: activeStore.value,
+    key: editingItem.value.key,
+    value: val
+  });
+  isModalOpen.value = false;
 };
 
-let unsubscribe: (() => void) | undefined;
+const remove = (key: string | number) => {
+  if (!confirm('Delete this item?')) return;
+  bridge.send('delete', {
+    type: activeType.value,
+    db: activeDb.value,
+    store: activeStore.value,
+    key
+  });
+};
+
+const clearAll = () => {
+  if (!confirm('Clear all items?')) return;
+  bridge.send('clear', {
+    type: activeType.value,
+    db: activeDb.value,
+    store: activeStore.value
+  });
+};
+
+const openAdd = () => {
+  editMode.value = 'add';
+  editingItem.value = { key: '', value: '' };
+  isModalOpen.value = true;
+};
+
+const openEdit = (item: StorageItem) => {
+  editMode.value = 'edit';
+  editingItem.value = { 
+    key: item.key, 
+    value: typeof item.value === 'object' ? JSON.stringify(item.value, null, 2) : String(item.value)
+  };
+  isModalOpen.value = true;
+};
 
 onMounted(() => {
-  unsubscribe = bridge.on<StorageData>('storage:data', (data) => {
-    storageData.value = data;
+  bridge.on<StorageData>('data', (d) => { 
+    storageData.value = d; 
   });
-
-  props.onRegisterClear(clear);
+  bridge.on<string>('error', (e) => {
+    props.api.notify(e, 'error');
+  });
+  refresh();
 });
 
-onUnmounted(() => {
-  if (unsubscribe) {
-    unsubscribe();
-  }
-  bridge.close();
-});
+onUnmounted(() => bridge.close());
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
-    <!-- Toolbar -->
-    <div class="p-4 border-b border-udt-c-border bg-gray-800 flex gap-2 items-center">
-      <UTabs
-        :items="['localStorage', 'sessionStorage', 'cookies']"
-        :model-value="activeTab"
-        @update:model-value="(v) => activeTab = v as typeof activeTab"
-      />
-      <UButton variant="danger" icon="Trash" size="sm" @click="clear" class="ml-auto">
-        Clear All
-      </UButton>
-    </div>
-
-    <!-- Table -->
-    <div class="flex-1 overflow-auto">
-      <UTable
-        :rows="currentItems"
-        :columns="[
-          { key: 'key', label: 'Key' },
-          { key: 'value', label: 'Value' },
-          { key: 'actions', label: '', width: '100px' },
-        ]"
+  <div class="flex h-full w-full bg-gray-900 text-gray-200">
+    
+    <!-- Sidebar (Navigation) -->
+    <div class="w-64 border-r border-gray-700 flex flex-col bg-gray-800 overflow-y-auto">
+      <div class="p-3 text-xs font-bold text-gray-400 uppercase">Storage Types</div>
+      
+      <!-- Flat Storages -->
+      <button 
+        v-for="type in (['local', 'session', 'cookie'] as const)" 
+        :key="type"
+        @click="activeType = type; activeDb = ''; activeStore = '';"
+        class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
+        :class="activeType === type ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-300'"
       >
-        <template #cell-key="{ val }">
-          <div class="font-mono text-sm font-bold">{{ val }}</div>
-        </template>
+        <span>{{ type === 'local' ? 'Local Storage' : type === 'session' ? 'Session Storage' : 'Cookies' }}</span>
+        <UBadge size="xs" color="gray">{{ storageData[type]?.length || 0 }}</UBadge>
+      </button>
 
-        <template #cell-value="{ val }">
-          <div class="font-mono text-xs max-w-md truncate" :title="val as string">
-            {{ val }}
-          </div>
-        </template>
+      <!-- IndexedDB Tree -->
+      <div class="mt-4 p-3 text-xs font-bold text-gray-400 uppercase flex justify-between">
+        <span>IndexedDB</span>
+        <button @click="refresh" class="text-gray-400 hover:text-gray-200">
+          <UIcon name="ArrowPath" class="w-3 h-3" />
+        </button>
+      </div>
+      
+      <div v-for="db in storageData.indexeddb" :key="db.name">
+        <div class="px-4 py-1 text-sm font-semibold text-gray-300 flex items-center gap-2">
+          <UIcon name="CircleStack" class="w-3 h-3" /> {{ db.name }}
+        </div>
+        <button 
+          v-for="store in db.stores" 
+          :key="store.name"
+          @click="activeType = 'indexeddb'; activeDb = db.name; activeStore = store.name;"
+          class="w-full text-left px-8 py-1.5 text-xs flex justify-between hover:bg-gray-700 border-l-2 transition-colors"
+          :class="(activeType === 'indexeddb' && activeStore === store.name && activeDb === db.name) 
+            ? 'border-indigo-500 bg-gray-700 text-indigo-300' 
+            : 'border-transparent text-gray-400'"
+        >
+          <span>{{ store.name }}</span>
+          <span class="opacity-60">{{ store.entries.length }}</span>
+        </button>
+      </div>
+      
+      <div v-if="storageData.indexeddb.length === 0" class="px-4 py-2 text-xs text-gray-500 italic">No DBs found</div>
 
-        <template #cell-actions="{ row }">
-          <UButton
-            variant="ghost"
-            icon="Trash"
-            size="sm"
-            @click="deleteItem((row as StorageItem).key)"
-            title="Delete"
-          />
-        </template>
-      </UTable>
+      <!-- Advanced Storages -->
+      <div class="mt-4 p-3 text-xs font-bold text-gray-400 uppercase">Advanced</div>
+      
+      <button 
+        @click="activeType = 'cache'; activeDb = ''; activeStore = '';"
+        class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
+        :class="activeType === 'cache' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-300'"
+      >
+        <div class="flex items-center gap-2">
+          <UIcon name="Bolt" class="w-4 h-4" /> Cache API
+        </div>
+      </button>
 
-      <UEmpty v-if="currentItems.length === 0" icon="ServerStack" :title="`No items in ${activeTab}`" description="Storage items will appear here when they are created" />
+      <button 
+        @click="activeType = 'opfs'; activeDb = 'root'; activeStore = '';"
+        class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
+        :class="activeType === 'opfs' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-300'"
+      >
+        <div class="flex items-center gap-2">
+          <UIcon name="Folder" class="w-4 h-4" /> File System
+        </div>
+      </button>
     </div>
+
+    <!-- Main View -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Toolbar -->
+      <div class="p-3 border-b border-gray-700 flex justify-between items-center bg-gray-800">
+        <div class="flex items-center gap-2">
+          <h2 class="font-bold text-lg text-white">
+            <span v-if="activeType === 'indexeddb'">{{ activeDb }} / {{ activeStore }}</span>
+            <span v-else-if="activeType === 'local'">Local Storage</span>
+            <span v-else-if="activeType === 'session'">Session Storage</span>
+            <span v-else-if="activeType === 'cookie'">Cookies</span>
+            <span v-else-if="activeType === 'cache'">Cache Storage</span>
+            <span v-else-if="activeType === 'opfs'">File System</span>
+            <span v-else>{{ activeType }}</span>
+          </h2>
+          <UButton variant="ghost" size="sm" icon="ArrowPath" @click="refresh" />
+        </div>
+        <div class="flex gap-2 items-center">
+          <USelect 
+            v-if="activeType === 'cache' && storageData.cache.length > 0"
+            v-model="activeDb"
+            :options="storageData.cache.map(c => ({ label: c.name, value: c.name }))"
+            class="w-48"
+          />
+          <UInput v-model="filter" placeholder="Filter..." class="w-40" />
+          <UButton variant="danger" size="sm" icon="Trash" @click="clearAll">Clear</UButton>
+          <UButton 
+            v-if="activeType !== 'cache' && activeType !== 'opfs'"
+            variant="primary" 
+            size="sm" 
+            icon="Plus" 
+            @click="openAdd"
+          >
+            Add
+          </UButton>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="flex-1 overflow-auto p-4 bg-gray-900/50">
+        <UTable 
+          v-if="filteredList.length > 0"
+          :rows="filteredList" 
+          :columns="[
+            {key:'key', label:'Key', width:'25%'}, 
+            {key:'value', label:'Value'}, 
+            {key:'actions', label:'', width:'80px'}
+          ]"
+        >
+          <template #cell-key="{ val, row }">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-sm font-bold text-indigo-400 break-all">{{ val }}</span>
+              <UBadge 
+                v-if="isHttpOnlyCookie(row)" 
+                color="yellow" 
+                size="xs" 
+                title="HttpOnly (Server side)"
+              >
+                HTTP
+              </UBadge>
+            </div>
+          </template>
+          <template #cell-value="{ val }">
+            <div class="max-h-16 overflow-hidden text-xs font-mono text-gray-300 break-all">
+              <span v-if="typeof val === 'object'">{{ JSON.stringify(val) }}</span>
+              <span v-else>{{ val }}</span>
+            </div>
+          </template>
+          <template #cell-actions="{ row }">
+            <div class="flex justify-end gap-1">
+              <button 
+                v-if="activeType !== 'cache' && activeType !== 'opfs'"
+                @click="openEdit(row as StorageItem)" 
+                class="p-1 text-gray-400 hover:text-indigo-400"
+              >
+                <UIcon name="Pencil" class="w-4 h-4"/>
+              </button>
+              <button 
+                @click="remove((row as StorageItem).key)" 
+                class="p-1 text-gray-400 hover:text-red-400"
+              >
+                <UIcon name="Trash" class="w-4 h-4"/>
+              </button>
+            </div>
+          </template>
+        </UTable>
+        <UEmpty v-else icon="CircleStack" title="Storage is empty" description="No items found in this storage" />
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <UModal :visible="isModalOpen" :title="editMode === 'add' ? 'Add Item' : 'Edit Item'" @close="isModalOpen = false">
+      <div class="space-y-4">
+        <div>
+          <label class="text-sm font-bold text-gray-200">Key</label>
+          <UInput 
+            v-model="editingItem.key" 
+            :disabled="editMode === 'edit' && activeType !== 'indexeddb'" 
+          />
+        </div>
+        <div>
+          <label class="text-sm font-bold text-gray-200">Value (JSON supported)</label>
+          <textarea 
+            v-model="editingItem.value" 
+            class="w-full h-32 p-2 border border-gray-600 rounded bg-gray-800 text-gray-200 font-mono text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+          ></textarea>
+        </div>
+        <div class="flex justify-end gap-2">
+          <UButton variant="ghost" @click="isModalOpen = false">Cancel</UButton>
+          <UButton variant="primary" @click="save">Save</UButton>
+        </div>
+      </div>
+    </UModal>
+
   </div>
 </template>
 
+<style scoped>
+/* Tailwind CSS v4 */
+</style>

@@ -1,16 +1,10 @@
-import type { DevToolsPlugin } from '@u-devtools/core';
+import { definePlugin } from '@u-devtools/kit';
 import { setupServer } from './server.js';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// ИСПРАВЛЕНИЕ: Выходим из dist (..) и идем в src
-const clientPath = path.resolve(__dirname, '../src/client.ts');
-
-export const packageInspectorPlugin = (): DevToolsPlugin => ({
+export const packageInspectorPlugin = () => definePlugin({
   name: 'Package Inspector',
-  clientPath,
+  root: import.meta.url,
+  client: './client',
   setupServer: (rpc, ctx) => setupServer(rpc, ctx),
 });
 

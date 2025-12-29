@@ -22,7 +22,7 @@
       "@u-devtools/plugin-terminal": ["plugins/terminal/src/index.ts"],
       "@u-devtools/plugin-storage": ["plugins/storage/src/index.ts"],
       "@u-devtools/plugin-package-inspector": ["plugins/package-inspector/src/index.ts"],
-      "@u-devtools/plugin-vue-router": ["plugins/vue-router/src/index.ts"],
+      "@u-devtools/plugin-vue-inspector": ["plugins/vue-inspector/src/index.ts"],
       "@u-devtools/plugin-vite-inspector": ["plugins/vite-inspector/src/index.ts"],
       "@u-devtools/plugin-console": ["plugins/console/src/index.ts"]
     }

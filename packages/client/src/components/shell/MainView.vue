@@ -10,13 +10,13 @@ const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col min-w-0 bg-gray-900 relative z-0">
+  <div class="flex-1 flex flex-col min-w-0 min-h-0 bg-gray-900 relative z-0 overflow-hidden border border-gray-700">
     <!-- Internal Views -->
     <AboutPanel v-if="isAboutActive" />
     <PluginManager v-else-if="isManagerActive" :api="systemApi" />
     
     <!-- Plugin View -->
-    <div v-else-if="currentPlugin" class="flex-1 overflow-hidden relative">
+    <div v-else-if="currentPlugin" class="flex-1 overflow-hidden relative min-w-0 min-h-0">
       <PluginRenderer :renderer="currentPlugin.renderMain" :api="createApiForPlugin(currentPlugin.name)" />
     </div>
     

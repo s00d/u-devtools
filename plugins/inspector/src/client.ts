@@ -7,7 +7,7 @@ const plugin: PluginClientInstance = {
   icon: 'MagnifyingGlass',
 
   renderMain(el, api) {
-    const app = createApp(InspectorPanel);
+    const app = createApp(InspectorPanel, { api });
     app.mount(el);
     return () => app.unmount();
   },

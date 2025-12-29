@@ -1,19 +1,16 @@
-import type { DevToolsPlugin } from '@u-devtools/core';
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { definePlugin } from '@u-devtools/kit';
 
 // Метаданные определяем статически (из package.json во время сборки)
-const meta: DevToolsPlugin['meta'] = {
+const meta = {
   name: '@u-devtools/plugin-network',
   version: '0.1.0',
   description: 'Network logger plugin for Universal DevTools',
 };
 
-export const networkPlugin = (): DevToolsPlugin => ({
+export const networkPlugin = () => definePlugin({
   name: 'Network',
-  clientPath: path.resolve(__dirname, '../src/client.ts'),
-  appPath: path.resolve(__dirname, '../src/app.ts'),
+  root: import.meta.url,
+  client: './client',
+  app: './app',
   meta,
 });

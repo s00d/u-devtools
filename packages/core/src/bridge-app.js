@@ -3,24 +3,51 @@
  * between the application runtime (window) and the DevTools iframe.
  */
 export class AppBridge {
-    constructor(name) {
-        this.channel = new BroadcastChannel(`u-devtools-${name}`);
-    }
-    send(event, data) {
-        this.channel.postMessage({ type: event, data });
-    }
-    on(event, cb) {
-        const handler = (e) => {
-            if (e.data.type === event) {
-                cb(e.data.data);
+    constructor(namespace) {
+        this.namespace = namespace;
+        this.listeners = new Map();
+        // Автоматическое пространство имен
+        this.channel = new BroadcastChannel(`u-devtools:${namespace}`);
+        this.channel.onmessage = (e) => {
+            const { event, data } = e.data;
+            const handlers = this.listeners.get(event);
+            if (handlers) {
+                handlers.forEach((fn) => fn(data));
             }
         };
-        this.channel.addEventListener('message', handler);
+    }
+    /**
+     * Отправить событие "на ту сторону".
+     */
+    send(event, data) {
+        try {
+            this.channel.postMessage({ event, data });
+        }
+        catch (e) {
+            // Ignore errors if channel is closed
+            if (e instanceof DOMException && (e.name === 'InvalidStateError' || e.message?.includes('closed'))) {
+                console.warn(`[AppBridge] Cannot send event "${event}": channel is closed`);
+                return;
+            }
+            throw e;
+        }
+    }
+    /**
+     * Слушать события "с той стороны".
+     */
+    on(event, cb) {
+        const eventStr = String(event);
+        if (!this.listeners.has(eventStr)) {
+            this.listeners.set(eventStr, new Set());
+        }
+        this.listeners.get(eventStr).add(cb);
+        // Возвращаем функцию отписки
         return () => {
-            this.channel.removeEventListener('message', handler);
+            this.listeners.get(eventStr)?.delete(cb);
         };
     }
     close() {
         this.channel.close();
+        this.listeners.clear();
     }
 }

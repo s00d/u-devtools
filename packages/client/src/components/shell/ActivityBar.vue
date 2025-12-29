@@ -26,31 +26,37 @@ const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
 
-const handleMenuItemClick = (action: 'settings' | 'about') => {
+const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
   isMenuOpen.value = false;
   if (action === 'settings') showSettings.value = true;
   if (action === 'about') activePluginId.value = 'internal:about';
+  if (action === 'extensions') activePluginId.value = 'internal:plugins';
 };
 </script>
 
 <template>
-  <div
-    class="flex-none bg-[#18181b] border-r border-[#27272a] z-10 flex flex-col transition-all duration-300 ease-in-out select-none"
-    :class="isSidebarExpanded ? 'w-64' : 'w-12'"
-  >
-    <!-- 1. Top: Toggle Sidebar -->
-    <div 
-      class="h-12 flex items-center border-b border-[#27272a] hover:bg-[#27272a] cursor-pointer transition-colors"
-      :class="isSidebarExpanded ? 'px-4 justify-between' : 'justify-center'"
-      @click="isSidebarExpanded = !isSidebarExpanded"
-      title="Toggle Sidebar"
+  <div class="relative flex">
+    <div
+      class="flex-none bg-[#18181b] border-r border-[#27272a] z-10 flex flex-col transition-all duration-300 ease-in-out select-none"
+      :class="isSidebarExpanded ? 'w-64' : 'w-12'"
     >
-      <div v-if="isSidebarExpanded" class="font-bold text-gray-200 text-sm tracking-wide">DEVTOOLS</div>
-      <UIcon 
-        :name="isSidebarExpanded ? 'ChevronDoubleLeft' : 'Bars3'" 
-        class="w-5 h-5 text-gray-400" 
-      />
-    </div>
+      <!-- 1. Top: Header with Close Button -->
+      <div 
+        class="h-12 flex items-center border-b border-[#27272a] relative"
+        :class="isSidebarExpanded ? 'px-4' : 'justify-center'"
+      >
+        <div v-if="isSidebarExpanded" class="font-bold text-gray-200 text-sm tracking-wide flex-1">U-DEVTOOLS</div>
+        <button
+          @click="closeDevTools"
+          class="flex items-center justify-center w-8 h-8 rounded hover:bg-[#27272a] transition-colors group"
+          title="Close DevTools"
+        >
+          <UIcon 
+            name="XMark" 
+            class="w-4 h-4 text-gray-400 group-hover:text-red-400 transition-colors" 
+          />
+        </button>
+      </div>
 
     <!-- 2. Middle: Plugins List -->
     <div class="flex-1 overflow-y-auto overflow-x-hidden py-2 space-y-0.5 scrollbar-hide">
@@ -88,20 +94,6 @@ const handleMenuItemClick = (action: 'settings' | 'about') => {
     <!-- 3. Bottom: Compact Actions -->
     <div class="mt-auto flex flex-col py-2 border-t border-[#27272a] space-y-1 relative">
       
-      <!-- Plugin Manager -->
-      <button 
-        @click="activePluginId = 'internal:plugins'" 
-        class="w-full flex items-center gap-3 px-3 py-2.5 transition-colors group relative border-l-2" 
-        :class="[
-          isManagerActive ? 'border-indigo-500 text-white bg-gray-800' : 'border-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-800',
-          !isSidebarExpanded ? 'justify-center' : ''
-        ]"
-        title="Extensions"
-      >
-        <UIcon name="Squares2X2" class="w-5 h-5 flex-shrink-0" />
-        <span v-if="isSidebarExpanded" class="text-sm">Extensions</span>
-      </button>
-
       <!-- Settings (With Popover Menu) -->
       <div ref="menuRef" class="relative w-full">
         <button 
@@ -127,6 +119,14 @@ const handleMenuItemClick = (action: 'settings' | 'about') => {
             <UIcon name="AdjustmentsHorizontal" class="w-4 h-4" /> Settings
           </button>
           
+          <button 
+            @click="handleMenuItemClick('extensions')"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white text-left w-full"
+            :class="isManagerActive ? 'bg-gray-700 text-white' : ''"
+          >
+            <UIcon name="Squares2X2" class="w-4 h-4" /> Extensions
+          </button>
+          
           <div class="h-px bg-[#3f3f46] my-1 mx-2"></div>
           
           <button 
@@ -137,19 +137,20 @@ const handleMenuItemClick = (action: 'settings' | 'about') => {
           </button>
         </div>
       </div>
-      
-      <!-- Close Button (Always visible, distinct) -->
-      <button 
-        @click="closeDevTools" 
-        class="w-full flex items-center gap-3 px-3 py-2.5 transition-colors group relative border-l-2 border-transparent text-gray-500 hover:text-red-400 hover:bg-red-500/10"
-        :class="!isSidebarExpanded ? 'justify-center' : ''"
-        title="Close DevTools"
-      >
-        <UIcon name="XMark" class="w-5 h-5 flex-shrink-0" />
-        <span v-if="isSidebarExpanded" class="text-sm">Close</span>
-      </button>
-
     </div>
+    </div>
+    
+    <!-- Toggle Sidebar Button (Right side, small and always visible) -->
+    <button
+      @click="isSidebarExpanded = !isSidebarExpanded"
+      class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-12 bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] cursor-pointer transition-all flex items-center justify-center z-20 rounded-r-lg shadow-lg group"
+      title="Toggle Sidebar"
+    >
+      <UIcon 
+        :name="isSidebarExpanded ? 'ChevronLeft' : 'ChevronRight'" 
+        class="w-3 h-3 text-gray-400 group-hover:text-gray-200 transition-colors" 
+      />
+    </button>
   </div>
 </template>
 

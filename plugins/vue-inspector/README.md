@@ -1,6 +1,6 @@
-# @u-devtools/plugin-vue-router
+# @u-devtools/plugin-vue-inspector
 
-Vue Router inspector plugin for Universal DevTools. This plugin is **Vue-specific** and requires Vue Router to be installed in your project.
+Vue Inspector plugin for Universal DevTools. This plugin is **Vue-specific** and requires Vue Router to be installed in your project.
 
 ## Features
 
@@ -16,14 +16,14 @@ The plugin is already included when you use `@u-devtools/vite`. Just add it to y
 
 ```typescript
 import { createDevTools } from '@u-devtools/vite';
-import { vueRouterPlugin } from '@u-devtools/plugin-vue-router';
+import { vueInspectorPlugin } from '@u-devtools/plugin-vue-inspector';
 
 export default defineConfig({
   plugins: [
     vue(),
     createDevTools({
       plugins: [
-        vueRouterPlugin()
+        vueInspectorPlugin()
       ]
     })
   ]
@@ -57,7 +57,7 @@ app.mount('#app');
 ## Usage
 
 1. Open DevTools (click the 🛠 button)
-2. Select the "Vue Router" tab
+2. Select the "Vue Inspector" tab
 3. View all routes and the current active route
 4. Click the navigation button (→) to navigate to any route
 

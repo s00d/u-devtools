@@ -10,7 +10,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="flex gap-1 border border-udt-c-border rounded overflow-hidden bg-udt-c-bg">
+  <div class="flex gap-1 border border-gray-700 rounded overflow-hidden bg-gray-800">
     <button
       v-for="item in items"
       :key="item"
@@ -18,8 +18,8 @@ const emit = defineEmits<{
       class="px-3 py-1.5 text-sm transition-colors font-medium"
       :class="
         modelValue === item
-          ? 'bg-indigo-600 text-white'
-          : 'bg-udt-c-bg text-gray-300 hover:bg-gray-700'
+          ? 'bg-indigo-900/30 text-indigo-300'
+          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
       "
     >
       {{ item }}

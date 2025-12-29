@@ -50,17 +50,31 @@ export class ViteRpcClient {
             setTimeout(() => {
                 if (this.handlers.has(id)) {
                     this.handlers.delete(id);
-                    reject(new Error(`RPC Timeout: ${method}`));
+                    const error = new Error(`RPC Timeout: ${method}`);
+                    console.error('[RPC Timeout]', {
+                        method,
+                        payload,
+                        stack: error.stack,
+                        timestamp: new Date().toISOString(),
+                    });
+                    reject(error);
                 }
             }, 5000);
         });
     }
-    // Подписка на события
+    // Подписка на события (возвращает функцию для отписки)
     on(event, fn) {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, new Set());
         }
         this.eventListeners.get(event)?.add(fn);
+        // Возвращаем функцию для отписки
+        return () => {
+            const listeners = this.eventListeners.get(event);
+            if (listeners) {
+                listeners.delete(fn);
+            }
+        };
     }
     // Отписка от событий
     off(event, fn) {
@@ -83,9 +97,12 @@ export class ViteRpcServer {
             const msg = data;
             const { id, method, payload } = msg;
             try {
-                const fn = this.methods.get(method || '');
-                if (!fn)
-                    throw new Error(`Method ${method} not found`);
+                const methodName = method || '';
+                const fn = this.methods.get(methodName);
+                if (!fn) {
+                    console.error(`[ViteRpcServer] Method "${methodName}" not found`);
+                    throw new Error(`Method ${methodName} not found`);
+                }
                 const result = await fn(payload);
                 // Отправляем ответ конкретному клиенту
                 client.send('u-devtools:response', {
@@ -113,5 +130,11 @@ export class ViteRpcServer {
             method: event,
             payload,
         });
+    }
+    getMethodsCount() {
+        return this.methods.size;
+    }
+    getMethods() {
+        return Array.from(this.methods.keys());
     }
 }

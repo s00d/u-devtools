@@ -2,8 +2,8 @@
   "name": "@u-devtools/kit",
   "version": "0.1.0",
   "description": "SDK for creating Universal DevTools plugins",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/kit/src/index.js",
+  "types": "./dist/kit/src/index.d.ts",
   "type": "module",
   "files": [
     "dist"
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
   }
 }

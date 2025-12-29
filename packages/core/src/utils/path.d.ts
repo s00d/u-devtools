@@ -8,3 +8,4 @@
  * @throws Error if the path is outside the root directory
  */
 export declare function safeResolve(root: string, targetPath: string): string;
+//# sourceMappingURL=path.d.ts.map

@@ -33,7 +33,8 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', '@u-devtools/core', '@u-devtools/ui', 'node:path', 'node:url'],
+      // idb should be bundled in app.js, not external
+      external: ['vue', '@u-devtools/core', '@u-devtools/ui', '@u-devtools/kit', 'node:path', 'node:url'],
       output: {
         globals: {
           vue: 'Vue',

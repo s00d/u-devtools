@@ -4,6 +4,7 @@ import type { ClientApi } from '@u-devtools/core';
 import { USplitter, UButton, UIcon, UInput, UModal, ULoading, UEmpty } from '@u-devtools/ui';
 import { flattenTranslations, unflattenTranslations } from '../util/i18nUtils';
 import type { TranslationContent, LocaleData, TreeNode, ModuleOptions } from '../types';
+import { Translator, type DriverType } from '../util/Translator';
 import TreeItem from './TreeItem.vue';
 
 const props = defineProps<{
@@ -22,7 +23,17 @@ const searchQuery = ref('');
 const currentPage = ref(1);
 const isStatisticsModalVisible = ref(false);
 const isSaving = ref(false);
+const isTranslating = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
+
+// Translation settings (from plugin settings)
+const selectedDriver = computed(() => props.api.settings.get<DriverType>('translationDriver', 'disabled'));
+const apiToken = computed(() => props.api.settings.get<string>('translationApiToken', ''));
+const driverOptions = computed(() => ({
+  folderId: props.api.settings.get<string>('translationFolderId', ''),
+  formality: props.api.settings.get<string>('translationFormality', 'default'),
+  model: props.api.settings.get<string>('translationModel', 'gpt-3.5-turbo'),
+}));
 
 // Settings
 const itemsPerPage = computed(() => props.api.settings.get<number>('itemsPerPage', 30));
@@ -273,6 +284,94 @@ function handleInputChange(key: string, value: string) {
   localContent.value = unflattenTranslations(flat);
 }
 
+// Translation functions
+async function translateKey(key: string) {
+  if (selectedDriver.value === 'disabled' || !apiToken.value) {
+    props.api.notify('Translation service is not configured. Please configure it in Settings.', 'error');
+    return;
+  }
+
+  const defaultText = defaultLocaleFlatContent.value[key];
+  if (!defaultText) {
+    props.api.notify('No default value found for this key', 'error');
+    return;
+  }
+
+  try {
+    const fromLang = configs.value.defaultLocale || 'en';
+    const fileName = selectedFile.value.split('/').pop() || '';
+    const toLang = fileName.replace('.json', '').split('.').pop() || 'en';
+
+    const translator = new Translator({
+      apiKey: apiToken.value,
+      driver: selectedDriver.value,
+      options: driverOptions.value,
+    });
+
+    const translated = await translator.translate(defaultText, fromLang, toLang);
+    handleInputChange(key, translated);
+    props.api.notify('Translation completed', 'success');
+  } catch (e) {
+    const error = e instanceof Error ? e.message : String(e);
+    props.api.notify(`Translation error: ${error}`, 'error');
+  }
+}
+
+async function translateMissingKeys() {
+  if (selectedDriver.value === 'disabled' || !apiToken.value) {
+    props.api.notify('Translation service is not configured. Please configure it in Settings.', 'error');
+    return;
+  }
+
+  const defaultFlat = defaultLocaleFlatContent.value;
+  const currentFlat = flattenedContent.value;
+  const missingKeys = Object.keys(defaultFlat).filter(
+    (key) => !currentFlat[key] || !currentFlat[key].trim()
+  );
+
+  if (missingKeys.length === 0) {
+    props.api.notify('No missing translations', 'info');
+    return;
+  }
+
+  if (!confirm(`Translate ${missingKeys.length} missing keys?`)) {
+    return;
+  }
+
+  isTranslating.value = true;
+  try {
+    const fromLang = configs.value.defaultLocale || 'en';
+    const fileName = selectedFile.value.split('/').pop() || '';
+    const toLang = fileName.replace('.json', '').split('.').pop() || 'en';
+
+    const translator = new Translator({
+      apiKey: apiToken.value,
+      driver: selectedDriver.value,
+      options: driverOptions.value,
+    });
+
+    const flat = { ...currentFlat };
+    for (const key of missingKeys) {
+      const text = defaultFlat[key];
+      if (text) {
+        try {
+          flat[key] = await translator.translate(text, fromLang, toLang);
+        } catch (e) {
+          console.error(`Failed to translate key ${key}:`, e);
+        }
+      }
+    }
+
+    localContent.value = unflattenTranslations(flat);
+    props.api.notify(`Translated ${missingKeys.length} keys`, 'success');
+  } catch (e) {
+    const error = e instanceof Error ? e.message : String(e);
+    props.api.notify(`Translation error: ${error}`, 'error');
+  } finally {
+    isTranslating.value = false;
+  }
+}
+
 // Watch for updates from server
 let unsubscribe: (() => void) | undefined;
 
@@ -358,6 +457,15 @@ watch(selectedFileContent, (newContent) => {
                   />
                 </label>
                 <UButton
+                  v-if="selectedDriver !== 'disabled'"
+                  variant="ghost"
+                  size="sm"
+                  icon="Language"
+                  :loading="isTranslating"
+                  @click="translateMissingKeys"
+                  title="Translate Missing Keys"
+                />
+                <UButton
                   variant="ghost"
                   size="sm"
                   icon="ChartBar"
@@ -400,6 +508,15 @@ watch(selectedFileContent, (newContent) => {
                   <span class="font-mono text-xs font-semibold text-gray-300 truncate select-all">
                     {{ key }}
                   </span>
+                  <UButton
+                    v-if="selectedDriver !== 'disabled' && defaultLocaleFlatContent[key]"
+                    variant="ghost"
+                    size="sm"
+                    icon="Language"
+                    @click="translateKey(key)"
+                    title="Translate from default locale"
+                    class="ml-2"
+                  />
                 </div>
                 <div class="text-xs text-gray-500 mb-2 truncate opacity-80">
                   {{ defaultLocaleFlatContent[key] || 'No default value' }}
