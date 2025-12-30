@@ -26,7 +26,7 @@ const addItem = () => {
   // Если это объект, заполняем дефолтными ключами
   if (!props.itemType && props.itemSchema) {
     Object.keys(props.itemSchema).forEach((k) => {
-      // @ts-ignore
+      // @ts-expect-error
       newItem[k] = props.itemSchema[k].default ?? '';
     });
   }

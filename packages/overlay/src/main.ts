@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore - Vite обработает этот импорт
+// @ts-expect-error - Vite обработает этот импорт
 import style from './style.css?inline';
 
 const MOUNT_ID = 'u-devtools-overlay-host';

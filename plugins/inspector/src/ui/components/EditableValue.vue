@@ -6,9 +6,7 @@ const props = defineProps<{
   prop: string;
 }>();
 
-const emit = defineEmits<{
-  (e: 'update', payload: { prop: string; value: string }): void;
-}>();
+const emit = defineEmits<(e: 'update', payload: { prop: string; value: string }) => void>();
 
 const isEditing = ref(false);
 const inputRef = ref<HTMLInputElement | null>(null);

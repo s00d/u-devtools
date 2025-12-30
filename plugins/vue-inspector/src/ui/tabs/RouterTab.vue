@@ -5,7 +5,7 @@ import { ULoading } from '@u-devtools/ui';
 import { useRouterInfo } from '../../composables/useRouterInfo';
 import RouterRoutes from '../components/RouterRoutes.vue';
 
-const props = defineProps<{ api: ClientApi }>();
+defineProps<{ api: ClientApi }>();
 
 const router = useRouterInfo();
 

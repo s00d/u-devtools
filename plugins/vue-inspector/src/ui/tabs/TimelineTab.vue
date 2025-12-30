@@ -4,7 +4,7 @@ import type { ClientApi } from '@u-devtools/core';
 import { USelect, UInput, UButton, UEmpty, ULoading } from '@u-devtools/ui';
 import { useTimeline } from '../../composables/useTimeline';
 
-const props = defineProps<{ api: ClientApi }>();
+defineProps<{ api: ClientApi }>();
 
 const timeline = useTimeline();
 

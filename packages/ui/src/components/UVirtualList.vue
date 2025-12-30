@@ -15,9 +15,7 @@ const props = withDefaults(defineProps<VirtualListProps>(), {
   keyField: undefined,
 });
 
-const emit = defineEmits<{
-  (e: 'scroll', event: Event): void;
-}>();
+const emit = defineEmits<(e: 'scroll', event: Event) => void>();
 
 // Вычисляем key для элемента
 const getItemKey = (item: unknown, index: number): string | number => {

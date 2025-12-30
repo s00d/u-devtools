@@ -16,9 +16,7 @@ const props = defineProps<{
   data: ElementInfo;
 }>();
 
-const emit = defineEmits<{
-  (e: 'update-style', payload: { prop: string; value: string }): void;
-}>();
+const emit = defineEmits<(e: 'update-style', payload: { prop: string; value: string }) => void>();
 
 const computedGroups = computed<ComputedGroups>(() => {
   if (!props.data?.computed) return {};

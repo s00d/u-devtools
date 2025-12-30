@@ -20,7 +20,7 @@ export function cleanTimestampFiles(dir: string): Plugin {
             }
           }
         });
-      } catch (e) {
+      } catch (_e) {
         // Игнорируем ошибки чтения директории
       }
     },

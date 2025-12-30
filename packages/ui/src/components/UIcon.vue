@@ -22,7 +22,7 @@ const iconComponent = computed(() => {
   }
 
   const source = props.solid ? SolidIcons : OutlineIcons;
-  // @ts-ignore
+  // @ts-expect-error
   return source[normalizedName] || OutlineIcons.QuestionMarkCircleIcon;
 });
 

@@ -123,7 +123,7 @@ XHR.prototype.open = function (method: string, url: string | URL, ...args: unkno
   xhr._udt_url = url.toString();
   xhr._udt_requestHeaders = {};
   
-  // @ts-ignore
+  // @ts-expect-error
   return originalOpen.apply(this, [method, url, ...args]);
 };
 
@@ -133,7 +133,7 @@ XHR.prototype.setRequestHeader = function (header: string, value: string) {
     xhr._udt_requestHeaders = {};
   }
   xhr._udt_requestHeaders[header] = value;
-  // @ts-ignore
+  // @ts-expect-error
   return originalSetHeader.apply(this, [header, value]);
 };
 
@@ -208,7 +208,7 @@ XHR.prototype.send = function (body?: unknown) {
     });
   });
 
-  // @ts-ignore
+  // @ts-expect-error
   return originalSend.apply(this, [body]);
 };
 

@@ -6,9 +6,7 @@ const props = defineProps<{
   classes: string[];
 }>();
 
-const emit = defineEmits<{
-  (e: 'update', classes: string[]): void;
-}>();
+const emit = defineEmits<(e: 'update', classes: string[]) => void>();
 
 const customClass = ref('');
 

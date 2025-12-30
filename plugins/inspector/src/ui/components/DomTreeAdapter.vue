@@ -12,9 +12,7 @@ const props = defineProps<{
   domContext?: DomContext;
 }>();
 
-const emit = defineEmits<{
-  (e: 'select-node', payload: { type: 'parent' | 'sibling' | 'child'; index?: number }): void;
-}>();
+const emit = defineEmits<(e: 'select-node', payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => void>();
 
 // Преобразуем DomContext в формат TreeNode для UTreeView
 const treeNodes = computed<TreeNode[]>(() => {
