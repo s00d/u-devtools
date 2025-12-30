@@ -1,17 +1,10 @@
 {
   "name": "@u-devtools/plugin-console",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Console logger plugin for Universal DevTools",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "files": [
     "dist",
     "src",
@@ -52,6 +45,7 @@
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",
     "@u-devtools/utils": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
     "vue": "^3.5.26"
   },
   "devDependencies": {

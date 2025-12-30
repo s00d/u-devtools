@@ -12,6 +12,22 @@ interface ConsoleLog {
   timestamp: number;
 }
 
+// Сохраняем оригинальные функции ДО переопределения
+const originalLog = console.log;
+const originalWarn = console.warn;
+const originalError = console.error;
+const originalInfo = console.info;
+const originalDebug = console.debug;
+
+// Маппинг оригинальных функций
+const originals: Record<LogLevel, typeof console.log> = {
+  log: originalLog,
+  warn: originalWarn,
+  error: originalError,
+  info: originalInfo,
+  debug: originalDebug,
+};
+
 function createLogHandler(level: LogLevel) {
   return (...args: unknown[]) => {
     const log: ConsoleLog = {
@@ -33,18 +49,11 @@ function createLogHandler(level: LogLevel) {
 
     bridge.send('console-log', log);
 
-    // Call original console method
-    const original = console[level] as typeof console.log;
+    // Вызываем оригинальную функцию из сохраненного маппинга
+    const original = originals[level];
     original.apply(console, args);
   };
 }
-
-// Patch console methods
-const originalLog = console.log;
-const originalWarn = console.warn;
-const originalError = console.error;
-const originalInfo = console.info;
-const originalDebug = console.debug;
 
 console.log = createLogHandler('log');
 console.warn = createLogHandler('warn');

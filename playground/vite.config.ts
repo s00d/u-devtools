@@ -12,6 +12,7 @@ import { storagePlugin } from '@u-devtools/plugin-storage';
 import { packageInspectorPlugin } from '@u-devtools/plugin-package-inspector';
 import { vueInspectorPlugin } from '@u-devtools/plugin-vue-inspector';
 import { viteInspectorPlugin } from '@u-devtools/plugin-vite-inspector';
+import { consolePlugin } from '@u-devtools/plugin-console';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -26,6 +27,7 @@ export default defineConfig({
         // Плагин переводов: смотрит в папку src/locales
         i18nPlugin({ dir: 'src/locales' }),
 
+        consolePlugin(),
         // Плагин сети: перехватывает fetch/xhr
         networkPlugin(),
 
@@ -78,6 +80,7 @@ export default defineConfig({
       '@u-devtools/plugin-package-inspector',
       '@u-devtools/plugin-vue-inspector',
       '@u-devtools/plugin-vite-inspector',
+      '@u-devtools/plugin-console',
     ],
     resolve: {
       conditions: ['development', 'default'],

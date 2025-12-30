@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default createViteConfig({
   name: 'UDevToolsConsole',
   entry: {
+    index: 'src/index.ts',
     client: 'src/client.ts',
     app: 'src/app.ts',
   },

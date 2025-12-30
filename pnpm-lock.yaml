@@ -245,6 +245,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.0(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
+      '@u-devtools/plugin-console':
+        specifier: workspace:*
+        version: link:../plugins/console
       '@u-devtools/plugin-i18n':
         specifier: workspace:*
         version: link:../plugins/i18n
@@ -293,6 +296,9 @@ importers:
       '@u-devtools/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@u-devtools/kit':
+        specifier: workspace:*
+        version: link:../../packages/kit
       '@u-devtools/ui':
         specifier: workspace:*
         version: link:../../packages/ui

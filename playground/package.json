@@ -16,6 +16,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@u-devtools/plugin-i18n": "workspace:*",
+    "@u-devtools/plugin-console": "workspace:*",
     "@u-devtools/plugin-inspector": "workspace:*",
     "@u-devtools/plugin-network": "workspace:*",
     "@u-devtools/plugin-package-inspector": "workspace:*",
