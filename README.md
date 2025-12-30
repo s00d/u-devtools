@@ -81,6 +81,33 @@ Universal DevTools Kit operates in three distinct execution contexts, each servi
 - 🛠️ **Overlay Menu API:** Add custom buttons to the DevTools launcher
 - 📚 **Comprehensive Documentation:** Step-by-step guides and examples
 
+## 📦 Packages
+
+### Core Packages
+
+- **[@u-devtools/vite](https://www.npmjs.com/package/@u-devtools/vite)** - Vite plugin for Universal DevTools Kit
+- **[@u-devtools/client](https://www.npmjs.com/package/@u-devtools/client)** - DevTools client shell (Vue 3 iframe)
+- **[@u-devtools/overlay](https://www.npmjs.com/package/@u-devtools/overlay)** - DevTools overlay launcher
+- **[@u-devtools/core](https://www.npmjs.com/package/@u-devtools/core)** - Core types and interfaces
+- **[@u-devtools/bridge](https://www.npmjs.com/package/@u-devtools/bridge)** - RPC bridge for communication
+- **[@u-devtools/kit](https://www.npmjs.com/package/@u-devtools/kit)** - SDK for creating plugins
+- **[@u-devtools/ui](https://www.npmjs.com/package/@u-devtools/ui)** - UI component library
+- **[@u-devtools/utils](https://www.npmjs.com/package/@u-devtools/utils)** - Utility functions (browser)
+- **[@u-devtools/utils-node](https://www.npmjs.com/package/@u-devtools/utils-node)** - Utility functions (Node.js)
+- **[create-u-devtools](https://www.npmjs.com/package/create-u-devtools)** - CLI tool to scaffold plugins
+
+### Plugins
+
+- **[@u-devtools/plugin-i18n](https://www.npmjs.com/package/@u-devtools/plugin-i18n)** - Translation management plugin
+- **[@u-devtools/plugin-network](https://www.npmjs.com/package/@u-devtools/plugin-network)** - Network request inspector
+- **[@u-devtools/plugin-inspector](https://www.npmjs.com/package/@u-devtools/plugin-inspector)** - DOM element inspector
+- **[@u-devtools/plugin-terminal](https://www.npmjs.com/package/@u-devtools/plugin-terminal)** - Terminal plugin
+- **[@u-devtools/plugin-storage](https://www.npmjs.com/package/@u-devtools/plugin-storage)** - Browser storage inspector
+- **[@u-devtools/plugin-package-inspector](https://www.npmjs.com/package/@u-devtools/plugin-package-inspector)** - Package.json inspector
+- **[@u-devtools/plugin-vue-inspector](https://www.npmjs.com/package/@u-devtools/plugin-vue-inspector)** - Vue component inspector
+- **[@u-devtools/plugin-vite-inspector](https://www.npmjs.com/package/@u-devtools/plugin-vite-inspector)** - Vite diagnostics inspector
+- **[@u-devtools/plugin-console](https://www.npmjs.com/package/@u-devtools/plugin-console)** - Console logger plugin
+
 ## 🚀 Installation & Quick Start
 
 ### Step 1: Install Dependencies
