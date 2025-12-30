@@ -20,6 +20,10 @@ Add the plugin to your `vite.config.ts`:
 import { defineConfig } from 'vite';
 import { createDevTools } from '@u-devtools/vite';
 import { myPlugin } from './plugins/my-plugin';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
@@ -31,8 +35,23 @@ export default defineConfig({
       ],
     }),
   ],
+  server: {
+    // IMPORTANT: File system access configuration
+    // Vite requires explicit permission to access files outside the project root.
+    // DevTools plugins (like i18n) need to read/write files in your project,
+    // so we need to grant access to the project directory.
+    fs: {
+      allow: [__dirname],
+    },
+    // Optional: Enable polling for file watching (useful in some environments)
+    watch: {
+      usePolling: true,
+    },
+  },
 });
 ```
+
+**Important:** If you're using plugins that interact with the file system (like the i18n plugin), you must configure `server.fs.allow` to grant Vite permission to access your project files. This is required because Vite restricts file system access by default for security reasons.
 
 ## Options
 
