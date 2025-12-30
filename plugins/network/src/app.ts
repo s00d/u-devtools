@@ -133,7 +133,6 @@ XHR.prototype.setRequestHeader = function (header: string, value: string) {
     xhr._udt_requestHeaders = {};
   }
   xhr._udt_requestHeaders[header] = value;
-  // @ts-expect-error
   return originalSetHeader.apply(this, [header, value]);
 };
 
