@@ -27,4 +27,3 @@ export default createViteConfig({
   external: ['@u-devtools/kit'],
   // idb should be bundled in app.js, not external
 });
-

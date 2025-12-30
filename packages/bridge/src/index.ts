@@ -82,7 +82,7 @@ export class ViteRpcClient {
       this.eventListeners.set(event, new Set());
     }
     this.eventListeners.get(event)?.add(fn);
-    
+
     // Возвращаем функцию для отписки
     return () => {
       const listeners = this.eventListeners.get(event);

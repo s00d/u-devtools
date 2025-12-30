@@ -5,7 +5,7 @@ export type StatusColor = 'gray' | 'green' | 'blue' | 'yellow' | 'red';
 
 /**
  * Gets a color based on HTTP status code.
- * 
+ *
  * @param status - HTTP status code
  * @returns Color name for the status
  */
@@ -19,7 +19,7 @@ export function getStatusColor(status?: number): StatusColor {
 
 /**
  * Gets a color based on console log level.
- * 
+ *
  * @param level - Console log level
  * @returns Color name for the level
  */
@@ -37,4 +37,3 @@ export function getLevelColor(level: string): StatusColor {
       return 'gray';
   }
 }
-

@@ -5,7 +5,9 @@ import type { ClientApi } from '@u-devtools/core';
 
 const props = defineProps<{ api: ClientApi }>();
 
-const output = ref<string>('Welcome to Universal DevTools Terminal\nType any command (e.g. "ls -la", "npm run build")\n');
+const output = ref<string>(
+  'Welcome to Universal DevTools Terminal\nType any command (e.g. "ls -la", "npm run build")\n'
+);
 const input = ref('');
 const inputRef = ref<HTMLInputElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
@@ -19,7 +21,7 @@ const historyIndex = ref(-1);
 const quickCommands = computed(() => {
   const commands = props.api.settings.get<Array<{ label: string; cmd: string }>>('quickCommands', [
     { label: 'List Files', cmd: 'ls -la' },
-    { label: 'Build', cmd: 'npm run build' }
+    { label: 'Build', cmd: 'npm run build' },
   ]);
   return Array.isArray(commands) ? commands : [];
 });
@@ -54,7 +56,7 @@ const execute = async () => {
 
   // Отправляем на сервер
   await props.api.rpc.call('term:execute', cmd);
-  
+
   input.value = '';
   await nextTick();
   inputRef.value?.focus();
@@ -65,7 +67,7 @@ const onKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowUp') {
     e.preventDefault();
     if (history.value.length === 0) return;
-    
+
     if (historyIndex.value === -1) {
       historyIndex.value = history.value.length - 1;
     } else if (historyIndex.value > 0) {

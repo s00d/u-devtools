@@ -38,4 +38,3 @@ export function createApiForPlugin(pluginName: string): ClientApi {
     dialog: createDialogApi(),
   };
 }
-

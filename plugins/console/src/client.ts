@@ -32,4 +32,3 @@ const plugin: PluginClientInstance = {
 const clearSignal = { value: () => {} };
 
 export default plugin;
-

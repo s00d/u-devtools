@@ -6,20 +6,23 @@ interface Option {
   value: string;
 }
 
-const props = withDefaults(defineProps<{
-  modelValue?: string;
-  options?: Option[];
-  placeholder?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  disabled?: boolean;
-}>(), {
-  size: 'md',
-  disabled: false,
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string;
+    options?: Option[];
+    placeholder?: string;
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    disabled?: boolean;
+  }>(),
+  {
+    size: 'md',
+    disabled: false,
+  }
+);
 
 defineEmits<{
   'update:modelValue': [value: string];
-  'change': [event: Event];
+  change: [event: Event];
 }>();
 
 const sizeClasses = computed(() => {

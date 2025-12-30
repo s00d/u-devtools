@@ -103,11 +103,14 @@ const inspectComponentInspector = async () => {
     const data = await componentTree.inspectComponentInspector();
     if (data) {
       // Select the component that was inspected
-      const node = componentTree.flattenedTree.value.find(n => n.id === data.id);
+      const node = componentTree.flattenedTree.value.find((n) => n.id === data.id);
       if (node) {
         await componentTree.selectComponent(node);
         // Expand parent nodes
-        const expandParents = (nodes: typeof componentTree.flattenedTree.value, targetId: string) => {
+        const expandParents = (
+          nodes: typeof componentTree.flattenedTree.value,
+          targetId: string
+        ) => {
           for (const node of nodes) {
             if (node.id === targetId) {
               return true;
@@ -137,7 +140,7 @@ const cancelInspectComponentInspector = () => {
 // Keyboard shortcuts
 onMounted(() => {
   componentTree.getComponentTree();
-  
+
   // Global shortcuts via api.shortcuts
   props.api.shortcuts.register(['Meta', 'S'], () => {
     if (!inspectComponentTipVisible.value) {
@@ -149,7 +152,7 @@ onMounted(() => {
       inspectComponentInspector();
     }
   });
-  
+
   // Local shortcuts for navigation (only when component tab is active)
   const handleKeyDown = (event: KeyboardEvent) => {
     // Escape для отмены inspect
@@ -157,23 +160,24 @@ onMounted(() => {
       cancelInspectComponentInspector();
       return;
     }
-    
+
     // Навигация работает только когда компонент в фокусе или активен
-    const isActive = document.activeElement?.closest('.components-tab') || 
-                     document.querySelector('.components-tab')?.classList.contains('active');
-    
+    const isActive =
+      document.activeElement?.closest('.components-tab') ||
+      document.querySelector('.components-tab')?.classList.contains('active');
+
     if (!isActive) return;
-    
+
     const selectedId = componentTree.selectedComponentId.value;
     if (!selectedId) return;
-    
+
     const flattened = componentTree.flattenedTree.value;
-    const currentIndex = flattened.findIndex(n => n.id === selectedId);
-    
+    const currentIndex = flattened.findIndex((n) => n.id === selectedId);
+
     switch (event.key) {
       case 'ArrowRight': {
         // Expand if collapsed and has children
-        const node = flattened.find(n => n.id === selectedId);
+        const node = flattened.find((n) => n.id === selectedId);
         if (node?.children && node.children.length > 0) {
           if (!componentTree.expandedNodes.value.has(selectedId)) {
             componentTree.toggleExpanded(selectedId);
@@ -217,7 +221,7 @@ onMounted(() => {
       }
     }
   };
-  
+
   window.addEventListener('keydown', handleKeyDown);
   onUnmounted(() => {
     window.removeEventListener('keydown', handleKeyDown);

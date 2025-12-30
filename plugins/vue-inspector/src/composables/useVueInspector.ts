@@ -106,13 +106,12 @@ export function useVueInspector(api: ClientApi) {
   // Filtered tree
   const filteredTree = computed(() => {
     if (!filterText.value) return componentTree.value;
-    
+
     const filter = filterText.value.toLowerCase();
     const filterNode = (node: ComponentTreeNode): ComponentTreeNode | null => {
       const matches = node.name.toLowerCase().includes(filter);
-      const filteredChildren = node.children
-        ?.map(filterNode)
-        .filter((n): n is ComponentTreeNode => n !== null) || [];
+      const filteredChildren =
+        node.children?.map(filterNode).filter((n): n is ComponentTreeNode => n !== null) || [];
 
       if (matches || filteredChildren.length > 0) {
         return {
@@ -123,9 +122,7 @@ export function useVueInspector(api: ClientApi) {
       return null;
     };
 
-    return componentTree.value
-      .map(filterNode)
-      .filter((n): n is ComponentTreeNode => n !== null);
+    return componentTree.value.map(filterNode).filter((n): n is ComponentTreeNode => n !== null);
   });
 
   return {
@@ -145,4 +142,3 @@ export function useVueInspector(api: ClientApi) {
     scrollToComponent,
   };
 }
-

@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { UInput, USplitter, UCodeBlock, UBadge, ULoading, UIcon, UButton, UVirtualList } from '@u-devtools/ui';
+import {
+  UInput,
+  USplitter,
+  UCodeBlock,
+  UBadge,
+  ULoading,
+  UIcon,
+  UButton,
+  UVirtualList,
+} from '@u-devtools/ui';
 import type { ClientApi } from '@u-devtools/core';
 
 const props = defineProps<{ api: ClientApi }>();

@@ -20,14 +20,14 @@ function addEvent(type: ViteEvent['type'], data: Record<string, unknown>) {
     id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
     type,
     timestamp: Date.now(),
-    data
+    data,
   };
-  
+
   events.unshift(event);
   if (events.length > MAX_EVENTS) {
     events.pop();
   }
-  
+
   return event;
 }
 
@@ -37,13 +37,13 @@ export function setupServer(
   viteData: { config: ResolvedConfig; server: ViteDevServer }
 ) {
   const { config, server } = viteData;
-  
+
   // Проверка наличия сервера и moduleGraph
   if (!server) {
     console.error('[Vite Inspector] Vite server not provided');
     return;
   }
-  
+
   if (!server.moduleGraph) {
     console.warn('[Vite Inspector] Module graph not available yet');
   }
@@ -92,40 +92,55 @@ export function setupServer(
 
     // Список стандартных хуков Vite и Rollup для отслеживания
     const KNOWN_HOOKS = [
-    // Universal / Rollup
-    'options', 'buildStart', 'resolveId', 'load', 'transform', 'buildEnd', 'closeBundle',
-    // Vite Specific
-    'config', 'configResolved', 'configureServer', 'transformIndexHtml', 'handleHotUpdate'
+      // Universal / Rollup
+      'options',
+      'buildStart',
+      'resolveId',
+      'load',
+      'transform',
+      'buildEnd',
+      'closeBundle',
+      // Vite Specific
+      'config',
+      'configResolved',
+      'configureServer',
+      'transformIndexHtml',
+      'handleHotUpdate',
     ];
 
     // 3. Плагины (Detailed)
     rpc.handle('vite:plugins', () => {
       const plugins = config.plugins || [];
-      
-      return plugins
-        // Фильтруем пустые/ложные плагины
-        .filter((p: unknown) => p && typeof p === 'object')
-        .map((p: unknown, index: number) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const plugin = p as any;
-          
-          // Определяем, какие хуки используются
-          const activeHooks = KNOWN_HOOKS.filter(hook => {
-            const hookValue = plugin[hook];
-            // Хук может быть функцией или объектом { handler: ..., order: ... }
-            return typeof hookValue === 'function' || 
-                   (typeof hookValue === 'object' && typeof hookValue?.handler === 'function');
-          });
 
-          return {
-            index,
-            name: plugin.name || '(anonymous)',
-            enforce: plugin.enforce || '-',
-            apply: typeof plugin.apply === 'function' ? 'function' : plugin.apply || 'serve/build',
-            version: plugin.version || undefined, // Некоторые плагины указывают версию
-            activeHooks // Список активных хуков
-          };
-        });
+      return (
+        plugins
+          // Фильтруем пустые/ложные плагины
+          .filter((p: unknown) => p && typeof p === 'object')
+          .map((p: unknown, index: number) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const plugin = p as any;
+
+            // Определяем, какие хуки используются
+            const activeHooks = KNOWN_HOOKS.filter((hook) => {
+              const hookValue = plugin[hook];
+              // Хук может быть функцией или объектом { handler: ..., order: ... }
+              return (
+                typeof hookValue === 'function' ||
+                (typeof hookValue === 'object' && typeof hookValue?.handler === 'function')
+              );
+            });
+
+            return {
+              index,
+              name: plugin.name || '(anonymous)',
+              enforce: plugin.enforce || '-',
+              apply:
+                typeof plugin.apply === 'function' ? 'function' : plugin.apply || 'serve/build',
+              version: plugin.version || undefined, // Некоторые плагины указывают версию
+              activeHooks, // Список активных хуков
+            };
+          })
+      );
     });
 
     // 4. Build/Server Stats
@@ -135,13 +150,13 @@ export function setupServer(
       const stats = {
         modules: 0,
         requests: 0,
-        types: {} as Record<string, number>
+        types: {} as Record<string, number>,
       };
 
       // Анализ графа модулей
       server.moduleGraph.idToModuleMap.forEach((mod) => {
         stats.modules++;
-        
+
         // Определяем тип файла по расширению
         const file = mod.file || mod.id || '';
         const ext = file.split('.').pop() || 'unknown';
@@ -159,7 +174,7 @@ export function setupServer(
         console.warn('[Vite Inspector] Module graph not available');
         return [];
       }
-      
+
       const filter = payload as string | undefined;
       const modules: Array<{
         id: string;
@@ -169,12 +184,12 @@ export function setupServer(
         importers: number;
       }> = [];
       const search = filter?.toLowerCase() || '';
-      
+
       // Итерируемся по Map (id -> module)
       server.moduleGraph.idToModuleMap.forEach((mod, id) => {
         // Фильтрация
         if (search && !id.toLowerCase().includes(search)) return;
-        
+
         // Исключаем виртуальные модули самого девтулза, чтобы не шуметь
         if (id.includes('u-devtools') || id.includes('virtual:u-devtools')) return;
 
@@ -183,7 +198,7 @@ export function setupServer(
           file: mod.file,
           type: mod.type || 'unknown',
           acceptedHmr: mod.isSelfAccepting || false,
-          importers: mod.importers.size
+          importers: mod.importers.size,
         });
       });
 
@@ -216,7 +231,7 @@ export function setupServer(
         // Используем pluginContainer для получения трансформированного кода
         const loadResult = await server.pluginContainer.load(id);
         let codeToTransform = '';
-        
+
         if (loadResult) {
           // loadResult может быть строкой или объектом SourceDescription
           if (typeof loadResult === 'string') {
@@ -225,23 +240,27 @@ export function setupServer(
             codeToTransform = loadResult.code as string;
           }
         }
-        
+
         // Если не получили код из load, читаем с диска
         if (!codeToTransform && mod.file) {
           codeToTransform = await fs.readFile(mod.file, 'utf-8');
         }
-        
+
         if (codeToTransform) {
           const transformResult = await server.pluginContainer.transform(codeToTransform, id);
           if (transformResult) {
             if (typeof transformResult === 'string') {
               transformed = transformResult;
-            } else if (transformResult && typeof transformResult === 'object' && 'code' in transformResult) {
+            } else if (
+              transformResult &&
+              typeof transformResult === 'object' &&
+              'code' in transformResult
+            ) {
               transformed = transformResult.code as string;
             }
           }
         }
-        
+
         if (!transformed) {
           transformed = codeToTransform || '// No transformation result';
         }
@@ -254,7 +273,7 @@ export function setupServer(
         id: mod.id,
         file: mod.file,
         source,
-        transformed
+        transformed,
       };
     });
 
@@ -267,7 +286,7 @@ export function setupServer(
         return {
           id: result?.id || null,
           external: result?.external || false,
-          error: null
+          error: null,
         };
       } catch (e) {
         const error = e instanceof Error ? e.message : String(e);
@@ -308,22 +327,26 @@ export function setupServer(
 
     // 10. Events Log
     rpc.handle('vite:events:list', (payload: unknown) => {
-      const { limit = 100, type, since } = (payload || {}) as {
+      const {
+        limit = 100,
+        type,
+        since,
+      } = (payload || {}) as {
         limit?: number;
         type?: ViteEvent['type'];
         since?: number;
       };
-      
+
       let filtered = events;
-      
+
       if (type) {
-        filtered = filtered.filter(e => e.type === type);
+        filtered = filtered.filter((e) => e.type === type);
       }
-      
+
       if (since) {
-        filtered = filtered.filter(e => e.timestamp >= since);
+        filtered = filtered.filter((e) => e.timestamp >= since);
       }
-      
+
       return filtered.slice(0, limit || 100);
     });
 
@@ -337,13 +360,13 @@ export function setupServer(
         total: events.length,
         byType: {} as Record<string, number>,
         oldest: events.length > 0 ? events[events.length - 1].timestamp : null,
-        newest: events.length > 0 ? events[0].timestamp : null
+        newest: events.length > 0 ? events[0].timestamp : null,
       };
-      
-      events.forEach(e => {
+
+      events.forEach((e) => {
         stats.byType[e.type] = (stats.byType[e.type] || 0) + 1;
       });
-      
+
       return stats;
     });
 
@@ -359,7 +382,7 @@ export function setupServer(
               file: update.path || update.file || '',
               type: update.type || 'update',
               acceptedPath: update.acceptedPath,
-              timestamp: update.timestamp || Date.now()
+              timestamp: update.timestamp || Date.now(),
             });
           });
         }
@@ -369,7 +392,7 @@ export function setupServer(
       server.ws.on('connection', () => {
         addEvent('connection', {
           action: 'connected',
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
       });
 
@@ -377,7 +400,7 @@ export function setupServer(
       server.ws.on('error', (error) => {
         addEvent('error', {
           message: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : undefined
+          stack: error instanceof Error ? error.stack : undefined,
         });
       });
     }

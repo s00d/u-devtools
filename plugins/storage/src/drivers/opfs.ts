@@ -13,26 +13,31 @@ export class OPFSDriver implements StorageDriver {
     try {
       const root = await storageManager.getDirectory();
       const entries = await this.scanDir(root, '');
-      
+
       // OPFS - это одна большая "база", но для совместимости с UI вернем как массив
-      return [{ 
-        name: 'root', 
-        entries 
-      }];
+      return [
+        {
+          name: 'root',
+          entries,
+        },
+      ];
     } catch (_e) {
       return [];
     }
   }
 
   // Рекурсивный скан
-  private async scanDir(dirHandle: FileSystemDirectoryHandle, pathPrefix: string): Promise<StorageEntry[]> {
+  private async scanDir(
+    dirHandle: FileSystemDirectoryHandle,
+    pathPrefix: string
+  ): Promise<StorageEntry[]> {
     const entries: StorageEntry[] = [];
     const dirWithEntries = dirHandle as FileSystemDirectoryHandle & {
       entries: () => AsyncIterableIterator<[string, FileSystemHandle]>;
     };
     for await (const [name, handle] of dirWithEntries.entries()) {
       const path = pathPrefix ? `${pathPrefix}/${name}` : name;
-      
+
       if (handle.kind === 'file') {
         const fileHandle = handle as FileSystemFileHandle;
         const file = await fileHandle.getFile();
@@ -41,8 +46,8 @@ export class OPFSDriver implements StorageDriver {
           value: {
             size: file.size,
             type: file.type,
-            lastModified: new Date(file.lastModified).toLocaleString()
-          }
+            lastModified: new Date(file.lastModified).toLocaleString(),
+          },
         });
       } else if (handle.kind === 'directory') {
         // Рекурсия
@@ -69,12 +74,12 @@ export class OPFSDriver implements StorageDriver {
     const parts = key.split('/');
     const fileName = parts.pop();
     if (!fileName) return;
-    
+
     let currentDir = root;
     for (const part of parts) {
       currentDir = await currentDir.getDirectoryHandle(part);
     }
-    
+
     await currentDir.removeEntry(fileName);
   }
 
@@ -84,10 +89,11 @@ export class OPFSDriver implements StorageDriver {
     };
     if (!storageManager.getDirectory) return;
     const root = await storageManager.getDirectory();
-    const rootWithKeys = root as FileSystemDirectoryHandle & { keys: () => AsyncIterableIterator<string> };
+    const rootWithKeys = root as FileSystemDirectoryHandle & {
+      keys: () => AsyncIterableIterator<string>;
+    };
     for await (const name of rootWithKeys.keys()) {
       await root.removeEntry(name, { recursive: true });
     }
   }
 }
-

@@ -3,7 +3,9 @@ import type { ClipboardApi } from '@u-devtools/core';
 /**
  * Создает API для работы с буфером обмена.
  */
-export function createClipboardApi(notify: (msg: string, type?: 'info' | 'error' | 'success') => void): ClipboardApi {
+export function createClipboardApi(
+  notify: (msg: string, type?: 'info' | 'error' | 'success') => void
+): ClipboardApi {
   return {
     async copy(text: string, successMessage = 'Copied to clipboard!') {
       try {
@@ -26,4 +28,3 @@ export function createClipboardApi(notify: (msg: string, type?: 'info' | 'error'
     },
   };
 }
-

@@ -4,14 +4,8 @@ import { onClickOutside } from '@vueuse/core';
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import { UIcon } from '@u-devtools/ui';
 
-const { 
-  plugins, 
-  activePluginId, 
-  isSidebarExpanded, 
-  isManagerActive, 
-  showSettings, 
-  closeDevTools 
-} = useDevToolsState();
+const { plugins, activePluginId, isSidebarExpanded, isManagerActive, showSettings, closeDevTools } =
+  useDevToolsState();
 
 // Состояние меню настроек
 const isMenuOpen = ref(false);

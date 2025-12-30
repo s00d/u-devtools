@@ -15,19 +15,22 @@ export interface TreeNode {
   [key: string]: unknown; // Для гибкости
 }
 
-const props = withDefaults(defineProps<{
-  nodes: TreeNode[];
-  title?: string;
-  showHeader?: boolean;
-  expandAll?: boolean;
-  selectable?: boolean;
-  indentSize?: number;
-}>(), {
-  showHeader: true,
-  expandAll: false,
-  selectable: true,
-  indentSize: 20,
-});
+const props = withDefaults(
+  defineProps<{
+    nodes: TreeNode[];
+    title?: string;
+    showHeader?: boolean;
+    expandAll?: boolean;
+    selectable?: boolean;
+    indentSize?: number;
+  }>(),
+  {
+    showHeader: true,
+    expandAll: false,
+    selectable: true,
+    indentSize: 20,
+  }
+);
 
 const emit = defineEmits<{
   nodeClick: [node: TreeNode];
@@ -41,7 +44,7 @@ const expandedNodes = ref<Set<string | number>>(new Set());
 // Инициализация: раскрываем все, если expandAll
 if (props.expandAll) {
   const expandRecursive = (nodes: TreeNode[]) => {
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       if (node.children && node.children.length > 0) {
         expandedNodes.value.add(node.id);
         expandRecursive(node.children);

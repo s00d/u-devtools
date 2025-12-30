@@ -16,18 +16,18 @@ const has = (cls: string) => props.classes.includes(cls);
 // Хелпер для переключения
 const toggleClass = (cls: string, groupRegex?: RegExp) => {
   let newClasses = [...props.classes];
-  
+
   if (groupRegex) {
     // Удаляем конфликтующие классы (например, если ставим p-4, убираем p-2)
-    newClasses = newClasses.filter(c => !groupRegex.test(c));
+    newClasses = newClasses.filter((c) => !groupRegex.test(c));
   }
-  
+
   if (!has(cls)) {
     newClasses.push(cls);
   } else if (!groupRegex) {
     // Если это просто toggle (без группы), то удаляем, если он уже был
     // Если это группа (как display), то мы уже удалили все regex-ом, и добавили новый
-    newClasses = newClasses.filter(c => c !== cls);
+    newClasses = newClasses.filter((c) => c !== cls);
   }
 
   emit('update', newClasses);
@@ -42,7 +42,7 @@ const addCustomClass = () => {
 };
 
 const removeClass = (cls: string) => {
-  const newClasses = props.classes.filter(c => c !== cls);
+  const newClasses = props.classes.filter((c) => c !== cls);
   emit('update', newClasses);
 };
 </script>

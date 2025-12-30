@@ -51,7 +51,7 @@ export function createViteConfig({
       exclude: dtsOptions.exclude,
       copyDtsFiles: dtsOptions.copyDtsFiles,
       tsconfigPath: resolve(dir, 'tsconfig.json'),
-    }),
+    })
   );
 
   plugins.push(cleanTimestampFiles(dir));
@@ -60,9 +60,7 @@ export function createViteConfig({
   const entryResolved =
     typeof entry === 'string'
       ? resolve(dir, entry)
-      : Object.fromEntries(
-          Object.entries(entry).map(([key, value]) => [key, resolve(dir, value)]),
-        );
+      : Object.fromEntries(Object.entries(entry).map(([key, value]) => [key, resolve(dir, value)]));
 
   const defaultFileName = (format: string, entryName?: string) => {
     if (entryName && entryName !== 'index') {
@@ -77,10 +75,7 @@ export function createViteConfig({
     resolve: resolveAlias
       ? {
           alias: Object.fromEntries(
-            Object.entries(resolveAlias).map(([key, value]) => [
-              key,
-              resolve(dir, value),
-            ]),
+            Object.entries(resolveAlias).map(([key, value]) => [key, resolve(dir, value)])
           ),
         }
       : undefined,
@@ -117,4 +112,3 @@ export function createViteConfig({
     },
   });
 }
-

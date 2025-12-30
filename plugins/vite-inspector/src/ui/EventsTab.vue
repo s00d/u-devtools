@@ -29,7 +29,7 @@ const loadEvents = async () => {
   try {
     events.value = await props.api.rpc.call('vite:events:list', {
       limit: eventsLimit.value,
-      type: eventsFilter.value === 'all' ? undefined : eventsFilter.value
+      type: eventsFilter.value === 'all' ? undefined : eventsFilter.value,
     });
     eventsStats.value = await props.api.rpc.call('vite:events:stats');
   } catch (e) {
@@ -50,7 +50,6 @@ const clearEvents = async () => {
   }
 };
 
-
 const getEventColor = (type: ViteEvent['type']): 'gray' | 'red' | 'green' | 'yellow' | 'blue' => {
   const colors: Record<ViteEvent['type'], 'gray' | 'red' | 'green' | 'yellow' | 'blue'> = {
     hmr: 'blue',
@@ -58,7 +57,7 @@ const getEventColor = (type: ViteEvent['type']): 'gray' | 'red' | 'green' | 'yel
     error: 'red',
     transform: 'yellow',
     middleware: 'blue',
-    module: 'gray'
+    module: 'gray',
   };
   return colors[type] || 'gray';
 };
@@ -69,7 +68,7 @@ watch([eventsFilter, eventsLimit], () => {
 
 onMounted(() => {
   loadEvents();
-  
+
   // Подписка на новые события в реальном времени
   props.api.rpc.on('vite:hmr-log', () => {
     loadEvents();

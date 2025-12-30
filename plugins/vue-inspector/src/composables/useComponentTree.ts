@@ -22,9 +22,8 @@ export function useComponentTree() {
     const filter = filterText.value.toLowerCase();
     const filterNode = (node: ComponentTreeNode): ComponentTreeNode | null => {
       const matches = node.name.toLowerCase().includes(filter);
-      const filteredChildren = node.children
-        ?.map(filterNode)
-        .filter((n): n is ComponentTreeNode => n !== null) || [];
+      const filteredChildren =
+        node.children?.map(filterNode).filter((n): n is ComponentTreeNode => n !== null) || [];
 
       if (matches || filteredChildren.length > 0) {
         return {
@@ -35,9 +34,7 @@ export function useComponentTree() {
       return null;
     };
 
-    return componentTree.value
-      .map(filterNode)
-      .filter((n): n is ComponentTreeNode => n !== null);
+    return componentTree.value.map(filterNode).filter((n): n is ComponentTreeNode => n !== null);
   });
 
   // Flatten tree for easier navigation
@@ -89,7 +86,6 @@ export function useComponentTree() {
       // Ignore if bridge is closed
     }
   };
-
 
   const getComponentRenderCode = (nodeId: string): Promise<string> => {
     return new Promise((resolve) => {
@@ -200,12 +196,14 @@ export function useComponentTree() {
   });
 
   bridge.on('inspector:componentState', (state: ComponentState) => {
-    const hasProps = !!(state?.props?.length);
-    const hasData = !!(state?.data?.length);
-    const hasComputed = !!(state?.computed?.length);
+    const hasProps = !!state?.props?.length;
+    const hasData = !!state?.data?.length;
+    const hasComputed = !!state?.computed?.length;
     const hasSetupState = !!state?.setupState;
-    const hasMethods = !!(state?.methods?.length);
-    console.log(`[Vue Inspector] componentState received: hasState=${!!state}, props=${hasProps}, data=${hasData}, computed=${hasComputed}, setupState=${hasSetupState}, methods=${hasMethods}`);
+    const hasMethods = !!state?.methods?.length;
+    console.log(
+      `[Vue Inspector] componentState received: hasState=${!!state}, props=${hasProps}, data=${hasData}, computed=${hasComputed}, setupState=${hasSetupState}, methods=${hasMethods}`
+    );
     componentState.value = state;
     isLoading.value = false;
   });

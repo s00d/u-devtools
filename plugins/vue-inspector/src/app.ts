@@ -57,11 +57,13 @@ bridge.on('inspector:getComponentTree', async (payload: { filter?: string }) => 
   try {
     const tree = await devtools.ctx.api.getInspectorTree({
       inspectorId: 'components',
-      filter: payload.filter || ''
+      filter: payload.filter || '',
     });
     bridge.send('inspector:componentTree', serialize(tree || []));
   } catch (e) {
-    console.error(`[Vue Inspector] getComponentTree error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] getComponentTree error: ${e instanceof Error ? e.message : String(e)}`
+    );
     bridge.send('inspector:componentTree', []);
   }
 });
@@ -77,7 +79,9 @@ function normalizeComponentState(data: any): any {
   // Check if data has a 'state' property (CustomInspectorState format)
   const stateArray = data.state;
   if (!stateArray || !Array.isArray(stateArray)) {
-    console.warn(`[Vue Inspector] State is not an array. Data keys: ${data ? Object.keys(data).join(', ') : 'null'}`);
+    console.warn(
+      `[Vue Inspector] State is not an array. Data keys: ${data ? Object.keys(data).join(', ') : 'null'}`
+    );
     return null;
   }
 
@@ -96,7 +100,9 @@ function normalizeComponentState(data: any): any {
   stateArray.forEach((item: any, index: number) => {
     // Log first few items to understand structure
     if (index < 3) {
-      console.log(`[Vue Inspector] State item ${index}: key="${item.key}", type="${item.type}", stateType="${item.stateType || item.stateTypeName || 'none'}", valueType="${typeof item.value}"`);
+      console.log(
+        `[Vue Inspector] State item ${index}: key="${item.key}", type="${item.type}", stateType="${item.stateType || item.stateTypeName || 'none'}", valueType="${typeof item.value}"`
+      );
     }
 
     const itemType = item.type || '';
@@ -127,7 +133,11 @@ function normalizeComponentState(data: any): any {
       setupStateItems.push(stateItem);
     }
     // Handle methods (functions)
-    else if (valueType === 'function' || itemType.includes('method') || itemType.includes('(other)')) {
+    else if (
+      valueType === 'function' ||
+      itemType.includes('method') ||
+      itemType.includes('(other)')
+    ) {
       methods.push(stateItem);
     }
     // Handle attrs
@@ -158,10 +168,13 @@ function normalizeComponentState(data: any): any {
   });
 
   // Convert setupState array to object
-  const setupStateObj = setupStateItems.length > 0 ? setupStateItems.reduce((acc: any, item: any) => {
-    acc[item.key] = item.value;
-    return acc;
-  }, {}) : undefined;
+  const setupStateObj =
+    setupStateItems.length > 0
+      ? setupStateItems.reduce((acc: any, item: any) => {
+          acc[item.key] = item.value;
+          return acc;
+        }, {})
+      : undefined;
 
   const normalized = {
     props,
@@ -177,7 +190,9 @@ function normalizeComponentState(data: any): any {
 
   // Log for debugging
   const setupStateKeys = setupStateObj ? Object.keys(setupStateObj).join(', ') : 'none';
-  console.log(`[Vue Inspector] normalizeComponentState result: arrayLength=${stateArray.length}, props=${normalized.props.length}, data=${normalized.data.length}, computed=${normalized.computed.length}, setupState=[${setupStateKeys}], methods=${normalized.methods.length}`);
+  console.log(
+    `[Vue Inspector] normalizeComponentState result: arrayLength=${stateArray.length}, props=${normalized.props.length}, data=${normalized.data.length}, computed=${normalized.computed.length}, setupState=[${setupStateKeys}], methods=${normalized.methods.length}`
+  );
 
   return normalized;
 }
@@ -191,26 +206,40 @@ bridge.on('inspector:getComponentState', async (payload: { id: string }) => {
     console.log(`[Vue Inspector] getComponentState requested: id="${payload.id}"`);
     const state = await devtools.ctx.api.getInspectorState({
       inspectorId: 'components',
-      nodeId: payload.id
+      nodeId: payload.id,
     });
 
     const stateKeys = state ? Object.keys(state).join(', ') : 'none';
-    const stateType = state?.state ? (Array.isArray(state.state) ? 'array' : typeof state.state) : 'none';
-    const stateArrayLength = state?.state ? (Array.isArray(state.state) ? state.state.length : 0) : 0;
-    console.log(`[Vue Inspector] getComponentState raw result: hasState=${!!state}, stateKeys=[${stateKeys}], stateType=${stateType}, stateArrayLength=${stateArrayLength}`);
+    const stateType = state?.state
+      ? Array.isArray(state.state)
+        ? 'array'
+        : typeof state.state
+      : 'none';
+    const stateArrayLength = state?.state
+      ? Array.isArray(state.state)
+        ? state.state.length
+        : 0
+      : 0;
+    console.log(
+      `[Vue Inspector] getComponentState raw result: hasState=${!!state}, stateKeys=[${stateKeys}], stateType=${stateType}, stateArrayLength=${stateArrayLength}`
+    );
 
     // Normalize state to ComponentState format
     const normalized = normalizeComponentState(state);
-    const hasProps = !!(normalized?.props?.length);
-    const hasData = !!(normalized?.data?.length);
-    const hasComputed = !!(normalized?.computed?.length);
+    const hasProps = !!normalized?.props?.length;
+    const hasData = !!normalized?.data?.length;
+    const hasComputed = !!normalized?.computed?.length;
     const hasSetupState = !!normalized?.setupState;
-    const hasMethods = !!(normalized?.methods?.length);
-    console.log(`[Vue Inspector] getComponentState normalized: props=${hasProps}, data=${hasData}, computed=${hasComputed}, setupState=${hasSetupState}, methods=${hasMethods}`);
+    const hasMethods = !!normalized?.methods?.length;
+    console.log(
+      `[Vue Inspector] getComponentState normalized: props=${hasProps}, data=${hasData}, computed=${hasComputed}, setupState=${hasSetupState}, methods=${hasMethods}`
+    );
 
     bridge.send('inspector:componentState', serialize(normalized || null));
   } catch (e) {
-    console.error(`[Vue Inspector] getComponentState error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] getComponentState error: ${e instanceof Error ? e.message : String(e)}`
+    );
     bridge.send('inspector:componentState', null);
   }
 });
@@ -242,7 +271,7 @@ bridge.on('inspector:editState', async (payload: EditStatePayload) => {
     // Refresh state after edit
     const state = await devtools.ctx.api.getInspectorState({
       inspectorId: payload.inspectorId,
-      nodeId: payload.nodeId
+      nodeId: payload.nodeId,
     });
     bridge.send('inspector:componentState', serialize(state || null));
   } catch (e) {
@@ -260,7 +289,7 @@ bridge.on('inspector:getPiniaTree', async (payload: { filter?: string }) => {
   try {
     const tree = await devtools.ctx.api.getInspectorTree({
       inspectorId: 'pinia',
-      filter: payload.filter || ''
+      filter: payload.filter || '',
     });
     bridge.send('inspector:piniaTree', serialize(tree || []));
   } catch (e) {
@@ -277,7 +306,7 @@ bridge.on('inspector:getPiniaState', async (payload: { nodeId: string }) => {
   try {
     const state = await devtools.ctx.api.getInspectorState({
       inspectorId: 'pinia',
-      nodeId: payload.nodeId
+      nodeId: payload.nodeId,
     });
     bridge.send('inspector:piniaState', serialize(state || {}));
   } catch (e) {
@@ -288,34 +317,39 @@ bridge.on('inspector:getPiniaState', async (payload: { nodeId: string }) => {
 
 // --- EDIT PINIA STATE ---
 
-bridge.on('inspector:editPiniaState', async (payload: {
-  nodeId: string;
-  path: string[];
-  type: 'state' | 'getters';
-  value: unknown;
-}) => {
-  if (!isConnected || !hasPinia) return;
-  try {
-    // The API will add app and set function automatically
-    devtools.ctx.api.editInspectorState({
-      inspectorId: 'pinia',
-      nodeId: payload.nodeId,
-      path: payload.path,
-      state: {
-        value: payload.value,
-      } as any, // Type assertion needed as API adds app and set internally
-      type: payload.type,
-    } as any);
-    // Refresh state after edit
-    const state = await devtools.ctx.api.getInspectorState({
-      inspectorId: 'pinia',
-      nodeId: payload.nodeId
-    });
-    bridge.send('inspector:piniaState', serialize(state || {}));
-  } catch (e) {
-    console.error(`[Vue Inspector] editPiniaState error: ${e instanceof Error ? e.message : String(e)}`);
+bridge.on(
+  'inspector:editPiniaState',
+  async (payload: {
+    nodeId: string;
+    path: string[];
+    type: 'state' | 'getters';
+    value: unknown;
+  }) => {
+    if (!isConnected || !hasPinia) return;
+    try {
+      // The API will add app and set function automatically
+      devtools.ctx.api.editInspectorState({
+        inspectorId: 'pinia',
+        nodeId: payload.nodeId,
+        path: payload.path,
+        state: {
+          value: payload.value,
+        } as any, // Type assertion needed as API adds app and set internally
+        type: payload.type,
+      } as any);
+      // Refresh state after edit
+      const state = await devtools.ctx.api.getInspectorState({
+        inspectorId: 'pinia',
+        nodeId: payload.nodeId,
+      });
+      bridge.send('inspector:piniaState', serialize(state || {}));
+    } catch (e) {
+      console.error(
+        `[Vue Inspector] editPiniaState error: ${e instanceof Error ? e.message : String(e)}`
+      );
+    }
   }
-});
+);
 
 // --- ROUTER ---
 // Router info via direct instance access
@@ -342,13 +376,15 @@ bridge.on('inspector:getRouterInfo', () => {
         path: r.path,
         name: r.name,
         meta: r.meta,
-        aliasOf: r.aliasOf ? r.aliasOf.path : undefined
-      }))
+        aliasOf: r.aliasOf ? r.aliasOf.path : undefined,
+      })),
     };
 
     bridge.send('inspector:routerInfo', serialize(info));
   } catch (e) {
-    console.error(`[Vue Inspector] getRouterInfo error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] getRouterInfo error: ${e instanceof Error ? e.message : String(e)}`
+    );
     bridge.send('inspector:routerInfo', null);
   }
 });
@@ -368,14 +404,16 @@ bridge.on('inspector:navigateToRoute', async (payload: { path: string }) => {
             path: r.path,
             name: r.name,
             meta: r.meta,
-            aliasOf: r.aliasOf ? r.aliasOf.path : undefined
-          }))
+            aliasOf: r.aliasOf ? r.aliasOf.path : undefined,
+          })),
         };
         bridge.send('inspector:routerInfo', serialize(info));
       }, 100);
     }
   } catch (e) {
-    console.error(`[Vue Inspector] navigateToRoute error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] navigateToRoute error: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 });
 
@@ -410,7 +448,9 @@ bridge.on('inspector:scrollToComponent', (payload: { id: string }) => {
   try {
     devtools.ctx.api.scrollToComponent(payload.id);
   } catch (e) {
-    console.error(`[Vue Inspector] scrollToComponent error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] scrollToComponent error: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 });
 
@@ -430,7 +470,9 @@ bridge.on('inspector:unhighlight', () => {
     // Use cancelInspectComponentInspector to unhighlight
     devtools.ctx.api.cancelInspectComponentInspector();
   } catch (e) {
-    console.error(`[Vue Inspector] unhighlight error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] unhighlight error: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 });
 
@@ -442,7 +484,9 @@ bridge.on('inspector:getComponentRenderCode', async (payload: { nodeId: string }
     const code = devtools.ctx.api.getComponentRenderCode?.(payload.nodeId) || '';
     bridge.send('inspector:componentRenderCode', { code });
   } catch (e) {
-    console.error(`[Vue Inspector] getComponentRenderCode error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] getComponentRenderCode error: ${e instanceof Error ? e.message : String(e)}`
+    );
     bridge.send('inspector:componentRenderCode', { code: '' });
   }
 });
@@ -453,9 +497,13 @@ bridge.on('inspector:inspectComponentInspector', async () => {
   if (!isConnected) return;
   try {
     const data = await devtools.ctx.api.inspectComponentInspector();
-    bridge.send('inspector:inspectComponentInspector:result', { data: data ? JSON.parse(data) : null });
+    bridge.send('inspector:inspectComponentInspector:result', {
+      data: data ? JSON.parse(data) : null,
+    });
   } catch (e) {
-    console.error(`[Vue Inspector] inspectComponentInspector error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] inspectComponentInspector error: ${e instanceof Error ? e.message : String(e)}`
+    );
     bridge.send('inspector:inspectComponentInspector:result', { data: null });
   }
 });
@@ -465,13 +513,17 @@ bridge.on('inspector:cancelInspectComponentInspector', () => {
   try {
     devtools.ctx.api.cancelInspectComponentInspector();
   } catch (e) {
-    console.error(`[Vue Inspector] cancelInspectComponentInspector error: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(
+      `[Vue Inspector] cancelInspectComponentInspector error: ${e instanceof Error ? e.message : String(e)}`
+    );
   }
 });
 
 // --- CLEANUP ---
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as unknown as Record<string, unknown>).hot as { dispose: (cb: () => void) => void } | undefined;
+const hot = (import.meta as unknown as Record<string, unknown>).hot as
+  | { dispose: (cb: () => void) => void }
+  | undefined;
 if (hot) {
   hot.dispose(() => {
     bridge.close();

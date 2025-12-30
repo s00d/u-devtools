@@ -8,11 +8,11 @@ const meta = {
   description: 'Terminal plugin for running npm scripts from DevTools',
 };
 
-export const terminalPlugin = () => definePlugin({
-  name: 'Terminal',
-  root: import.meta.url,
-  client: './client',
-  meta,
-  setupServer: (rpc, ctx) => setupServer(rpc, ctx),
-});
-
+export const terminalPlugin = () =>
+  definePlugin({
+    name: 'Terminal',
+    root: import.meta.url,
+    client: './client',
+    meta,
+    setupServer: (rpc, ctx) => setupServer(rpc, ctx),
+  });

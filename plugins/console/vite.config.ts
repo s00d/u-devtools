@@ -24,4 +24,3 @@ export default createViteConfig({
     '@u-devtools/ui': '../../packages/ui/src',
   },
 });
-

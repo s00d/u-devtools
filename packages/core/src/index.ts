@@ -21,7 +21,6 @@ export interface PluginCommand {
   shortcut?: string[];
 }
 
-
 export interface StorageApi {
   get<T>(key: string, def: T): T;
   set<T>(key: string, value: T): void;

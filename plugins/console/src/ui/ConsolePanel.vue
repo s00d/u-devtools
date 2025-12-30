@@ -42,7 +42,6 @@ const filteredLogs = computed(() => {
   return result;
 });
 
-
 let unsubscribe: (() => void) | undefined;
 
 onMounted(() => {

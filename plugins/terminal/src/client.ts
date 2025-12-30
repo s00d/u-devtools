@@ -11,8 +11,10 @@ const plugin: PluginClientInstance = {
       id: 'term.clear',
       label: 'Clear Terminal',
       icon: 'Trash',
-      action: () => { /* Можно реализовать через EventBus, если нужно вызывать снаружи */ }
-    }
+      action: () => {
+        /* Можно реализовать через EventBus, если нужно вызывать снаружи */
+      },
+    },
   ],
 
   // --- НОВЫЙ SDK НАСТРОЕК ---
@@ -20,7 +22,7 @@ const plugin: PluginClientInstance = {
     fontSize: {
       label: 'Font Size',
       type: 'number',
-      default: 13
+      default: 13,
     },
     quickCommands: {
       label: 'Quick Commands',
@@ -28,21 +30,20 @@ const plugin: PluginClientInstance = {
       type: 'array',
       default: [
         { label: 'List Files', cmd: 'ls -la' },
-        { label: 'Build', cmd: 'npm run build' }
+        { label: 'Build', cmd: 'npm run build' },
       ],
       items: {
         label: { label: 'Button Label', type: 'string' },
-        cmd: { label: 'Command', type: 'string' }
-      }
-    }
+        cmd: { label: 'Command', type: 'string' },
+      },
+    },
   },
 
   renderMain(el, api) {
     const app = createApp(TerminalPanel, { api });
     app.mount(el);
     return () => app.unmount();
-  }
+  },
 };
 
 export default plugin;
-

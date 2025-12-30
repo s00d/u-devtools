@@ -5,17 +5,17 @@ export interface OverlayContext {
    * Открыть основное окно DevTools
    */
   open: () => void;
-  
+
   /**
    * Закрыть основное окно DevTools
    */
   close: () => void;
-  
+
   /**
    * Переключить состояние окна
    */
   toggle: () => void;
-  
+
   /**
    * Текущее состояние
    */
@@ -74,24 +74,26 @@ declare global {
  */
 export function registerMenuItem(item: OverlayMenuItem) {
   if (typeof window === 'undefined') return;
-  
+
   // Инициализируем глобальный массив, если его нет
   if (!window.__UDEVTOOLS_MENU_ITEMS__) {
     window.__UDEVTOOLS_MENU_ITEMS__ = [];
   }
-  
+
   // Сохраняем элемент в глобальный массив (для случаев, когда overlay еще не загружен)
-  const existingIdx = window.__UDEVTOOLS_MENU_ITEMS__.findIndex(i => i.id === item.id);
+  const existingIdx = window.__UDEVTOOLS_MENU_ITEMS__.findIndex((i) => i.id === item.id);
   if (existingIdx !== -1) {
     window.__UDEVTOOLS_MENU_ITEMS__[existingIdx] = item;
   } else {
     window.__UDEVTOOLS_MENU_ITEMS__.push(item);
   }
-  
+
   // Отправляем событие, которое поймает Vue-приложение оверлея (для обратной совместимости)
-  window.dispatchEvent(new CustomEvent(OVERLAY_EVENT, {
-    detail: item
-  }));
+  window.dispatchEvent(
+    new CustomEvent(OVERLAY_EVENT, {
+      detail: item,
+    })
+  );
 }
 
 export class DevToolsControl {
@@ -134,11 +136,11 @@ export class DevToolsControl {
           resolve(e.data.isOpen);
         }
       };
-      
+
       this.channel.addEventListener('message', handler);
       // Запрашиваем состояние
       this.channel.postMessage({ action: 'get-state' });
-      
+
       // Таймаут на случай, если девтулс не загружен
       setTimeout(() => {
         this.channel.removeEventListener('message', handler);
@@ -146,7 +148,7 @@ export class DevToolsControl {
       }, 200);
     });
   }
-  
+
   /**
    * Подписаться на изменение состояния
    */
@@ -181,4 +183,3 @@ export class DevToolsControl {
 
 // Экспортируем синглтон для удобства
 export const devtools = new DevToolsControl();
-

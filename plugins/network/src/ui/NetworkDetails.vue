@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { UTabs, UJsonTree, UKeyValue, UButton, UCodeBlock, UIcon } from '@u-devtools/ui';
 
-const props = defineProps<{ 
+const props = defineProps<{
   request: {
     id: string;
     url: string;
@@ -27,7 +27,8 @@ const requestHeaders = computed(() => Object.entries(props.request.requestHeader
 const responseHeaders = computed(() => Object.entries(props.request.responseHeaders || {}));
 const hasBody = computed(() => !!props.request.requestBody);
 
-const isJson = (data: unknown) => typeof data === 'object' && data !== null && !Array.isArray(data) || Array.isArray(data);
+const isJson = (data: unknown) =>
+  (typeof data === 'object' && data !== null && !Array.isArray(data)) || Array.isArray(data);
 </script>
 
 <template>

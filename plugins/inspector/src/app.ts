@@ -6,7 +6,8 @@ const bridge = new AppBridge('inspector');
 // Создаем контейнер в Shadow DOM, чтобы стили сайта не влияли на оверлей
 const overlayHost = document.createElement('div');
 overlayHost.id = 'u-devtools-inspector-host';
-overlayHost.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2147483645 !important; display: none;';
+overlayHost.style.cssText =
+  'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2147483645 !important; display: none;';
 document.documentElement.appendChild(overlayHost);
 
 const shadow = overlayHost.attachShadow({ mode: 'closed' });
@@ -84,7 +85,8 @@ shadow.appendChild(style);
 // Создаем 4 линии (верх, низ, лево, право) и метки
 const guidesHost = document.createElement('div');
 guidesHost.id = 'u-devtools-guides-host';
-guidesHost.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; display: none;';
+guidesHost.style.cssText =
+  'position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; display: none;';
 document.documentElement.appendChild(guidesHost);
 
 function createLine(vertical: boolean) {
@@ -99,10 +101,14 @@ const guideRight = createLine(true);
 guidesHost.append(guideTop, guideBottom, guideLeft, guideRight);
 
 // Создаем элементы оверлея
-const marginBox = document.createElement('div'); marginBox.className = 'box margin';
-const paddingBox = document.createElement('div'); paddingBox.className = 'box padding';
-const contentBox = document.createElement('div'); contentBox.className = 'box content';
-const tooltip = document.createElement('div'); tooltip.className = 'tooltip';
+const marginBox = document.createElement('div');
+marginBox.className = 'box margin';
+const paddingBox = document.createElement('div');
+paddingBox.className = 'box padding';
+const contentBox = document.createElement('div');
+contentBox.className = 'box content';
+const tooltip = document.createElement('div');
+tooltip.className = 'tooltip';
 
 // Кнопка закрытия инспектора
 const closeButton = document.createElement('button');
@@ -185,7 +191,7 @@ function getStylesByCategory(el: HTMLElement) {
       margin: s.margin,
       padding: s.padding,
       'box-sizing': s.boxSizing,
-      'z-index': s.zIndex
+      'z-index': s.zIndex,
     },
     text: {
       color: s.color,
@@ -193,7 +199,7 @@ function getStylesByCategory(el: HTMLElement) {
       'font-family': s.fontFamily,
       'font-weight': s.fontWeight,
       'line-height': s.lineHeight,
-      'text-align': s.textAlign
+      'text-align': s.textAlign,
     },
     appearance: {
       background: s.background,
@@ -202,14 +208,16 @@ function getStylesByCategory(el: HTMLElement) {
       'border-radius': s.borderRadius,
       opacity: s.opacity,
       cursor: s.cursor,
-      visibility: s.visibility
+      visibility: s.visibility,
     },
-    flex: s.display.includes('flex') ? {
-      'flex-direction': s.flexDirection,
-      'justify-content': s.justifyContent,
-      'align-items': s.alignItems,
-      gap: s.gap
-    } : null
+    flex: s.display.includes('flex')
+      ? {
+          'flex-direction': s.flexDirection,
+          'justify-content': s.justifyContent,
+          'align-items': s.alignItems,
+          gap: s.gap,
+        }
+      : null,
   };
 }
 
@@ -224,7 +232,6 @@ function getA11yData(el: HTMLElement) {
     alt: el.getAttribute('alt') || '',
   };
 }
-
 
 // Проверяем и открываем DevTools если нужно (не блокируем выполнение)
 function ensureDevToolsOpen() {
@@ -274,8 +281,9 @@ function sendElementDataInternal(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
 
   const attrs: Record<string, string> = {};
-  Array.from(el.attributes).forEach(attr => {
-    if (attr.name !== UDT_ID_ATTR) { // Скрываем наш служебный атрибут
+  Array.from(el.attributes).forEach((attr) => {
+    if (attr.name !== UDT_ID_ATTR) {
+      // Скрываем наш служебный атрибут
       attrs[attr.name] = attr.value;
     }
   });
@@ -293,7 +301,7 @@ function sendElementDataInternal(el: HTMLElement) {
     breadcrumbs: getBreadcrumbs(el),
     a11y: getA11yData(el),
     colors: getContrast(el),
-    domContext: getDomContext(el)
+    domContext: getDomContext(el),
   };
 
   bridge.send('element-picked', data);
@@ -319,7 +327,7 @@ function serializeNodeSummary(el: Element) {
     id: (el as HTMLElement).id || '',
     tagName: el.tagName.toLowerCase(),
     classes: Array.from(el.classList),
-    hasChildren: el.children.length > 0
+    hasChildren: el.children.length > 0,
   };
 }
 
@@ -329,20 +337,22 @@ function getDomContext(el: HTMLElement) {
 
   // Фильтруем DevTools элементы из соседей
   const allSiblings = parent ? Array.from(parent.children) : [el];
-  const validSiblings = allSiblings.filter(child => !isDevToolsElement(child as HTMLElement));
+  const validSiblings = allSiblings.filter((child) => !isDevToolsElement(child as HTMLElement));
 
   // Соседи (братья и сестры) с индексами (только валидные элементы)
   const siblings = validSiblings.map((child, index) => ({
     ...serializeNodeSummary(child),
     isCurrent: child === el,
-    index // Индекс в отфильтрованном массиве
+    index, // Индекс в отфильтрованном массиве
   }));
 
   // Дети текущего элемента с индексами (только валидные элементы)
-  const validChildren = Array.from(el.children).filter(child => !isDevToolsElement(child as HTMLElement));
+  const validChildren = Array.from(el.children).filter(
+    (child) => !isDevToolsElement(child as HTMLElement)
+  );
   const children = validChildren.map((child, index) => ({
     ...serializeNodeSummary(child),
-    index
+    index,
   }));
 
   // Находим валидного родителя (пропускаем DevTools элементы)
@@ -354,7 +364,7 @@ function getDomContext(el: HTMLElement) {
   return {
     parent: validParent ? serializeNodeSummary(validParent) : null,
     siblings,
-    children
+    children,
   };
 }
 
@@ -366,7 +376,7 @@ function rgbToHex(rgb: string): string {
   const r = parseInt(res[0], 10);
   const g = parseInt(res[1], 10);
   const b = parseInt(res[2], 10);
-  return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
+  return `#${[r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function getContrast(el: HTMLElement) {
@@ -377,7 +387,7 @@ function getContrast(el: HTMLElement) {
     color: rgbToHex(color),
     bg: rgbToHex(bg),
     colorRaw: color,
-    bgRaw: bg
+    bgRaw: bg,
   };
 }
 
@@ -415,7 +425,13 @@ function updateOverlay(el: HTMLElement) {
 
   // Content Box (Inside padding)
   // top = rect.top + border-top + padding-top
-  setPos(contentBox, rect.left + bl + pl, rect.top + bt + pt, rect.width - bl - br - pl - pr, rect.height - bt - bb - pt - pb);
+  setPos(
+    contentBox,
+    rect.left + bl + pl,
+    rect.top + bt + pt,
+    rect.width - bl - br - pl - pr,
+    rect.height - bt - bb - pt - pb
+  );
 
   // Tooltip
   const idStr = el.id ? `<span class="id">#${el.id}</span>` : '';
@@ -670,7 +686,7 @@ bridge.on('highlight', () => {
     updateOverlay(currentTarget);
     // Скрываем через 2 сек
     setTimeout(() => {
-      if(!isActive) {
+      if (!isActive) {
         overlayHost.style.display = 'none';
         guidesHost.style.display = 'none';
       }
@@ -679,15 +695,18 @@ bridge.on('highlight', () => {
 });
 
 // 1. Атрибуты
-bridge.on('update-attr', ({ udtId, name, value }: { udtId?: string, name: string, value: string }) => {
-  mutate(udtId, (el) => el.setAttribute(name, value));
-});
+bridge.on(
+  'update-attr',
+  ({ udtId, name, value }: { udtId?: string; name: string; value: string }) => {
+    mutate(udtId, (el) => el.setAttribute(name, value));
+  }
+);
 
-bridge.on('remove-attr', ({ udtId, name }: { udtId?: string, name: string }) => {
+bridge.on('remove-attr', ({ udtId, name }: { udtId?: string; name: string }) => {
   mutate(udtId, (el) => el.removeAttribute(name));
 });
 
-bridge.on('update-text', ({ udtId, text }: { udtId?: string, text: string }) => {
+bridge.on('update-text', ({ udtId, text }: { udtId?: string; text: string }) => {
   mutate(udtId, (el) => {
     el.innerText = text;
   });
@@ -716,7 +735,9 @@ bridge.on('scroll-into-view', ({ udtId }: { udtId?: string }) => {
     // Visual Flash
     const originalOutline = el.style.outline;
     el.style.outline = '2px solid #f43f5e';
-    setTimeout(() => { el.style.outline = originalOutline; }, 1500);
+    setTimeout(() => {
+      el.style.outline = originalOutline;
+    }, 1500);
   });
 });
 
@@ -733,40 +754,46 @@ bridge.on('log-node', ({ udtId }: { udtId?: string }) => {
 // --- CLASS MANAGEMENT ---
 
 // Добавить класс
-bridge.on('add-class', ({ udtId, cls }: { udtId?: string, cls: string }) => {
+bridge.on('add-class', ({ udtId, cls }: { udtId?: string; cls: string }) => {
   mutate(udtId, (el) => el.classList.add(...cls.split(' ').filter(Boolean)));
 });
 
 // Удалить класс
-bridge.on('remove-class', ({ udtId, cls }: { udtId?: string, cls: string }) => {
+bridge.on('remove-class', ({ udtId, cls }: { udtId?: string; cls: string }) => {
   mutate(udtId, (el) => el.classList.remove(cls));
 });
 
 // Тоггл класса (вкл/выкл)
-bridge.on('toggle-class', ({ udtId, cls, active }: { udtId?: string, cls: string, active: boolean }) => {
-  mutate(udtId, (el) => {
-    if (active) {
-      el.classList.add(cls);
-    } else {
-      el.classList.remove(cls);
-    }
-  });
-});
+bridge.on(
+  'toggle-class',
+  ({ udtId, cls, active }: { udtId?: string; cls: string; active: boolean }) => {
+    mutate(udtId, (el) => {
+      if (active) {
+        el.classList.add(cls);
+      } else {
+        el.classList.remove(cls);
+      }
+    });
+  }
+);
 
 // Обновление всего списка классов (для TailwindEditor)
-bridge.on('update-classes', ({ udtId, classes }: { udtId?: string, classes: string[] }) => {
+bridge.on('update-classes', ({ udtId, classes }: { udtId?: string; classes: string[] }) => {
   mutate(udtId, (el) => {
     el.className = classes.join(' ');
   });
 });
 
 // Изменение стиля (для Box Model)
-bridge.on('update-style', ({ udtId, prop, value }: { udtId?: string, prop: string, value: string }) => {
-  mutate(udtId, (el) => {
-    // Используем type assertion для доступа к динамическим свойствам стиля
-    (el.style as unknown as Record<string, string>)[prop] = value;
-  });
-});
+bridge.on(
+  'update-style',
+  ({ udtId, prop, value }: { udtId?: string; prop: string; value: string }) => {
+    mutate(udtId, (el) => {
+      // Используем type assertion для доступа к динамическим свойствам стиля
+      (el.style as unknown as Record<string, string>)[prop] = value;
+    });
+  }
+);
 
 // Новая команда: Скролл + Мигание (Focus)
 bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
@@ -776,11 +803,13 @@ bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   // Пытаемся сфокусировать элемент, если он фокусируемый
-  if (el instanceof HTMLElement &&
-      (el instanceof HTMLInputElement ||
-       el instanceof HTMLButtonElement ||
-       el instanceof HTMLAnchorElement ||
-       el.tabIndex >= 0)) {
+  if (
+    el instanceof HTMLElement &&
+    (el instanceof HTMLInputElement ||
+      el instanceof HTMLButtonElement ||
+      el instanceof HTMLAnchorElement ||
+      el.tabIndex >= 0)
+  ) {
     try {
       el.focus();
     } catch {
@@ -802,7 +831,7 @@ bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
 });
 
 // Новая команда: Toggle Visibility (Visibility hidden vs Display none)
-bridge.on('toggle-visibility', ({ udtId, mode }: { udtId?: string, mode: 'hide' | 'remove' }) => {
+bridge.on('toggle-visibility', ({ udtId, mode }: { udtId?: string; mode: 'hide' | 'remove' }) => {
   mutate(udtId, (el) => {
     if (mode === 'hide') {
       el.style.visibility = el.style.visibility === 'hidden' ? '' : 'hidden';
@@ -813,9 +842,13 @@ bridge.on('toggle-visibility', ({ udtId, mode }: { udtId?: string, mode: 'hide' 
 });
 
 // Функция для поиска элемента по его характеристикам
-function findElementBySelector(tagName: string, id: string, classesStr: string): HTMLElement | null {
+function findElementBySelector(
+  tagName: string,
+  id: string,
+  classesStr: string
+): HTMLElement | null {
   // Преобразуем строку классов обратно в массив
-  const classes = classesStr ? classesStr.split(' ').filter(c => c.trim()) : [];
+  const classes = classesStr ? classesStr.split(' ').filter((c) => c.trim()) : [];
 
   // Сначала пробуем найти по ID (самый надежный способ)
   if (id) {
@@ -841,8 +874,10 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
         // Проверяем, что классы совпадают
         const elClasses = Array.from(el.classList).sort();
         const targetClasses = [...classes].sort();
-        if (elClasses.length === targetClasses.length &&
-            elClasses.every((c, i) => c === targetClasses[i])) {
+        if (
+          elClasses.length === targetClasses.length &&
+          elClasses.every((c, i) => c === targetClasses[i])
+        ) {
           return el;
         }
       }
@@ -855,77 +890,85 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
 }
 
 // Добавляем команду навигации по дереву (выбор соседа/родителя из UI)
-bridge.on('select-node', (payload: {
-  type: 'parent' | 'sibling' | 'child',
-  index?: number,
-  // Добавляем информацию о текущем элементе для поиска (classes как строка для сериализации)
-  currentElement?: { tagName: string; id: string; classes: string }
-}) => {
-  // Если currentTarget не установлен, пытаемся найти элемент по переданным характеристикам
-  let baseElement = currentTarget;
+bridge.on(
+  'select-node',
+  (payload: {
+    type: 'parent' | 'sibling' | 'child';
+    index?: number;
+    // Добавляем информацию о текущем элементе для поиска (classes как строка для сериализации)
+    currentElement?: { tagName: string; id: string; classes: string };
+  }) => {
+    // Если currentTarget не установлен, пытаемся найти элемент по переданным характеристикам
+    let baseElement = currentTarget;
 
-  if (!baseElement && payload.currentElement) {
-    baseElement = findElementBySelector(
-      payload.currentElement.tagName,
-      payload.currentElement.id,
-      payload.currentElement.classes || ''
-    );
-  }
-
-  if (!baseElement) {
-    console.warn('[Inspector] select-node: cannot find base element, currentTarget is null and no currentElement provided');
-    return;
-  }
-
-  let target: Element | null = null;
-
-  if (payload.type === 'parent') {
-    target = baseElement.parentElement;
-    // Игнорируем DevTools элементы
-    while (target && isDevToolsElement(target as HTMLElement)) {
-      target = target.parentElement;
-    }
-  } else if (payload.type === 'sibling' && baseElement.parentElement) {
-    // Выбираем соседа по индексу
-    if (typeof payload.index === 'number') {
-      const siblings = Array.from(baseElement.parentElement.children).filter(
-        child => !isDevToolsElement(child as HTMLElement)
+    if (!baseElement && payload.currentElement) {
+      baseElement = findElementBySelector(
+        payload.currentElement.tagName,
+        payload.currentElement.id,
+        payload.currentElement.classes || ''
       );
-      target = siblings[payload.index] || null;
     }
-  } else if (payload.type === 'child') {
-    // Выбираем ребенка по индексу
-    if (typeof payload.index === 'number') {
-      const children = Array.from(baseElement.children).filter(
-        child => !isDevToolsElement(child as HTMLElement)
+
+    if (!baseElement) {
+      console.warn(
+        '[Inspector] select-node: cannot find base element, currentTarget is null and no currentElement provided'
       );
-      target = children[payload.index] || null;
+      return;
     }
-  }
 
-  if (target && target instanceof HTMLElement && !isDevToolsElement(target)) {
-    currentTarget = target;
-    // Проверяем и открываем DevTools если нужно
-    ensureDevToolsOpen();
-    sendElementData(currentTarget);
-    // Показываем overlay даже если режим инспектирования выключен
-    overlayHost.style.display = 'block';
-    guidesHost.style.display = 'block';
-    updateOverlay(currentTarget);
-    // Скроллим к элементу, чтобы не потерять контекст
-    target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    let target: Element | null = null;
 
-    // Автоматически скрываем подсветку через 2 секунды после выбора (если режим инспектирования выключен)
-    setTimeout(() => {
-      if (!isActive) {
-        overlayHost.style.display = 'none';
-        guidesHost.style.display = 'none';
+    if (payload.type === 'parent') {
+      target = baseElement.parentElement;
+      // Игнорируем DevTools элементы
+      while (target && isDevToolsElement(target as HTMLElement)) {
+        target = target.parentElement;
       }
-    }, 2000);
-  } else {
-    console.warn('[Inspector] select-node: target not found or invalid', { type: payload.type, index: payload.index });
+    } else if (payload.type === 'sibling' && baseElement.parentElement) {
+      // Выбираем соседа по индексу
+      if (typeof payload.index === 'number') {
+        const siblings = Array.from(baseElement.parentElement.children).filter(
+          (child) => !isDevToolsElement(child as HTMLElement)
+        );
+        target = siblings[payload.index] || null;
+      }
+    } else if (payload.type === 'child') {
+      // Выбираем ребенка по индексу
+      if (typeof payload.index === 'number') {
+        const children = Array.from(baseElement.children).filter(
+          (child) => !isDevToolsElement(child as HTMLElement)
+        );
+        target = children[payload.index] || null;
+      }
+    }
+
+    if (target && target instanceof HTMLElement && !isDevToolsElement(target)) {
+      currentTarget = target;
+      // Проверяем и открываем DevTools если нужно
+      ensureDevToolsOpen();
+      sendElementData(currentTarget);
+      // Показываем overlay даже если режим инспектирования выключен
+      overlayHost.style.display = 'block';
+      guidesHost.style.display = 'block';
+      updateOverlay(currentTarget);
+      // Скроллим к элементу, чтобы не потерять контекст
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Автоматически скрываем подсветку через 2 секунды после выбора (если режим инспектирования выключен)
+      setTimeout(() => {
+        if (!isActive) {
+          overlayHost.style.display = 'none';
+          guidesHost.style.display = 'none';
+        }
+      }, 2000);
+    } else {
+      console.warn('[Inspector] select-node: target not found or invalid', {
+        type: payload.type,
+        index: payload.index,
+      });
+    }
   }
-});
+);
 
 // Cleanup
 interface ImportMetaHot {
@@ -985,7 +1028,7 @@ registerMenuItem({
       devtools.switchTab('Inspector', 'Computed');
 
       // Небольшая задержка для гарантии, что переключение произошло
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Отправляем данные элемента
       sendElementDataInternal(element);
@@ -993,5 +1036,5 @@ registerMenuItem({
       // Пользователь отменил выбор (например, нажал Escape)
       // Ничего не делаем
     }
-  }
+  },
 });

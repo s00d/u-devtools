@@ -13,13 +13,13 @@ const plugin: PluginClientInstance = {
     preserveLog: {
       label: 'Preserve Log',
       type: 'boolean',
-      default: false
+      default: false,
     },
     maxRequests: {
       label: 'History Limit',
       type: 'number',
-      default: 100
-    }
+      default: 100,
+    },
   },
   // ---------------------------
 

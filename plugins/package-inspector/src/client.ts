@@ -14,4 +14,3 @@ const plugin: PluginClientInstance = {
 };
 
 export default plugin;
-

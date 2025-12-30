@@ -17,7 +17,7 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
     if (cmd.trim().startsWith('cd ')) {
       const target = cmd.trim().substring(3).trim();
       const newPath = path.resolve(currentCwd, target);
-      
+
       // Проверяем существование папки
       try {
         const stat = await fs.stat(newPath);
@@ -38,15 +38,15 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
 
     try {
       // shell: true позволяет использовать пайпы, редиректы и алиасы ОС
-      const child = spawn(cmd, { 
-        cwd: currentCwd, 
+      const child = spawn(cmd, {
+        cwd: currentCwd,
         shell: true,
-        stdio: ['ignore', 'pipe', 'pipe']
+        stdio: ['ignore', 'pipe', 'pipe'],
       });
 
       child.stdout?.on('data', (d) => rpc.broadcast('term:data', d.toString()));
       child.stderr?.on('data', (d) => rpc.broadcast('term:data', d.toString()));
-      
+
       child.on('close', (code) => {
         if (code !== null && code !== 0) {
           rpc.broadcast('term:data', `\n[Process exited with code ${code}]\n`);
@@ -56,11 +56,9 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
       child.on('error', (err) => {
         rpc.broadcast('term:data', `Error: ${err.message}\n`);
       });
-
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : 'Unknown error';
       rpc.broadcast('term:data', `Execution failed: ${message}\n`);
     }
   });
 }
-

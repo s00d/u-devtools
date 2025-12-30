@@ -2,14 +2,17 @@
 import { computed } from 'vue';
 import UIcon from './UIcon.vue';
 
-const props = withDefaults(defineProps<{
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  icon?: string;
-  loading?: boolean;
-}>(), {
-  size: 'md',
-});
+const props = withDefaults(
+  defineProps<{
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    icon?: string;
+    loading?: boolean;
+  }>(),
+  {
+    size: 'md',
+  }
+);
 
 defineEmits<{
   click: [event: MouseEvent];
@@ -31,29 +34,29 @@ const buttonStyle = computed(() => {
     return {
       backgroundColor: '#6366f1',
       color: 'white',
-      boxShadow: '0 4px 12px -2px rgba(79,70,229,0.4)'
+      boxShadow: '0 4px 12px -2px rgba(79,70,229,0.4)',
     };
   } else if (props.variant === 'secondary') {
     return {
       backgroundColor: 'var(--udt-bg-surface)',
       color: 'var(--udt-text)',
-      border: '1px solid var(--udt-border)'
+      border: '1px solid var(--udt-border)',
     };
   } else if (props.variant === 'ghost') {
     return {
       color: 'var(--udt-text-dim)',
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     };
   } else if (props.variant === 'danger') {
     return {
       backgroundColor: 'rgba(239, 68, 68, 0.1)',
-      color: '#ef4444'
+      color: '#ef4444',
     };
   } else {
     return {
       border: '1px solid var(--udt-border)',
       backgroundColor: 'var(--udt-bg-surface)',
-      color: 'var(--udt-text)'
+      color: 'var(--udt-text)',
     };
   }
 });

@@ -17,7 +17,7 @@ export function useNotifications() {
     if (generalApi.get('notifications') === false) {
       return;
     }
-    
+
     const id = counter++;
     notifications.value.push({ id, message, type });
 

@@ -47,7 +47,8 @@ watch(isOpen, (val) => {
 
 const toggleMain = () => {
   // Используем devtools для синхронизации через BroadcastChannel
-  if (isOpen.value) devtools.close(); else devtools.open();
+  if (isOpen.value) devtools.close();
+  else devtools.open();
 };
 
 const createContext = (): OverlayContext => ({
@@ -57,7 +58,7 @@ const createContext = (): OverlayContext => ({
   isOpen: isOpen.value,
   switchPlugin: (pluginName: string) => devtools.switchPlugin(pluginName),
   switchTab: (pluginName: string, tabName: string) => devtools.switchTab(pluginName, tabName),
-  createBridge: (namespace: string) => new AppBridge(namespace)
+  createBridge: (namespace: string) => new AppBridge(namespace),
 });
 
 const handleItemClick = (item: OverlayMenuItem, event: MouseEvent) => {

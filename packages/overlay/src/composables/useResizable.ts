@@ -1,8 +1,8 @@
 import { ref } from 'vue';
 
 export function useResizable(
-  heightRef: { value: number }, 
-  onResizeStart?: () => void, 
+  heightRef: { value: number },
+  onResizeStart?: () => void,
   onResizeEnd?: () => void
 ) {
   const isResizing = ref(false);
@@ -24,14 +24,14 @@ export function useResizable(
     e.stopPropagation();
     isResizing.value = false;
     currentPointerId = null;
-    
+
     window.removeEventListener('pointermove', onPointerMove, true);
     window.removeEventListener('pointerup', onPointerUp, true);
     window.removeEventListener('pointercancel', onPointerUp, true);
-    
+
     document.body.style.userSelect = '';
     document.body.style.pointerEvents = '';
-    
+
     onResizeEnd?.();
   };
 
@@ -43,26 +43,25 @@ export function useResizable(
     currentPointerId = e.pointerId;
     startY = e.clientY;
     startHeight = heightRef.value;
-    
+
     // Захватываем указатель для надежного отслеживания
     if (e.currentTarget instanceof HTMLElement && e.currentTarget.setPointerCapture) {
       e.currentTarget.setPointerCapture(e.pointerId);
     }
-    
+
     window.addEventListener('pointermove', onPointerMove, true);
     window.addEventListener('pointerup', onPointerUp, true);
     window.addEventListener('pointercancel', onPointerUp, true);
-    
+
     // Блокируем выделение текста и iframe события
     document.body.style.userSelect = 'none';
     document.body.style.pointerEvents = 'none';
-    
+
     onResizeStart?.();
   };
 
   return {
     isResizing,
-    onPointerDown
+    onPointerDown,
   };
 }
-

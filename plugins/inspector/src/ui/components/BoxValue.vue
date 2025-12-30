@@ -3,7 +3,7 @@ import { ref, computed, nextTick } from 'vue';
 
 const props = defineProps<{
   value: string | number; // Значение из computed styles (обычно "10px" или "0px")
-  prop: string;           // Имя свойства (marginTop)
+  prop: string; // Имя свойства (marginTop)
 }>();
 
 const emit = defineEmits<(e: 'update', payload: { prop: string; value: string }) => void>();
@@ -32,15 +32,15 @@ const startEdit = async () => {
 
 const save = () => {
   if (!isEditing.value) return;
-  
+
   let val = tempValue.value.trim();
-  
+
   // Умная обработка единиц измерения
   if (val !== '') {
     // Если ввели просто число (не 0), добавляем px
     if (!Number.isNaN(Number(val)) && val !== '0') {
-    val += 'px';
-  }
+      val += 'px';
+    }
     // Если ввели 0, тоже добавляем px
     if (val === '0') {
       val = '0px';
@@ -48,14 +48,14 @@ const save = () => {
     // Если ввели auto, 50%, inherit и т.д. - оставляем как есть
   } else {
     // Если стерли всё, ставим 0px
-    val = '0px'; 
+    val = '0px';
   }
 
   // Эмитим только если значение изменилось
   if (val !== String(props.value)) {
     emit('update', { prop: props.prop, value: val });
   }
-  
+
   isEditing.value = false;
 };
 

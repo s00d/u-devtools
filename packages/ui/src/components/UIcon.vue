@@ -12,10 +12,10 @@ const props = defineProps<{
 const iconComponent = computed(() => {
   // Нормализуем имя: 'home' -> 'HomeIcon', 'HomeIcon' -> 'HomeIcon'
   let normalizedName = props.name;
-  
+
   // Делаем первую букву заглавной
   normalizedName = normalizedName.charAt(0).toUpperCase() + normalizedName.slice(1);
-  
+
   // Добавляем суффикс Icon, если его нет
   if (!normalizedName.endsWith('Icon')) {
     normalizedName += 'Icon';

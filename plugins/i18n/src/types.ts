@@ -17,4 +17,3 @@ export interface TreeNode {
   isFile: boolean;
   children: TreeNode[];
 }
-

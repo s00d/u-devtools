@@ -40,4 +40,3 @@ export function useVirtualRouter<T extends VirtualRoute[]>(
     restore,
   };
 }
-

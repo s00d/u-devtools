@@ -4,20 +4,36 @@ import { UTreeView, UDomNode, type TreeNode } from '@u-devtools/ui';
 
 interface DomContext {
   parent: { tagName: string; id: string; classes: string[]; hasChildren: boolean } | null;
-  siblings: Array<{ tagName: string; id: string; classes: string[]; hasChildren: boolean; isCurrent: boolean; index: number }>;
-  children: Array<{ tagName: string; id: string; classes: string[]; hasChildren: boolean; index: number }>;
+  siblings: Array<{
+    tagName: string;
+    id: string;
+    classes: string[];
+    hasChildren: boolean;
+    isCurrent: boolean;
+    index: number;
+  }>;
+  children: Array<{
+    tagName: string;
+    id: string;
+    classes: string[];
+    hasChildren: boolean;
+    index: number;
+  }>;
 }
 
 const props = defineProps<{
   domContext?: DomContext;
 }>();
 
-const emit = defineEmits<(e: 'select-node', payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => void>();
+const emit =
+  defineEmits<
+    (e: 'select-node', payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => void
+  >();
 
 // Преобразуем DomContext в формат TreeNode для UTreeView
 const treeNodes = computed<TreeNode[]>(() => {
   const nodes: TreeNode[] = [];
-  
+
   // Parent node (если есть)
   if (props.domContext?.parent) {
     const parent = props.domContext.parent;
@@ -34,7 +50,7 @@ const treeNodes = computed<TreeNode[]>(() => {
       isExpanded: true,
     });
   }
-  
+
   // Siblings (включая текущий)
   if (props.domContext?.siblings) {
     props.domContext.siblings.forEach((sibling) => {
@@ -51,26 +67,28 @@ const treeNodes = computed<TreeNode[]>(() => {
           isCurrent: sibling.isCurrent,
         },
         isCurrent: sibling.isCurrent,
-        isExpanded: sibling.isCurrent && props.domContext?.children && props.domContext.children.length > 0,
-        children: sibling.isCurrent && props.domContext?.children && props.domContext.children.length > 0
-          ? props.domContext.children.map((child) => ({
-              id: `child-${child.index}`,
-              label: '', // Будет рендериться через слот
-              data: {
-                type: 'child',
-                index: child.index,
-                tagName: child.tagName,
-                id: child.id,
-                classes: child.classes,
-                hasChildren: child.hasChildren,
-              },
-            }))
-          : undefined,
+        isExpanded:
+          sibling.isCurrent && props.domContext?.children && props.domContext.children.length > 0,
+        children:
+          sibling.isCurrent && props.domContext?.children && props.domContext.children.length > 0
+            ? props.domContext.children.map((child) => ({
+                id: `child-${child.index}`,
+                label: '', // Будет рендериться через слот
+                data: {
+                  type: 'child',
+                  index: child.index,
+                  tagName: child.tagName,
+                  id: child.id,
+                  classes: child.classes,
+                  hasChildren: child.hasChildren,
+                },
+              }))
+            : undefined,
       };
       nodes.push(node);
     });
   }
-  
+
   return nodes;
 });
 

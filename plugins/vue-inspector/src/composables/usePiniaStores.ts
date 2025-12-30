@@ -23,11 +23,10 @@ export function usePiniaStores() {
 
     const filter = filterStoreKey.value.toLowerCase();
     const filterNode = (node: CustomInspectorNode): CustomInspectorNode | null => {
-      const matches = node.label.toLowerCase().includes(filter) ||
-                     (node.name?.toLowerCase().includes(filter));
-      const filteredChildren = node.children
-        ?.map(filterNode)
-        .filter((n): n is CustomInspectorNode => n !== null) || [];
+      const matches =
+        node.label.toLowerCase().includes(filter) || node.name?.toLowerCase().includes(filter);
+      const filteredChildren =
+        node.children?.map(filterNode).filter((n): n is CustomInspectorNode => n !== null) || [];
 
       if (matches || filteredChildren.length > 0) {
         return {
@@ -38,9 +37,7 @@ export function usePiniaStores() {
       return null;
     };
 
-    return storesTree.value
-      .map(filterNode)
-      .filter((n): n is CustomInspectorNode => n !== null);
+    return storesTree.value.map(filterNode).filter((n): n is CustomInspectorNode => n !== null);
   });
 
   // Filtered state
@@ -107,7 +104,11 @@ export function usePiniaStores() {
     getStoreState(node.id);
 
     // Expand parent nodes
-    const expandParents = (nodes: CustomInspectorNode[], targetId: string, path: string[] = []): string[] | null => {
+    const expandParents = (
+      nodes: CustomInspectorNode[],
+      targetId: string,
+      path: string[] = []
+    ): string[] | null => {
       for (const node of nodes) {
         const currentPath = [...path, node.id];
         if (node.id === targetId) {
@@ -128,7 +129,12 @@ export function usePiniaStores() {
     expandParents(storesTree.value, node.id);
   };
 
-  const editState = async (payload: { nodeId: string; path: string[]; type: 'state' | 'getters'; value: unknown }) => {
+  const editState = async (payload: {
+    nodeId: string;
+    path: string[];
+    type: 'state' | 'getters';
+    value: unknown;
+  }) => {
     try {
       bridge.send('inspector:editPiniaState', payload);
     } catch (_e) {

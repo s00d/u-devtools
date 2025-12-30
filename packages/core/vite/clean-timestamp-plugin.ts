@@ -26,4 +26,3 @@ export function cleanTimestampFiles(dir: string): Plugin {
     },
   };
 }
-

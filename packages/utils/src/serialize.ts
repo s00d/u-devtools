@@ -1,13 +1,13 @@
 /**
  * Serializes data by removing functions and circular references.
  * Useful for sending complex objects through BroadcastChannel or JSON.
- * 
+ *
  * @param data - Data to serialize
  * @returns Serialized data with functions removed and circular references replaced with '[Circular]'
  */
 export function serialize<T>(data: T): T {
   const seen = new WeakSet();
-  
+
   const replacer = (_key: string, value: unknown): unknown => {
     // Remove functions
     if (typeof value === 'function') {
@@ -27,7 +27,7 @@ export function serialize<T>(data: T): T {
     }
     return value;
   };
-  
+
   try {
     const result = JSON.parse(JSON.stringify(data, replacer)) as T;
     return result;
@@ -43,4 +43,3 @@ export function serialize<T>(data: T): T {
     return null as T;
   }
 }
-

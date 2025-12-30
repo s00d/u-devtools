@@ -12,11 +12,7 @@ export function flattenTranslations(
         if (Array.isArray(value)) {
           // If it's an array, add `[]` prefix to the index
           value.forEach((item, index) => {
-            flattenTranslations(
-              item as Record<string, unknown>,
-              `${newKey}.[]${index}`,
-              result
-            );
+            flattenTranslations(item as Record<string, unknown>, `${newKey}.[]${index}`, result);
           });
         } else {
           // If it's an object, recursively call flattenTranslations
@@ -118,4 +114,3 @@ export const unflattenTranslations = <T = Record<string, unknown>>(
 
   return result;
 };
-

@@ -13,6 +13,9 @@ const baseConfig = createViteConfig({
   clearScreen: false,
 });
 
-export default mergeConfig(baseConfig, defineConfig({
-  plugins: [tailwindcss()],
-}));
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    plugins: [tailwindcss()],
+  })
+);

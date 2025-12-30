@@ -19,12 +19,5 @@ export default createViteConfig({
     '@u-devtools/core': '../core/src',
     '@u-devtools/bridge': '../bridge/src',
   },
-  external: [
-    'launch-editor',
-    'node:fs',
-    'node:https',
-    'node:child_process',
-    'node:util',
-  ],
+  external: ['launch-editor', 'node:fs', 'node:https', 'node:child_process', 'node:util'],
 });
-

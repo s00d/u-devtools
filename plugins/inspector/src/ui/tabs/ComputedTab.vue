@@ -22,33 +22,37 @@ const computedGroups = computed<ComputedGroups>(() => {
   if (!props.data?.computed) return {};
   const s = props.data.computed;
   return {
-    Layout: { 
-      display: s.display, 
-      position: s.position, 
-      'box-sizing': s.boxSizing, 
-      width: s.width, 
+    Layout: {
+      display: s.display,
+      position: s.position,
+      'box-sizing': s.boxSizing,
+      width: s.width,
       height: s.height,
-      'z-index': s.zIndex || '-'
+      'z-index': s.zIndex || '-',
     },
-    Spacing: { 
-      margin: s.margin || `${s.marginTop || 0} ${s.marginRight || 0} ${s.marginBottom || 0} ${s.marginLeft || 0}`, 
-      padding: s.padding || `${s.paddingTop || 0} ${s.paddingRight || 0} ${s.paddingBottom || 0} ${s.paddingLeft || 0}` 
+    Spacing: {
+      margin:
+        s.margin ||
+        `${s.marginTop || 0} ${s.marginRight || 0} ${s.marginBottom || 0} ${s.marginLeft || 0}`,
+      padding:
+        s.padding ||
+        `${s.paddingTop || 0} ${s.paddingRight || 0} ${s.paddingBottom || 0} ${s.paddingLeft || 0}`,
     },
-    Typography: { 
-      'font-family': s.fontFamily, 
-      'font-size': s.fontSize, 
+    Typography: {
+      'font-family': s.fontFamily,
+      'font-size': s.fontSize,
       color: s.color,
       'font-weight': s.fontWeight || '-',
-      'line-height': s.lineHeight || '-'
+      'line-height': s.lineHeight || '-',
     },
-    Background: { 
+    Background: {
       'background-color': s.backgroundColor || '-',
-      'background': s.background || '-'
+      background: s.background || '-',
     },
     Border: {
       border: s.border || '-',
-      'border-radius': s.borderRadius || '-'
-    }
+      'border-radius': s.borderRadius || '-',
+    },
   };
 });
 

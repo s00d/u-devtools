@@ -15,22 +15,19 @@ const baseConfig = createViteConfig({
   dtsOptions: {
     insertTypesEntry: true,
   },
-  external: [
-    'hygen',
-    'hygen/dist/logger.js',
-    'enquirer',
-    'execa',
-  ],
+  external: ['hygen', 'hygen/dist/logger.js', 'enquirer', 'execa'],
 });
 
-export default mergeConfig(baseConfig, defineConfig({
-  build: {
-    rollupOptions: {
-      output: {
-        banner: '#!/usr/bin/env node',
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    build: {
+      rollupOptions: {
+        output: {
+          banner: '#!/usr/bin/env node',
+        },
       },
+      minify: true,
     },
-    minify: true,
-  },
-}));
-
+  })
+);

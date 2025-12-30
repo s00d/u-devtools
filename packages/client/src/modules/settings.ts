@@ -80,4 +80,3 @@ export function createSettingsApi(pluginName: string): SettingsApi {
     },
   };
 }
-

@@ -25,4 +25,3 @@ const baseConfig = createViteConfig({
 });
 
 export default mergeConfig(baseConfig, defineConfig({}));
-

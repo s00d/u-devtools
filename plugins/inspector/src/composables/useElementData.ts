@@ -33,8 +33,21 @@ export interface ElementInfo {
   };
   domContext?: {
     parent: { tagName: string; id: string; classes: string[]; hasChildren: boolean } | null;
-    siblings: Array<{ tagName: string; id: string; classes: string[]; hasChildren: boolean; isCurrent: boolean; index: number }>;
-    children: Array<{ tagName: string; id: string; classes: string[]; hasChildren: boolean; index: number }>;
+    siblings: Array<{
+      tagName: string;
+      id: string;
+      classes: string[];
+      hasChildren: boolean;
+      isCurrent: boolean;
+      index: number;
+    }>;
+    children: Array<{
+      tagName: string;
+      id: string;
+      classes: string[];
+      hasChildren: boolean;
+      index: number;
+    }>;
   };
 }
 
@@ -81,7 +94,7 @@ export function useElementData(bridge: AppBridge) {
     if (!className) return;
     bridge.send('add-class', { cls: className, udtId: id() });
     if (!cls) {
-    newClass.value = '';
+      newClass.value = '';
     }
   };
 
@@ -114,4 +127,3 @@ export function useElementData(bridge: AppBridge) {
     updateClasses,
   };
 }
-

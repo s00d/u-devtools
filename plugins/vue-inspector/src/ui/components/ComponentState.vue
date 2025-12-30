@@ -12,17 +12,38 @@ const hasState = computed(() => {
   if (!props.state) {
     return false;
   }
-  const hasProps = props.state.props && Array.isArray(props.state.props) && props.state.props.length > 0;
-  const hasData = props.state.data && Array.isArray(props.state.data) && props.state.data.length > 0;
-  const hasComputed = props.state.computed && Array.isArray(props.state.computed) && props.state.computed.length > 0;
-  const hasSetupState = props.state.setupState && typeof props.state.setupState === 'object' && Object.keys(props.state.setupState).length > 0;
-  const hasMethods = props.state.methods && Array.isArray(props.state.methods) && props.state.methods.length > 0;
-  const hasAttrs = props.state.attrs && Array.isArray(props.state.attrs) && props.state.attrs.length > 0;
-  const hasProvide = props.state.provide && Array.isArray(props.state.provide) && props.state.provide.length > 0;
-  const hasInject = props.state.inject && Array.isArray(props.state.inject) && props.state.inject.length > 0;
-  const hasRefs = props.state.refs && Array.isArray(props.state.refs) && props.state.refs.length > 0;
-  
-  return !!(hasProps || hasData || hasComputed || hasSetupState || hasMethods || hasAttrs || hasProvide || hasInject || hasRefs);
+  const hasProps =
+    props.state.props && Array.isArray(props.state.props) && props.state.props.length > 0;
+  const hasData =
+    props.state.data && Array.isArray(props.state.data) && props.state.data.length > 0;
+  const hasComputed =
+    props.state.computed && Array.isArray(props.state.computed) && props.state.computed.length > 0;
+  const hasSetupState =
+    props.state.setupState &&
+    typeof props.state.setupState === 'object' &&
+    Object.keys(props.state.setupState).length > 0;
+  const hasMethods =
+    props.state.methods && Array.isArray(props.state.methods) && props.state.methods.length > 0;
+  const hasAttrs =
+    props.state.attrs && Array.isArray(props.state.attrs) && props.state.attrs.length > 0;
+  const hasProvide =
+    props.state.provide && Array.isArray(props.state.provide) && props.state.provide.length > 0;
+  const hasInject =
+    props.state.inject && Array.isArray(props.state.inject) && props.state.inject.length > 0;
+  const hasRefs =
+    props.state.refs && Array.isArray(props.state.refs) && props.state.refs.length > 0;
+
+  return !!(
+    hasProps ||
+    hasData ||
+    hasComputed ||
+    hasSetupState ||
+    hasMethods ||
+    hasAttrs ||
+    hasProvide ||
+    hasInject ||
+    hasRefs
+  );
 });
 
 // Convert array-based state to object for UJsonTree
@@ -32,24 +53,33 @@ const stateObject = computed(() => {
   const result: Record<string, unknown> = {};
 
   if (props.state.props && props.state.props.length > 0) {
-    result.props = props.state.props.reduce((acc, item) => {
-      acc[item.key] = item.value;
-      return acc;
-    }, {} as Record<string, unknown>);
+    result.props = props.state.props.reduce(
+      (acc, item) => {
+        acc[item.key] = item.value;
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
   }
 
   if (props.state.data && props.state.data.length > 0) {
-    result.data = props.state.data.reduce((acc, item) => {
-      acc[item.key] = item.value;
-      return acc;
-    }, {} as Record<string, unknown>);
+    result.data = props.state.data.reduce(
+      (acc, item) => {
+        acc[item.key] = item.value;
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
   }
 
   if (props.state.computed && props.state.computed.length > 0) {
-    result.computed = props.state.computed.reduce((acc, item) => {
-      acc[item.key] = item.value;
-      return acc;
-    }, {} as Record<string, unknown>);
+    result.computed = props.state.computed.reduce(
+      (acc, item) => {
+        acc[item.key] = item.value;
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
   }
 
   if (props.state.setupState) {

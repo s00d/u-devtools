@@ -12,7 +12,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Используем createRequire для надежного резолвинга в монорепо и node_modules
 const require = createRequire(import.meta.url);
 
-
 // Идентификаторы
 const VIRTUAL_MODULE_ID = 'virtual:u-devtools-plugins';
 const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
@@ -30,11 +29,7 @@ export interface DevToolsOptions {
 }
 
 export function createDevTools(options: DevToolsOptions = {}): PluginOption | PluginOption[] {
-  const { 
-    base = '/__devtools', 
-    plugins = [], 
-    enabled = true
-  } = options;
+  const { base = '/__devtools', plugins = [], enabled = true } = options;
 
   // --- ЛОГИКА ОТКЛЮЧЕНИЯ ---
   if (!enabled) {
@@ -46,9 +41,9 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
   }
 
   // --- 1. ОПРЕДЕЛЕНИЕ ПУТЕЙ (CLIENT & OVERLAY) ---
-  
+
   const isRunningFromSrc = import.meta.url.endsWith('.ts');
-  
+
   let clientEntryPath: string;
   let overlayEntryPath: string;
 
@@ -57,7 +52,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
     // Используем относительные пути к исходникам
     const localClientPath = path.resolve(__dirname, '../../client');
     clientEntryPath = path.join(localClientPath, 'src/main.ts');
-    
+
     // Резолвим оверлей (src)
     const localOverlayPath = path.resolve(__dirname, '../../overlay');
     overlayEntryPath = path.join(localOverlayPath, 'src/main.ts');
@@ -77,13 +72,12 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const overlayPkg = require(overlayPkgPath);
       // Если в package.json overlay не указан main, фолбэк на dist/index.js
       overlayEntryPath = path.resolve(overlayRoot, overlayPkg.main || 'dist/index.js');
-      
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : String(e);
       throw new Error(
         `[u-devtools] Failed to resolve dependencies.\n` +
-        `Ensure you have installed: @u-devtools/client and @u-devtools/overlay\n` +
-        `Error: ${errorMessage}`
+          `Ensure you have installed: @u-devtools/client and @u-devtools/overlay\n` +
+          `Error: ${errorMessage}`
       );
     }
   }
@@ -123,7 +117,9 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const clientPlugins = plugins.filter((p) => p.clientPath);
         if (clientPlugins.length === 0) return 'export const plugins = []';
         // Добавляем .replace(/\\/g, '/') для совместимости с Windows
-        const imports = clientPlugins.map((p, i) => `import plugin${i} from '${p.clientPath?.replace(/\\/g, '/') ?? ''}'`).join('\n');
+        const imports = clientPlugins
+          .map((p, i) => `import plugin${i} from '${p.clientPath?.replace(/\\/g, '/') ?? ''}'`)
+          .join('\n');
         const exports = `export const plugins = [${clientPlugins.map((_, i) => `plugin${i}`).join(', ')}]`;
         return `${imports}\n${exports}`;
       }
@@ -132,7 +128,9 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const appPlugins = plugins.filter((p) => p.appPath);
         if (appPlugins.length === 0) return '';
         // Добавляем .replace(/\\/g, '/') для совместимости с Windows
-        return appPlugins.map((p) => `import '${p.appPath?.replace(/\\/g, '/') ?? ''}';`).join('\n');
+        return appPlugins
+          .map((p) => `import '${p.appPath?.replace(/\\/g, '/') ?? ''}';`)
+          .join('\n');
       }
       return null;
     },
@@ -162,9 +160,14 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
       rpcServer.handle('sys:getPlugins', () => plugins.map((p) => ({ name: p.name })));
       rpcServer.handle('sys:openFile', async (payload: unknown) => {
-        const { file, line = 1, column = 1, editor = 'code' } = payload as { 
-          file: string; 
-          line?: number; 
+        const {
+          file,
+          line = 1,
+          column = 1,
+          editor = 'code',
+        } = payload as {
+          file: string;
+          line?: number;
           column?: number;
           editor?: string;
         };
@@ -193,7 +196,13 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         return plugins.map((p) => ({
           name: p.name,
           // Если метаданных нет, пытаемся угадать, является ли плагин встроенным
-          isCore: p.name.startsWith('I18n') || p.name.startsWith('Network') || p.name.startsWith('Inspector') || p.name.startsWith('Vite') || p.name.startsWith('Terminal') || !p.meta,
+          isCore:
+            p.name.startsWith('I18n') ||
+            p.name.startsWith('Network') ||
+            p.name.startsWith('Inspector') ||
+            p.name.startsWith('Vite') ||
+            p.name.startsWith('Terminal') ||
+            !p.meta,
           meta: p.meta || {
             name: 'unknown',
             version: '0.0.0',
@@ -209,31 +218,45 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const query = payload as string;
         const text = query || 'keywords:u-devtools-plugin';
         return new Promise((resolve) => {
-          https.get(
-            `https://registry.npmjs.org/-/v1/search?text=${encodeURIComponent(text)}&size=20`,
-            { headers: { 'User-Agent': 'u-devtools' } },
-            (res) => {
-              let data = '';
-              res.on('data', (chunk) => {
-                data += chunk;
-              });
-              res.on('end', () => {
-                try {
-                  const json = JSON.parse(data);
-                  const results = json.objects.map((obj: { package: { name: string; version: string; description?: string; publisher?: { username: string }; links?: { npm?: string } } }) => ({
-                    name: obj.package.name,
-                    version: obj.package.version,
-                    description: obj.package.description || 'No description',
-                    author: obj.package.publisher?.username || 'Unknown',
-                    homepage: obj.package.links?.npm || `https://www.npmjs.com/package/${obj.package.name}`,
-                  }));
-                  resolve(results);
-                } catch {
-                  resolve([]);
-                }
-              });
-            }
-          ).on('error', () => resolve([]));
+          https
+            .get(
+              `https://registry.npmjs.org/-/v1/search?text=${encodeURIComponent(text)}&size=20`,
+              { headers: { 'User-Agent': 'u-devtools' } },
+              (res) => {
+                let data = '';
+                res.on('data', (chunk) => {
+                  data += chunk;
+                });
+                res.on('end', () => {
+                  try {
+                    const json = JSON.parse(data);
+                    const results = json.objects.map(
+                      (obj: {
+                        package: {
+                          name: string;
+                          version: string;
+                          description?: string;
+                          publisher?: { username: string };
+                          links?: { npm?: string };
+                        };
+                      }) => ({
+                        name: obj.package.name,
+                        version: obj.package.version,
+                        description: obj.package.description || 'No description',
+                        author: obj.package.publisher?.username || 'Unknown',
+                        homepage:
+                          obj.package.links?.npm ||
+                          `https://www.npmjs.com/package/${obj.package.name}`,
+                      })
+                    );
+                    resolve(results);
+                  } catch {
+                    resolve([]);
+                  }
+                });
+              }
+            )
+            .on('error', () => resolve([]));
         });
       });
 
@@ -301,7 +324,8 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
               await writeFile(mod, configPath);
             } catch (configError: unknown) {
-              const message = configError instanceof Error ? configError.message : String(configError);
+              const message =
+                configError instanceof Error ? configError.message : String(configError);
               console.warn(
                 `[u-devtools] Failed to modify vite.config.ts: ${message}. Plugin installed, but you may need to add it manually.`
               );
@@ -396,14 +420,18 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       // 3. Эндпоинт для чтения HttpOnly кук
       server.middlewares.use('/__u-devtools/cookies', (req, res) => {
         const cookieHeader = req.headers.cookie || '';
-        const cookies = cookieHeader.split(';').filter(Boolean).map((str) => {
-          const [key, ...v] = str.split('=');
-          return {
-            key: key?.trim() || '',
-            value: decodeURIComponent(v.join('=')),
-            httpOnly: true // Помечаем как серверные
-          };
-        }).filter(c => c.key);
+        const cookies = cookieHeader
+          .split(';')
+          .filter(Boolean)
+          .map((str) => {
+            const [key, ...v] = str.split('=');
+            return {
+              key: key?.trim() || '',
+              value: decodeURIComponent(v.join('=')),
+              httpOnly: true, // Помечаем как серверные
+            };
+          })
+          .filter((c) => c.key);
 
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -464,11 +492,12 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
     transformIndexHtml(html) {
       const appPlugins = plugins.filter((p) => p.appPath);
-      
+
       // Инъекция скриптов плагинов (Inspector, Network...)
-      const appScript = appPlugins.length > 0 
-        ? `<script type="module">import "/@id/${VIRTUAL_APP_ID}";</script>` 
-        : '';
+      const appScript =
+        appPlugins.length > 0
+          ? `<script type="module">import "/@id/${VIRTUAL_APP_ID}";</script>`
+          : '';
 
       // Нормализуем путь оверлея для Windows
       const normalizedOverlayPath = overlayEntryPath.replace(/\\/g, '/');

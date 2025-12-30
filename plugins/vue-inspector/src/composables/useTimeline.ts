@@ -26,9 +26,11 @@ export function useTimeline() {
     if (filterType.value) {
       const filter = filterType.value.toLowerCase();
       result = result.filter((event) => {
-        return event.type?.toLowerCase().includes(filter) ||
-               event.title?.toLowerCase().includes(filter) ||
-               (event.subtitle?.toLowerCase().includes(filter));
+        return (
+          event.type?.toLowerCase().includes(filter) ||
+          event.title?.toLowerCase().includes(filter) ||
+          event.subtitle?.toLowerCase().includes(filter)
+        );
       });
     }
 

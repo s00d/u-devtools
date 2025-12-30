@@ -29,7 +29,10 @@ export class AppBridge {
       this.channel.postMessage({ event, data });
     } catch (e) {
       // Ignore errors if channel is closed
-      if (e instanceof DOMException && (e.name === 'InvalidStateError' || e.message?.includes('closed'))) {
+      if (
+        e instanceof DOMException &&
+        (e.name === 'InvalidStateError' || e.message?.includes('closed'))
+      ) {
         console.warn(`[AppBridge] Cannot send event "${event}": channel is closed`);
         return;
       }
@@ -62,4 +65,3 @@ export class AppBridge {
     this.listeners.clear();
   }
 }
-

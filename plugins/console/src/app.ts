@@ -17,14 +17,16 @@ function createLogHandler(level: LogLevel) {
     const log: ConsoleLog = {
       id: Math.random().toString(36).slice(2),
       level,
-      message: args.map((arg) => {
-        if (typeof arg === 'string') return arg;
-        try {
-          return JSON.stringify(arg, null, 2);
-        } catch {
-          return String(arg);
-        }
-      }).join(' '),
+      message: args
+        .map((arg) => {
+          if (typeof arg === 'string') return arg;
+          try {
+            return JSON.stringify(arg, null, 2);
+          } catch {
+            return String(arg);
+          }
+        })
+        .join(' '),
       args,
       timestamp: Date.now(),
     };
@@ -71,8 +73,7 @@ if (hot) {
     console.error = originalError;
     console.info = originalInfo;
     console.debug = originalDebug;
-    
+
     bridge.close();
   });
 }
-

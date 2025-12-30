@@ -52,4 +52,3 @@ export function createBusApi(): EventBusApi {
     off: (event: string, handler: (data: unknown) => void) => bus.off(event, handler),
   };
 }
-

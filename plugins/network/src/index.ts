@@ -7,10 +7,11 @@ const meta = {
   description: 'Network logger plugin for Universal DevTools',
 };
 
-export const networkPlugin = () => definePlugin({
-  name: 'Network',
-  root: import.meta.url,
-  client: './client',
-  app: './app',
-  meta,
-});
+export const networkPlugin = () =>
+  definePlugin({
+    name: 'Network',
+    root: import.meta.url,
+    client: './client',
+    app: './app',
+    meta,
+  });

@@ -2,34 +2,37 @@
 import { computed, useSlots } from 'vue';
 import UIcon from './UIcon.vue';
 
-const props = withDefaults(defineProps<{
-  modelValue?: string | number;
-  placeholder?: string;
-  type?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  disabled?: boolean;
-  readonly?: boolean;
-  // Префикс/суффикс (текст или иконка)
-  prefix?: string; // Текст префикса
-  suffix?: string; // Текст суффикса
-  prefixIcon?: string; // Иконка префикса (Heroicons name)
-  suffixIcon?: string; // Иконка суффикса (Heroicons name)
-  // Встроенный текст в начале/конце
-  prepend?: string; // Текст перед input (внешний)
-  append?: string; // Текст после input (внешний)
-}>(), {
-  size: 'md',
-  disabled: false,
-  readonly: false,
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string | number;
+    placeholder?: string;
+    type?: string;
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    disabled?: boolean;
+    readonly?: boolean;
+    // Префикс/суффикс (текст или иконка)
+    prefix?: string; // Текст префикса
+    suffix?: string; // Текст суффикса
+    prefixIcon?: string; // Иконка префикса (Heroicons name)
+    suffixIcon?: string; // Иконка суффикса (Heroicons name)
+    // Встроенный текст в начале/конце
+    prepend?: string; // Текст перед input (внешний)
+    append?: string; // Текст после input (внешний)
+  }>(),
+  {
+    size: 'md',
+    disabled: false,
+    readonly: false,
+  }
+);
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
-  'focus': [event: FocusEvent];
-  'blur': [event: FocusEvent];
-  'keydown': [event: KeyboardEvent];
-  'keyup': [event: KeyboardEvent];
-  'enter': [event: KeyboardEvent];
+  focus: [event: FocusEvent];
+  blur: [event: FocusEvent];
+  keydown: [event: KeyboardEvent];
+  keyup: [event: KeyboardEvent];
+  enter: [event: KeyboardEvent];
 }>();
 
 const slots = useSlots();
@@ -86,7 +89,7 @@ const appendSizeClasses = computed(() => {
 
 const inputBorderRadiusClasses = computed(() => {
   const classes: string[] = [];
-  
+
   if (hasPrefix.value && !hasPrepend.value) {
     classes.push('rounded-l-none');
   }
@@ -99,7 +102,7 @@ const inputBorderRadiusClasses = computed(() => {
   if (hasAppend.value) {
     classes.push('rounded-r-none');
   }
-  
+
   return classes.join(' ');
 });
 

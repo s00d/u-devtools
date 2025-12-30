@@ -21,9 +21,10 @@ const convertToUTreeNode = (node: I18nTreeNode, parentPath = ''): TreeNode => {
     icon: node.isFile ? 'DocumentText' : 'FolderOpen',
     isSelected: props.selectedFile === fullPath,
     isExpanded: !node.isFile, // Папки раскрыты по умолчанию
-    children: node.children && node.children.length > 0
-      ? node.children.map(child => convertToUTreeNode(child, fullPath))
-      : undefined,
+    children:
+      node.children && node.children.length > 0
+        ? node.children.map((child) => convertToUTreeNode(child, fullPath))
+        : undefined,
     data: {
       fullPath,
       isFile: node.isFile,
@@ -31,7 +32,7 @@ const convertToUTreeNode = (node: I18nTreeNode, parentPath = ''): TreeNode => {
   };
 };
 
-const treeNodes = computed(() => props.tree.map(node => convertToUTreeNode(node)));
+const treeNodes = computed(() => props.tree.map((node) => convertToUTreeNode(node)));
 
 const handleNodeSelect = (node: TreeNode) => {
   const fullPath = node.data?.fullPath as string;

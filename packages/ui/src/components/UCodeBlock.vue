@@ -3,14 +3,17 @@ import { ref, watch, onMounted, nextTick, computed, shallowRef, watchEffect } fr
 import { createHighlighter, type Highlighter } from 'shiki';
 import ULoading from './ULoading.vue';
 
-const props = withDefaults(defineProps<{
-  language?: string;
-  code?: string;
-  theme?: string;
-}>(), {
-  language: 'text',
-  theme: 'nord',
-});
+const props = withDefaults(
+  defineProps<{
+    language?: string;
+    code?: string;
+    theme?: string;
+  }>(),
+  {
+    language: 'text',
+    theme: 'nord',
+  }
+);
 
 const slotCodeRef = ref<HTMLElement | null>(null);
 const highlightedCode = ref('');
@@ -22,42 +25,42 @@ const slotContent = ref('');
 // Нормализация имени языка для Shiki
 const normalizedLanguage = computed(() => {
   if (!props.language) return 'text';
-  
+
   const lang = props.language.toLowerCase();
   const aliases: Record<string, string> = {
-    'js': 'javascript',
-    'ts': 'typescript',
-    'py': 'python',
-    'rb': 'ruby',
-    'sh': 'bash',
-    'shell': 'bash',
-    'yml': 'yaml',
-    'md': 'markdown',
-    'html': 'html',
-    'xml': 'html',
-    'vue': 'vue',
-    'css': 'css',
-    'scss': 'scss',
-    'sass': 'sass',
-    'less': 'less',
-    'json': 'json',
-    'sql': 'sql',
-    'go': 'go',
-    'rust': 'rust',
-    'java': 'java',
-    'c': 'c',
-    'cpp': 'cpp',
-    'csharp': 'csharp',
-    'php': 'php',
-    'swift': 'swift',
-    'kotlin': 'kotlin',
-    'dart': 'dart',
-    'diff': 'diff',
-    'docker': 'dockerfile',
-    'dockerfile': 'dockerfile',
-    'svg': 'xml', // SVG использует XML подсветку
+    js: 'javascript',
+    ts: 'typescript',
+    py: 'python',
+    rb: 'ruby',
+    sh: 'bash',
+    shell: 'bash',
+    yml: 'yaml',
+    md: 'markdown',
+    html: 'html',
+    xml: 'html',
+    vue: 'vue',
+    css: 'css',
+    scss: 'scss',
+    sass: 'sass',
+    less: 'less',
+    json: 'json',
+    sql: 'sql',
+    go: 'go',
+    rust: 'rust',
+    java: 'java',
+    c: 'c',
+    cpp: 'cpp',
+    csharp: 'csharp',
+    php: 'php',
+    swift: 'swift',
+    kotlin: 'kotlin',
+    dart: 'dart',
+    diff: 'diff',
+    docker: 'dockerfile',
+    dockerfile: 'dockerfile',
+    svg: 'xml', // SVG использует XML подсветку
   };
-  
+
   return aliases[lang] || lang;
 });
 
@@ -75,7 +78,7 @@ watchEffect(() => {
 // Инициализация highlighter
 const initHighlighter = async () => {
   if (highlighter.value || isInitializing.value) return;
-  
+
   isInitializing.value = true;
   try {
     highlighter.value = await createHighlighter({
@@ -130,7 +133,7 @@ const highlight = async () => {
 
   isHighlighting.value = true;
   await nextTick();
-  
+
   // Получаем код из prop или из слота
   let code = '';
   if (props.code) {
@@ -142,7 +145,7 @@ const highlight = async () => {
     }
     code = slotContent.value;
   }
-  
+
   if (!code || !code.trim()) {
     highlightedCode.value = '';
     isHighlighting.value = false;
@@ -188,7 +191,9 @@ const highlight = async () => {
 };
 
 const isLoading = computed(() => isInitializing.value || isHighlighting.value);
-const showHighlighted = computed(() => highlightedCode.value && !isLoading.value && needsHighlighting.value);
+const showHighlighted = computed(
+  () => highlightedCode.value && !isLoading.value && needsHighlighting.value
+);
 
 onMounted(async () => {
   // Ждем, чтобы slot успел отрендериться
@@ -200,13 +205,17 @@ onMounted(async () => {
 });
 
 // Отслеживаем изменения в props и содержимом слота
-watch(() => [props.language, props.code, props.theme, slotContent.value], async () => {
-  await nextTick();
-  if (needsHighlighting.value && !highlighter.value) {
-    await initHighlighter();
-  }
-  await highlight();
-}, { deep: true });
+watch(
+  () => [props.language, props.code, props.theme, slotContent.value],
+  async () => {
+    await nextTick();
+    if (needsHighlighting.value && !highlighter.value) {
+      await initHighlighter();
+    }
+    await highlight();
+  },
+  { deep: true }
+);
 </script>
 
 <template>

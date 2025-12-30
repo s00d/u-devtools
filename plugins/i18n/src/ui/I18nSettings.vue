@@ -9,7 +9,9 @@ const props = defineProps<{
 
 // Read current settings from API
 const currentSettings = computed(() => props.api.settings.all);
-const selectedDriver = computed(() => String(currentSettings.value.translationDriver || 'disabled'));
+const selectedDriver = computed(() =>
+  String(currentSettings.value.translationDriver || 'disabled')
+);
 
 // Update field in settings API
 const updateField = (key: string, value: unknown) => {

@@ -20,7 +20,9 @@ export class WebStorageDriver implements StorageDriver {
         try {
           // Пытаемся автоматически распарсить JSON
           if (value) value = JSON.parse(value);
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
         data.push({ key, value });
       }
     }
@@ -42,4 +44,3 @@ export class WebStorageDriver implements StorageDriver {
     this.storage.clear();
   }
 }
-

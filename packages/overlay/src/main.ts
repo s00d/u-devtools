@@ -25,19 +25,20 @@ function init() {
 
   const host = document.createElement('div');
   host.id = MOUNT_ID;
-  host.style.cssText = 'position: fixed; top: 0; left: 0; width: 0; height: 0; z-index: 2147483647; pointer-events: none;';
+  host.style.cssText =
+    'position: fixed; top: 0; left: 0; width: 0; height: 0; z-index: 2147483647; pointer-events: none;';
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: 'open' });
-  
+
   const styleEl = document.createElement('style');
   styleEl.textContent = style;
   shadow.appendChild(styleEl);
 
   const appRoot = document.createElement('div');
-  // Важно: вернуть pointer-events auto контейнеру приложения, 
+  // Важно: вернуть pointer-events auto контейнеру приложения,
   // иначе клики будут проходить сквозь кнопку
-  appRoot.style.pointerEvents = 'auto'; 
+  appRoot.style.pointerEvents = 'auto';
   shadow.appendChild(appRoot);
 
   const app = createApp(App, { base });

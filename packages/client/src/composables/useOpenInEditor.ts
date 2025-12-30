@@ -8,7 +8,7 @@ import { createSettingsApi } from '../modules/settings';
  */
 export function useOpenInEditor(api: ClientApi) {
   const globalSettings = createSettingsApi('internal');
-  
+
   // Получаем выбранный редактор из настроек
   const editor = computed(() => {
     return globalSettings.get<string>('launchEditor', 'code');
@@ -40,4 +40,3 @@ export function useOpenInEditor(api: ClientApi) {
     editor,
   };
 }
-

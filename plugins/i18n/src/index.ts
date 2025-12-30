@@ -14,10 +14,11 @@ export interface I18nPluginOptions {
   defaultLocale?: string;
 }
 
-export const i18nPlugin = (options: I18nPluginOptions) => definePlugin({
-  name: 'i18n',
-  root: import.meta.url,
-  client: './client',
-  meta,
-  setupServer: (rpc: RpcServerInterface, ctx: ServerContext) => setupServer(rpc, ctx, options),
-});
+export const i18nPlugin = (options: I18nPluginOptions) =>
+  definePlugin({
+    name: 'i18n',
+    root: import.meta.url,
+    client: './client',
+    meta,
+    setupServer: (rpc: RpcServerInterface, ctx: ServerContext) => setupServer(rpc, ctx, options),
+  });

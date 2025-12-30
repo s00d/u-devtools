@@ -24,13 +24,17 @@ const { onPointerDown } = useResizable(
 // Сохраняем оригинальное значение для восстановления
 const originalPaddingBottom = document.body.style.paddingBottom;
 
-watch([isOpen, height], ([open, h]) => {
-  if (open) {
-    document.body.style.paddingBottom = `${h}px`;
-  } else {
-    document.body.style.paddingBottom = '0px';
-  }
-}, { immediate: true });
+watch(
+  [isOpen, height],
+  ([open, h]) => {
+    if (open) {
+      document.body.style.paddingBottom = `${h}px`;
+    } else {
+      document.body.style.paddingBottom = '0px';
+    }
+  },
+  { immediate: true }
+);
 
 // Cleanup при размонтировании
 onUnmounted(() => {
@@ -67,8 +71,6 @@ onMounted(() => {
     }
   });
 });
-
-
 </script>
 
 <template>

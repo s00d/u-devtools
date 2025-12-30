@@ -2,15 +2,18 @@
 import { computed } from 'vue';
 import UIcon from './UIcon.vue';
 
-const props = withDefaults(defineProps<{
-  visible: boolean;
-  title?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  closable?: boolean;
-}>(), {
-  size: 'md',
-  closable: true,
-});
+const props = withDefaults(
+  defineProps<{
+    visible: boolean;
+    title?: string;
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+    closable?: boolean;
+  }>(),
+  {
+    size: 'md',
+    closable: true,
+  }
+);
 
 defineEmits<{
   close: [];

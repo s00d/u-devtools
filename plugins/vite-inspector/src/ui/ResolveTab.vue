@@ -17,8 +17,8 @@ const debugResolve = async () => {
   if (!resolveInput.value.trim()) return;
   resolving.value = true;
   try {
-    resolveResult.value = await props.api.rpc.call('vite:resolve', { 
-      id: resolveInput.value.trim() 
+    resolveResult.value = await props.api.rpc.call('vite:resolve', {
+      id: resolveInput.value.trim(),
     });
   } catch (e) {
     props.api.notify(`Resolve failed: ${e}`, 'error');

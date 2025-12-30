@@ -34,9 +34,7 @@ const selectedId = ref<string | null>(null);
 const bridge = new AppBridge('network');
 
 // Читаем настройки
-const maxRequests = computed(() => 
-  props.api?.settings?.get('maxRequests', 100) ?? 100
-);
+const maxRequests = computed(() => props.api?.settings?.get('maxRequests', 100) ?? 100);
 
 const clear = () => {
   requests.value = [];
@@ -46,16 +44,12 @@ const clear = () => {
 const filteredRequests = computed(() => {
   if (!filter.value) return requests.value;
   const lower = filter.value.toLowerCase();
-  return requests.value.filter((r) => 
-    r.url.toLowerCase().includes(lower) || 
-    r.method.toLowerCase().includes(lower)
+  return requests.value.filter(
+    (r) => r.url.toLowerCase().includes(lower) || r.method.toLowerCase().includes(lower)
   );
 });
 
-const selectedRequest = computed(() => 
-  requests.value.find(r => r.id === selectedId.value)
-);
-
+const selectedRequest = computed(() => requests.value.find((r) => r.id === selectedId.value));
 
 const selectRequest = (row: NetRequest) => {
   selectedId.value = row.id;
@@ -71,10 +65,10 @@ const unsubscribes: (() => void)[] = [];
 
 onMounted(() => {
   unsubscribes.push(
-    bridge.on<{ 
-      id: string; 
-      url: string; 
-      method: string; 
+    bridge.on<{
+      id: string;
+      url: string;
+      method: string;
       startTime: number;
       requestHeaders?: Record<string, string>;
       requestBody?: unknown;
@@ -91,11 +85,11 @@ onMounted(() => {
   );
 
   unsubscribes.push(
-    bridge.on<{ 
-      id: string; 
-      status: number; 
-      statusText: string; 
-      endTime: number; 
+    bridge.on<{
+      id: string;
+      status: number;
+      statusText: string;
+      endTime: number;
       duration: number;
     }>('request-end', (data) => {
       const req = requests.value.find((r) => r.id === data.id);
@@ -106,10 +100,10 @@ onMounted(() => {
   );
 
   unsubscribes.push(
-    bridge.on<{ 
-      id: string; 
-      error: string; 
-      endTime: number; 
+    bridge.on<{
+      id: string;
+      error: string;
+      endTime: number;
       duration: number;
     }>('request-error', (data) => {
       const req = requests.value.find((r) => r.id === data.id);

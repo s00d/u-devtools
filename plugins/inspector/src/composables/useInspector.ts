@@ -14,7 +14,7 @@ export function useInspector() {
   };
 
   const selectNode = (
-    type: 'parent' | 'sibling' | 'child', 
+    type: 'parent' | 'sibling' | 'child',
     index?: number,
     currentElement?: { tagName: string; id: string; classes: string }
   ) => {
@@ -28,4 +28,3 @@ export function useInspector() {
     bridge,
   };
 }
-

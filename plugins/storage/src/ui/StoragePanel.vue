@@ -41,13 +41,13 @@ const props = defineProps<{ api: ClientApi }>();
 const bridge = new AppBridge('storage');
 
 // --- State ---
-const storageData = ref<StorageData>({ 
-  local: [], 
-  session: [], 
-  cookie: [], 
-  indexeddb: [], 
+const storageData = ref<StorageData>({
+  local: [],
+  session: [],
+  cookie: [],
+  indexeddb: [],
   cache: [],
-  opfs: []
+  opfs: [],
 });
 const activeType = ref<'local' | 'session' | 'cookie' | 'indexeddb' | 'cache' | 'opfs'>('local');
 
@@ -68,12 +68,12 @@ const currentList = computed(() => {
     const store = db.stores.find((s) => s.name === activeStore.value);
     return store ? store.entries : [];
   }
-  
+
   if (activeType.value === 'cache') {
     if (!activeDb.value && storageData.value.cache.length > 0) {
       activeDb.value = storageData.value.cache[0].name;
     }
-    const cache = storageData.value.cache.find(c => c.name === activeDb.value);
+    const cache = storageData.value.cache.find((c) => c.name === activeDb.value);
     return cache ? cache.entries : [];
   }
 
@@ -113,7 +113,9 @@ const save = () => {
   let val = editingItem.value.value;
   // Auto JSON parse
   if (typeof val === 'string' && (val.startsWith('{') || val.startsWith('['))) {
-    try { val = JSON.parse(val); } catch {}
+    try {
+      val = JSON.parse(val);
+    } catch {}
   }
 
   bridge.send('save', {
@@ -121,7 +123,7 @@ const save = () => {
     db: activeDb.value,
     store: activeStore.value,
     key: editingItem.value.key,
-    value: val
+    value: val,
   });
   isModalOpen.value = false;
 };
@@ -132,7 +134,7 @@ const remove = (key: string | number) => {
     type: activeType.value,
     db: activeDb.value,
     store: activeStore.value,
-    key
+    key,
   });
 };
 
@@ -141,7 +143,7 @@ const clearAll = () => {
   bridge.send('clear', {
     type: activeType.value,
     db: activeDb.value,
-    store: activeStore.value
+    store: activeStore.value,
   });
 };
 
@@ -153,16 +155,17 @@ const openAdd = () => {
 
 const openEdit = (item: StorageItem) => {
   editMode.value = 'edit';
-  editingItem.value = { 
-    key: item.key, 
-    value: typeof item.value === 'object' ? JSON.stringify(item.value, null, 2) : String(item.value)
+  editingItem.value = {
+    key: item.key,
+    value:
+      typeof item.value === 'object' ? JSON.stringify(item.value, null, 2) : String(item.value),
   };
   isModalOpen.value = true;
 };
 
 onMounted(() => {
-  bridge.on<StorageData>('data', (d) => { 
-    storageData.value = d; 
+  bridge.on<StorageData>('data', (d) => {
+    storageData.value = d;
   });
   bridge.on<string>('error', (e) => {
     props.api.notify(e, 'error');

@@ -10,4 +10,3 @@ export default createViteConfig({
   dir: __dirname,
   useVue: true,
 });
-

@@ -154,4 +154,3 @@ export interface VirtualRoute {
   component: unknown; // Vue component
   icon?: string;
 }
-

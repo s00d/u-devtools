@@ -35,15 +35,15 @@ let controlChannel: BroadcastChannel | null = null;
 
 onMounted(() => {
   window.addEventListener('keydown', onKeyDown);
-  
+
   // Слушаем команды от overlay
   controlChannel = new BroadcastChannel('u-devtools:control');
   controlChannel.onmessage = (e) => {
     const { action, pluginName, tabName } = e.data;
-    
+
     if (action === 'switch-plugin' && pluginName) {
       // Переключаем на плагин
-      const plugin = plugins.value.find(p => p.name === pluginName);
+      const plugin = plugins.value.find((p) => p.name === pluginName);
       if (plugin) {
         activePluginId.value = pluginName;
       }
@@ -52,9 +52,11 @@ onMounted(() => {
       if (activePluginId.value === pluginName) {
         // Отправляем событие для переключения таба через bus
         // Плагины могут слушать это событие
-        window.dispatchEvent(new CustomEvent('u-devtools:switch-tab', {
-          detail: { pluginName, tabName }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('u-devtools:switch-tab', {
+            detail: { pluginName, tabName },
+          })
+        );
       }
     }
   };

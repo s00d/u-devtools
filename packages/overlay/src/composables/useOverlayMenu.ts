@@ -12,9 +12,9 @@ export function useOverlayMenu() {
 
   const handleRegister = (e: Event) => {
     const detail = (e as CustomEvent<OverlayMenuItem>).detail;
-    
+
     // Избегаем дубликатов
-    const existingIdx = items.value.findIndex(i => i.id === detail.id);
+    const existingIdx = items.value.findIndex((i) => i.id === detail.id);
     if (existingIdx !== -1) {
       items.value[existingIdx] = detail;
     } else {
@@ -29,22 +29,22 @@ export function useOverlayMenu() {
     // Проверяем глобальный массив зарегистрированных элементов (на случай, если они были зарегистрированы до монтирования overlay)
     if (window.__UDEVTOOLS_MENU_ITEMS__ && window.__UDEVTOOLS_MENU_ITEMS__.length > 0) {
       // Добавляем все элементы из глобального массива
-      window.__UDEVTOOLS_MENU_ITEMS__.forEach(item => {
-        const existingIdx = items.value.findIndex(i => i.id === item.id);
+      window.__UDEVTOOLS_MENU_ITEMS__.forEach((item) => {
+        const existingIdx = items.value.findIndex((i) => i.id === item.id);
         if (existingIdx !== -1) {
           items.value[existingIdx] = item;
         } else {
           items.value.push(item);
         }
       });
-      
+
       // Сортируем
       items.value.sort((a, b) => (a.order || 0) - (b.order || 0));
-      
+
       // Очищаем глобальный массив после обработки
       window.__UDEVTOOLS_MENU_ITEMS__ = [];
     }
-    
+
     // Устанавливаем слушатель для новых регистраций
     window.addEventListener(OVERLAY_EVENT, handleRegister);
   });
@@ -54,7 +54,6 @@ export function useOverlayMenu() {
   });
 
   return {
-    items
+    items,
   };
 }
-

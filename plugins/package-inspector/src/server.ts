@@ -9,8 +9,9 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
       const content = await fs.readFile(pkgPath, 'utf-8');
       return JSON.parse(content);
     } catch (error) {
-      throw new Error(`Failed to read package.json: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to read package.json: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   });
 }
-

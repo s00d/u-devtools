@@ -31,4 +31,3 @@ export class CookieDriver implements StorageDriver {
     });
   }
 }
-

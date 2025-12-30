@@ -27,7 +27,9 @@ const isTranslating = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 // Translation settings (from plugin settings)
-const selectedDriver = computed(() => props.api.settings.get<DriverType>('translationDriver', 'disabled'));
+const selectedDriver = computed(() =>
+  props.api.settings.get<DriverType>('translationDriver', 'disabled')
+);
 const apiToken = computed(() => props.api.settings.get<string>('translationApiToken', ''));
 const driverOptions = computed(() => ({
   folderId: props.api.settings.get<string>('translationFolderId', ''),
@@ -196,8 +198,8 @@ function getDefaultLocaleTranslation(): TranslationContent {
     defaultContent = locales.value[`/${defaultFileName}`];
   }
   if (!defaultContent) {
-    const defaultLocaleKey = Object.keys(locales.value).find((key) =>
-      key.includes(`${defaultLocale}.json`) || key.endsWith(`/${defaultLocale}.json`)
+    const defaultLocaleKey = Object.keys(locales.value).find(
+      (key) => key.includes(`${defaultLocale}.json`) || key.endsWith(`/${defaultLocale}.json`)
     );
     if (defaultLocaleKey) {
       defaultContent = locales.value[defaultLocaleKey];
@@ -287,7 +289,10 @@ function handleInputChange(key: string, value: string) {
 // Translation functions
 async function translateKey(key: string) {
   if (selectedDriver.value === 'disabled' || !apiToken.value) {
-    props.api.notify('Translation service is not configured. Please configure it in Settings.', 'error');
+    props.api.notify(
+      'Translation service is not configured. Please configure it in Settings.',
+      'error'
+    );
     return;
   }
 
@@ -319,7 +324,10 @@ async function translateKey(key: string) {
 
 async function translateMissingKeys() {
   if (selectedDriver.value === 'disabled' || !apiToken.value) {
-    props.api.notify('Translation service is not configured. Please configure it in Settings.', 'error');
+    props.api.notify(
+      'Translation service is not configured. Please configure it in Settings.',
+      'error'
+    );
     return;
   }
 

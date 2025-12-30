@@ -44,7 +44,6 @@ export function useDevToolsState(): {
     isAboutActive,
     isManagerActive,
     closeDevTools,
-    notifications
+    notifications,
   };
 }
-

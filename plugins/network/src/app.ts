@@ -44,7 +44,12 @@ const originalFetch = window.fetch;
 
 window.fetch = async (...args) => {
   const [resource, config] = args;
-  const url = typeof resource === 'string' ? resource : resource instanceof Request ? resource.url : String(resource);
+  const url =
+    typeof resource === 'string'
+      ? resource
+      : resource instanceof Request
+        ? resource.url
+        : String(resource);
   const method = config?.method || (resource instanceof Request ? resource.method : 'GET');
   const startTime = Date.now();
   const id = generateId();
@@ -53,9 +58,9 @@ window.fetch = async (...args) => {
   // Пытаемся сохранить тело запроса (если строка)
   let requestBody: unknown = config?.body;
   if (typeof requestBody === 'string') {
-    try { 
-      requestBody = JSON.parse(requestBody); 
-    } catch { 
+    try {
+      requestBody = JSON.parse(requestBody);
+    } catch {
       // Оставляем как строку
     }
   }
@@ -66,18 +71,18 @@ window.fetch = async (...args) => {
     method: method.toUpperCase(),
     startTime,
     requestHeaders,
-    requestBody
+    requestBody,
   });
 
   try {
     const response = await originalFetch(...args);
-    
+
     // Читаем ответ асинхронно, не блокируя возврат
     readBody(response).then((body) => {
       bridge.send('request-details', {
         id,
         responseBody: body,
-        responseHeaders: parseHeaders(response.headers)
+        responseHeaders: parseHeaders(response.headers),
       });
     });
 
@@ -124,7 +129,7 @@ XHR.prototype.open = function (method: string, url: string | URL, ...args: unkno
   xhr._udt_method = method;
   xhr._udt_url = url.toString();
   xhr._udt_requestHeaders = {};
-  
+
   // @ts-expect-error
   return originalOpen.apply(this, [method, url, ...args]);
 };
@@ -144,10 +149,10 @@ XHR.prototype.send = function (body?: unknown) {
 
   // Сохраняем тело
   if (typeof body === 'string') {
-    try { 
-      xhr._udt_requestBody = JSON.parse(body); 
-    } catch { 
-      xhr._udt_requestBody = body; 
+    try {
+      xhr._udt_requestBody = JSON.parse(body);
+    } catch {
+      xhr._udt_requestBody = body;
     }
   } else {
     xhr._udt_requestBody = body; // FormData или Blob сложно сериализовать
@@ -161,21 +166,21 @@ XHR.prototype.send = function (body?: unknown) {
       method: (xhr._udt_method || 'GET').toUpperCase(),
       startTime: xhr._udt_start,
       requestHeaders: xhr._udt_requestHeaders || {},
-      requestBody: xhr._udt_requestBody
+      requestBody: xhr._udt_requestBody,
     });
   }
 
   // Слушаем завершение
   xhr.addEventListener('loadend', () => {
     if (!xhr._udt_id) return;
-    
+
     let responseBody: unknown = xhr.response;
     try {
       if (xhr.responseType === '' || xhr.responseType === 'text') {
-        try { 
-          responseBody = JSON.parse(xhr.responseText); 
-        } catch { 
-          responseBody = xhr.responseText; 
+        try {
+          responseBody = JSON.parse(xhr.responseText);
+        } catch {
+          responseBody = xhr.responseText;
         }
       }
     } catch {
@@ -185,9 +190,9 @@ XHR.prototype.send = function (body?: unknown) {
     bridge.send('request-details', {
       id: xhr._udt_id,
       responseBody: responseBody,
-      responseHeaders: parseHeaders(xhr.getAllResponseHeaders())
+      responseHeaders: parseHeaders(xhr.getAllResponseHeaders()),
     });
-    
+
     bridge.send('request-end', {
       id: xhr._udt_id,
       status: xhr.status,
@@ -200,7 +205,7 @@ XHR.prototype.send = function (body?: unknown) {
   // Слушаем ошибку (сетевую)
   xhr.addEventListener('error', () => {
     if (!xhr._udt_id) return;
-    
+
     bridge.send('request-error', {
       id: xhr._udt_id,
       error: 'XHR Network Error',
@@ -216,20 +221,20 @@ XHR.prototype.send = function (body?: unknown) {
 // --- REPLAY LOGIC ---
 // Слушаем команду от UI, чтобы повторить запрос
 bridge.on('replay', async (data: unknown) => {
-  const { url, method, headers, body } = data as { 
-    url: string; 
-    method: string; 
-    headers?: Record<string, string>; 
+  const { url, method, headers, body } = data as {
+    url: string;
+    method: string;
+    headers?: Record<string, string>;
     body?: unknown;
   };
-  
+
   console.log('[U-DevTools] Replaying request:', method, url);
-  
+
   try {
     await originalFetch(url, {
       method,
       headers: headers || {},
-      body: body ? JSON.stringify(body) : undefined
+      body: body ? JSON.stringify(body) : undefined,
     });
   } catch (e) {
     console.error('[U-DevTools] Replay failed', e);

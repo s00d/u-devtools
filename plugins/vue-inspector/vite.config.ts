@@ -28,4 +28,3 @@ export default createViteConfig({
   },
   external: ['@u-devtools/kit', 'vite-plugin-vue-inspector'],
 });
-

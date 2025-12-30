@@ -12,26 +12,34 @@ import A11yTab from './tabs/A11yTab.vue';
 const props = defineProps<{ api: ClientApi }>();
 
 const { isInspecting, toggleInspect, selectNode, bridge } = useInspector();
-const { data, updateStyle, updateAttr, addAttr, deleteAttr, addClass, removeClass, updateClasses } = useElementData(bridge);
+const { data, updateStyle, updateAttr, addAttr, deleteAttr, addClass, removeClass, updateClasses } =
+  useElementData(bridge);
 
 const activeTab = ref('Computed');
 
 const handleSelectNode = (payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => {
   // Передаем информацию о текущем элементе для поиска, если currentTarget не установлен
   // Преобразуем массив classes в строку для сериализации через BroadcastChannel
-  const currentElement = data.value ? {
-    tagName: data.value.tagName,
-    id: data.value.id,
-    classes: Array.isArray(data.value.classes) ? data.value.classes.join(' ') : data.value.classes
-  } : undefined;
-  
+  const currentElement = data.value
+    ? {
+        tagName: data.value.tagName,
+        id: data.value.id,
+        classes: Array.isArray(data.value.classes)
+          ? data.value.classes.join(' ')
+          : data.value.classes,
+      }
+    : undefined;
+
   selectNode(payload.type, payload.index, currentElement);
 };
 
 // Обработка переключения таба из overlay
 const handleTabSwitch = (e: Event) => {
   const detail = (e as CustomEvent<{ pluginName: string; tabName: string }>).detail;
-  if (detail.pluginName === 'Inspector' && ['Computed', 'Styles', 'A11y'].includes(detail.tabName)) {
+  if (
+    detail.pluginName === 'Inspector' &&
+    ['Computed', 'Styles', 'A11y'].includes(detail.tabName)
+  ) {
     activeTab.value = detail.tabName;
   }
 };
@@ -43,7 +51,7 @@ onMounted(() => {
     data.value = elementData;
     isInspecting.value = false; // Отключаем режим инспектирования
   });
-  
+
   bridge.on('inspector-cancelled', () => {
     isInspecting.value = false;
   });

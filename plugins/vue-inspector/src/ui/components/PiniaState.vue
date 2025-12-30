@@ -21,12 +21,15 @@ const stateObject = computed(() => {
 
   Object.entries(props.state).forEach(([key, states]) => {
     if (Array.isArray(states) && states.length > 0) {
-      result[key] = states.reduce((acc, item) => {
-        if (item && typeof item === 'object' && 'key' in item && typeof item.key === 'string') {
-          acc[item.key] = 'value' in item ? item.value : item;
-        }
-        return acc;
-      }, {} as Record<string, unknown>);
+      result[key] = states.reduce(
+        (acc, item) => {
+          if (item && typeof item === 'object' && 'key' in item && typeof item.key === 'string') {
+            acc[item.key] = 'value' in item ? item.value : item;
+          }
+          return acc;
+        },
+        {} as Record<string, unknown>
+      );
     }
   });
 

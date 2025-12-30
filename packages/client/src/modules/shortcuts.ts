@@ -59,4 +59,3 @@ export function createShortcutApi(pluginName: string): ShortcutApi {
     },
   };
 }
-

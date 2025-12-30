@@ -14,28 +14,30 @@ export class CacheStorageDriver implements StorageDriver {
       try {
         const cache = await caches.open(name);
         const requests = await cache.keys();
-        
+
         // Лимитируем 50 записей для производительности
-        const entries = await Promise.all(requests.slice(0, 50).map(async (req) => {
-          // Мы не читаем тело сразу, это дорого. Читаем только метаданные.
-          const resp = await cache.match(req);
-          let size = 0;
-          try {
-            const blob = await resp?.clone().blob();
-            size = blob?.size || 0;
-          } catch {
-            // Ignore size calculation errors
-          }
-          
-          return {
-            key: req.url,
-            value: {
-              status: resp?.status,
-              type: resp?.headers.get('content-type') || 'unknown',
-              size
+        const entries = await Promise.all(
+          requests.slice(0, 50).map(async (req) => {
+            // Мы не читаем тело сразу, это дорого. Читаем только метаданные.
+            const resp = await cache.match(req);
+            let size = 0;
+            try {
+              const blob = await resp?.clone().blob();
+              size = blob?.size || 0;
+            } catch {
+              // Ignore size calculation errors
             }
-          };
-        }));
+
+            return {
+              key: req.url,
+              value: {
+                status: resp?.status,
+                type: resp?.headers.get('content-type') || 'unknown',
+                size,
+              },
+            };
+          })
+        );
 
         result.push({ name, entries });
       } catch (e) {
@@ -62,4 +64,3 @@ export class CacheStorageDriver implements StorageDriver {
     await caches.delete(cacheName);
   }
 }
-

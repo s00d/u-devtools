@@ -22,15 +22,18 @@ const baseConfig = createViteConfig({
   external: ['virtual:u-devtools-plugins'],
 });
 
-export default mergeConfig(baseConfig, defineConfig({
-  build: {
-    rollupOptions: {
-      external: (id: string) => {
-        // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
-        // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
-        if (id === 'vue' || id === 'virtual:u-devtools-plugins') return true;
-        return false;
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    build: {
+      rollupOptions: {
+        external: (id: string) => {
+          // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
+          // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
+          if (id === 'vue' || id === 'virtual:u-devtools-plugins') return true;
+          return false;
+        },
       },
     },
-  },
-}));
+  })
+);

@@ -87,9 +87,7 @@ export class Translator {
       return acc.replace(`_r${index}_`, match);
     }, text);
 
-    return restoredText
-      .replace(/ {2,}|^ |^\xA0|\xA0{2,}|\xA0$/gmu, '')
-      .replace(/&nbsp;/g, ' ');
+    return restoredText.replace(/ {2,}|^ |^\xA0|\xA0{2,}|\xA0$/gmu, '').replace(/&nbsp;/g, ' ');
   }
 
   private async googleTranslate(text: string, fromLang: string, toLang: string): Promise<string> {
@@ -237,7 +235,11 @@ export class Translator {
     return data.choices[0].message.content;
   }
 
-  private async googleFreeTranslate(text: string, fromLang: string, toLang: string): Promise<string> {
+  private async googleFreeTranslate(
+    text: string,
+    fromLang: string,
+    toLang: string
+  ): Promise<string> {
     const url = 'https://translate.google.com/translate_a/single';
     const params = new URLSearchParams({
       client: 'gtx',
@@ -261,7 +263,11 @@ export class Translator {
     return data[0].map((item) => (item[0] ? item[0] : '')).join('');
   }
 
-  private async yandexCloudTranslate(text: string, fromLang: string, toLang: string): Promise<string> {
+  private async yandexCloudTranslate(
+    text: string,
+    fromLang: string,
+    toLang: string
+  ): Promise<string> {
     const url = 'https://translate.api.cloud.yandex.net/translate/v2/translate';
     const headers = {
       'Content-Type': 'application/json',
@@ -322,7 +328,8 @@ export class Translator {
 
   private tokenTransform(value: number, seed: string): number {
     for (let d = 0; d < seed.length - 2; d += 3) {
-      const c = seed.charCodeAt(d + 2) >= 97 ? seed.charCodeAt(d + 2) - 87 : Number(seed.charAt(d + 2));
+      const c =
+        seed.charCodeAt(d + 2) >= 97 ? seed.charCodeAt(d + 2) - 87 : Number(seed.charAt(d + 2));
       if (seed.charAt(d + 1) === '+') {
         value = value >>> c;
       } else {
@@ -337,4 +344,3 @@ export class Translator {
     return value;
   }
 }
-

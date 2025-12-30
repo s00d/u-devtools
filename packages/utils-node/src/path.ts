@@ -18,4 +18,3 @@ export function safeResolve(root: string, targetPath: string): string {
   }
   return resolvedPath;
 }
-

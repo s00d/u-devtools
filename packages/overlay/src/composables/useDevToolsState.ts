@@ -8,10 +8,10 @@ const MAX_HEIGHT_RATIO = 0.9;
 
 export function useDevToolsState() {
   const { height: windowHeight } = useWindowSize();
-  
+
   const state = useStorage(STATE_KEY, {
     isOpen: false,
-    height: 400
+    height: 400,
   });
 
   const clampHeight = (h: number) => {
@@ -23,7 +23,7 @@ export function useDevToolsState() {
     get: () => clampHeight(state.value.height),
     set: (v) => {
       state.value.height = clampHeight(v);
-    }
+    },
   });
 
   const toggle = () => {
@@ -53,14 +53,14 @@ export function useDevToolsState() {
     controlChannel = new BroadcastChannel('u-devtools:control');
     controlChannel.addEventListener('message', (e) => {
       const { action, type } = e.data || {};
-      
+
       // Игнорируем сообщения state-changed, чтобы избежать циклов
       if (type === 'u-devtools:state-changed' || type === 'u-devtools:state-response') {
         return;
       }
-      
+
       if (!controlChannel) return;
-      
+
       if (action === 'open') {
         const wasOpen = state.value.isOpen;
         state.value.isOpen = true;
@@ -80,11 +80,17 @@ export function useDevToolsState() {
         state.value.isOpen = !state.value.isOpen;
         // Отправляем уведомление об изменении состояния только если оно изменилось
         if (wasOpen !== state.value.isOpen) {
-          controlChannel.postMessage({ type: 'u-devtools:state-changed', isOpen: state.value.isOpen });
+          controlChannel.postMessage({
+            type: 'u-devtools:state-changed',
+            isOpen: state.value.isOpen,
+          });
         }
       } else if (action === 'get-state') {
         // Отвечаем на запрос состояния
-        controlChannel.postMessage({ type: 'u-devtools:state-response', isOpen: state.value.isOpen });
+        controlChannel.postMessage({
+          type: 'u-devtools:state-response',
+          isOpen: state.value.isOpen,
+        });
       }
     });
   });
@@ -103,7 +109,6 @@ export function useDevToolsState() {
     height: currentHeight,
     toggle,
     close,
-    open
+    open,
   };
 }
-

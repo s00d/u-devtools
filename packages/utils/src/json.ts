@@ -1,6 +1,6 @@
 /**
  * Safely parses a JSON string with error handling.
- * 
+ *
  * @param text - JSON string to parse
  * @param defaultValue - Default value to return if parsing fails
  * @returns Parsed object or default value
@@ -15,7 +15,7 @@ export function safeJsonParse<T = unknown>(text: string, defaultValue: T | null 
 
 /**
  * Safely stringifies an object with error handling.
- * 
+ *
  * @param value - Value to stringify
  * @param defaultValue - Default string to return if stringification fails
  * @returns JSON string or default value
@@ -30,7 +30,7 @@ export function safeJsonStringify(value: unknown, defaultValue = '{}'): string {
 
 /**
  * Safely parses a JSON string from localStorage.
- * 
+ *
  * @param key - localStorage key
  * @param defaultValue - Default value to return if key doesn't exist or parsing fails
  * @returns Parsed object or default value
@@ -47,7 +47,7 @@ export function safeLocalStorageGet<T = unknown>(key: string, defaultValue: T): 
 
 /**
  * Safely sets a value in localStorage as JSON.
- * 
+ *
  * @param key - localStorage key
  * @param value - Value to store
  * @returns true if successful, false otherwise
@@ -60,4 +60,3 @@ export function safeLocalStorageSet(key: string, value: unknown): boolean {
     return false;
   }
 }
-

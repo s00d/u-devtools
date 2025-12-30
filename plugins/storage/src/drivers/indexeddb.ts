@@ -7,7 +7,7 @@ export class IndexedDBDriver implements StorageDriver {
 
   async fetchAll() {
     if (!('indexedDB' in window)) return [];
-    
+
     const indexedDBWithDatabases = window.indexedDB as IDBFactory & {
       databases(): Promise<IDBDatabaseInfo[]>;
     };
@@ -24,13 +24,13 @@ export class IndexedDBDriver implements StorageDriver {
           // Лимитируем 50 записей для производительности
           const records = await db.getAll(storeName, undefined, 50);
           const keys = await db.getAllKeys(storeName, undefined, 50);
-          
+
           stores.push({
             name: storeName,
-            entries: keys.map((key, i) => ({ key, value: records[i] }))
+            entries: keys.map((key, i) => ({ key, value: records[i] })),
           });
         }
-        
+
         result.push({ name: info.name, version: info.version, stores });
         db.close();
       } catch (e) {
@@ -42,7 +42,12 @@ export class IndexedDBDriver implements StorageDriver {
   }
 
   async save(payload: { db: string; store: string; key: unknown; value: unknown }) {
-    const { db: dbName, store, key, value } = payload as { db: string; store: string; key: unknown; value: unknown };
+    const {
+      db: dbName,
+      store,
+      key,
+      value,
+    } = payload as { db: string; store: string; key: unknown; value: unknown };
     const database = await openDB(dbName);
     // Используем put для upsert (вставка или обновление)
     await database.put(store, value, key as IDBValidKey);
@@ -63,4 +68,3 @@ export class IndexedDBDriver implements StorageDriver {
     database.close();
   }
 }
-

@@ -34,7 +34,9 @@ const getStorage = (type: 'local' | 'session') => {
             const parsed = JSON.parse(value);
             value = parsed;
           }
-        } catch { /* not json */ }
+        } catch {
+          /* not json */
+        }
         data.push({ key, value });
       }
     }
@@ -48,14 +50,18 @@ const getStorage = (type: 'local' | 'session') => {
 const getClientCookies = () => {
   try {
     if (!document.cookie) return [];
-    return document.cookie.split(';').filter(Boolean).map(c => {
-      const [key, ...v] = c.split('=');
-      return { 
-        key: key?.trim() || '', 
-        value: decodeURIComponent(v.join('=')),
-        httpOnly: false
-      };
-    }).filter(c => c.key);
+    return document.cookie
+      .split(';')
+      .filter(Boolean)
+      .map((c) => {
+        const [key, ...v] = c.split('=');
+        return {
+          key: key?.trim() || '',
+          value: decodeURIComponent(v.join('=')),
+          httpOnly: false,
+        };
+      })
+      .filter((c) => c.key);
   } catch {
     return [];
   }
@@ -77,10 +83,14 @@ const getServerCookies = async () => {
 // --- Безопасное получение IndexedDB ---
 const getIDB = async () => {
   // Проверка поддержки. Метод databases() есть только в Chrome/Edge!
-  if (!('indexedDB' in window) || typeof (window.indexedDB as { databases?: () => Promise<IDBDatabaseInfo[]> }).databases !== 'function') {
+  if (
+    !('indexedDB' in window) ||
+    typeof (window.indexedDB as { databases?: () => Promise<IDBDatabaseInfo[]> }).databases !==
+      'function'
+  ) {
     return [];
   }
-  
+
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbs = await (window.indexedDB as any).databases();
@@ -88,27 +98,27 @@ const getIDB = async () => {
 
     for (const dbInfo of dbs) {
       if (!dbInfo.name) continue;
-      
+
       try {
         const db = await openDB(dbInfo.name, dbInfo.version);
         const stores = [];
-        
+
         for (const storeName of db.objectStoreNames) {
           try {
             // Читаем только ключи или лимит данных, чтобы не упасть на Blob
             const records = await db.getAll(storeName, undefined, 50);
             const keys = await db.getAllKeys(storeName, undefined, 50);
-            
+
             const entries = keys.map((key, i) => ({
               key,
-              value: records[i]
+              value: records[i],
             }));
             stores.push({ name: storeName, entries });
           } catch {
             stores.push({ name: storeName, entries: [], error: 'Read Error' });
           }
         }
-        
+
         result.push({ name: dbInfo.name, version: dbInfo.version, stores });
         db.close();
       } catch {
@@ -125,11 +135,8 @@ const getIDB = async () => {
 const refreshAll = async () => {
   try {
     // Параллельная загрузка асинхронных данных
-    const [idb, serverCookies] = await Promise.all([
-      getIDB(),
-      getServerCookies()
-    ]);
-    
+    const [idb, serverCookies] = await Promise.all([getIDB(), getServerCookies()]);
+
     // Синхронные данные
     const local = getStorage('local');
     const session = getStorage('session');
@@ -140,15 +147,15 @@ const refreshAll = async () => {
     for (const c of clientCookies) {
       cookieMap.set(c.key, c);
     }
-    
+
     // Если сервер вернул куки, обновляем/добавляем их
     if (Array.isArray(serverCookies)) {
       for (const c of serverCookies) {
         const cookie = c as { key: string; value: string; httpOnly?: boolean };
-        cookieMap.set(cookie.key, { 
-          key: cookie.key, 
-          value: cookie.value, 
-          httpOnly: cookie.httpOnly ?? true 
+        cookieMap.set(cookie.key, {
+          key: cookie.key,
+          value: cookie.value,
+          httpOnly: cookie.httpOnly ?? true,
         });
       }
     }
@@ -178,9 +185,9 @@ const refreshAll = async () => {
       cookie: Array.from(cookieMap.values()),
       indexeddb: idb,
       cache,
-      opfs
+      opfs,
     };
-    
+
     bridge.send('data', result);
   } catch (e) {
     console.error('[U-DevTools] Storage refresh failed:', e);
@@ -191,7 +198,7 @@ const refreshAll = async () => {
       cookie: [],
       indexeddb: [],
       cache: [],
-      opfs: []
+      opfs: [],
     });
   }
 };
@@ -215,7 +222,7 @@ const handleAction = async (action: 'save' | 'remove' | 'clear', payload: unknow
       const result = driver.clear(payload);
       if (result instanceof Promise) await result;
     }
-    
+
     // После изменения сразу обновляем данные
     refreshAll();
   } catch (e) {

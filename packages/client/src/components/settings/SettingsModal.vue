@@ -22,8 +22,8 @@ const generalSettingsSchema: PluginSettingsSchema = {
       { label: 'Compact (90%)', value: '0.9' },
       { label: 'Normal (100%)', value: '1' },
       { label: 'Large (110%)', value: '1.1' },
-      { label: 'Huge (125%)', value: '1.25' }
-    ]
+      { label: 'Huge (125%)', value: '1.25' },
+    ],
   },
   opacity: {
     label: 'Panel Opacity',
@@ -33,18 +33,18 @@ const generalSettingsSchema: PluginSettingsSchema = {
       { label: 'Solid (100%)', value: '1' },
       { label: 'Slightly Transparent (95%)', value: '0.95' },
       { label: 'Glass (90%)', value: '0.9' },
-      { label: 'Ghost (80%)', value: '0.8' }
-    ]
+      { label: 'Ghost (80%)', value: '0.8' },
+    ],
   },
   notifications: {
     label: 'Enable Notifications',
     type: 'boolean',
-    default: true
+    default: true,
   },
   reducedMotion: {
     label: 'Reduced Motion',
     type: 'boolean',
-    default: false
+    default: false,
   },
   launchEditor: {
     label: 'Editor for "Open in IDE"',
@@ -72,9 +72,9 @@ const generalSettingsSchema: PluginSettingsSchema = {
       { label: 'Vim', value: 'vim' },
       { label: 'Emacs', value: 'emacs' },
       { label: 'Visual Studio', value: 'visualstudio' },
-      { label: 'Notepad++', value: 'notepad++' }
-    ]
-  }
+      { label: 'Notepad++', value: 'notepad++' },
+    ],
+  },
 };
 
 // Инициализируем дефолты для General
@@ -84,7 +84,7 @@ const defaults = {
   opacity: '1',
   notifications: true,
   reducedMotion: false,
-  launchEditor: 'code'
+  launchEditor: 'code',
 };
 
 Object.entries(defaults).forEach(([k, v]) => {
@@ -113,37 +113,47 @@ onMounted(() => {
 const currentScale = computed(() => generalApi.get('scale', '1'));
 const currentOpacity = computed(() => generalApi.get('opacity', '1'));
 
-watch([currentScale, currentOpacity], ([scale, opacity]) => {
-  document.documentElement.style.setProperty('--udt-scale', String(scale));
-  document.documentElement.style.setProperty('--udt-opacity', String(opacity));
-}, { immediate: true });
+watch(
+  [currentScale, currentOpacity],
+  ([scale, opacity]) => {
+    document.documentElement.style.setProperty('--udt-scale', String(scale));
+    document.documentElement.style.setProperty('--udt-opacity', String(opacity));
+  },
+  { immediate: true }
+);
 
 // 2. Reduced Motion
 const reducedMotion = computed(() => generalApi.get('reducedMotion', false));
-watch(reducedMotion, (val) => {
-  if (val) {
-    document.documentElement.classList.add('udt-reduce-motion');
-  } else {
-    document.documentElement.classList.remove('udt-reduce-motion');
-  }
-}, { immediate: true });
+watch(
+  reducedMotion,
+  (val) => {
+    if (val) {
+      document.documentElement.classList.add('udt-reduce-motion');
+    } else {
+      document.documentElement.classList.remove('udt-reduce-motion');
+    }
+  },
+  { immediate: true }
+);
 
 // 3. Notifications (проверяется в useNotifications)
 
 // --- СБРОС НАСТРОЕК ---
 const resetAllSettings = () => {
-  if (!confirm('Are you sure you want to reset all DevTools settings? This will reload the page.')) {
+  if (
+    !confirm('Are you sure you want to reset all DevTools settings? This will reload the page.')
+  ) {
     return;
   }
-  
+
   // Удаляем все настройки из localStorage
   const keys = Object.keys(localStorage);
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key.startsWith('u-devtools-')) {
       localStorage.removeItem(key);
     }
   });
-  
+
   // Перезагружаем страницу
   window.location.reload();
 };

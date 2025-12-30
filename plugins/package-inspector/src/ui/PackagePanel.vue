@@ -33,17 +33,24 @@ const loadPackageInfo = async () => {
 
 const currentDeps = computed(() => {
   if (!packageInfo.value) return [];
-  
-  const deps = packageInfo.value[activeTab.value === 'dependencies' ? 'dependencies' : activeTab.value === 'devDependencies' ? 'devDependencies' : 'peerDependencies'];
+
+  const deps =
+    packageInfo.value[
+      activeTab.value === 'dependencies'
+        ? 'dependencies'
+        : activeTab.value === 'devDependencies'
+          ? 'devDependencies'
+          : 'peerDependencies'
+    ];
   if (!deps) return [];
 
   const entries = Object.entries(deps).map(([name, version]) => ({ name, version }));
-  
+
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    return entries.filter(dep => dep.name.toLowerCase().includes(query));
+    return entries.filter((dep) => dep.name.toLowerCase().includes(query));
   }
-  
+
   return entries;
 });
 

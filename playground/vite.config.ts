@@ -25,29 +25,29 @@ export default defineConfig({
       plugins: [
         // Плагин переводов: смотрит в папку src/locales
         i18nPlugin({ dir: 'src/locales' }),
-        
+
         // Плагин сети: перехватывает fetch/xhr
         networkPlugin(),
-        
+
         // Плагин инспектора: позволяет выбирать элементы
         inspectorPlugin(),
-        
+
         // Плагин терминала: полноценный терминал с поддержкой любых команд
         terminalPlugin(),
-        
+
         // Плагин хранилища: просмотр LocalStorage/SessionStorage/Cookies
         storagePlugin(),
-        
+
         // Плагин инспектора пакетов: просмотр зависимостей
         packageInspectorPlugin(),
-        
+
         // Плагин Vue Inspector: инспектор маршрутов (Vue-specific)
         vueInspectorPlugin(),
-        
+
         // Плагин Vite Inspector: диагностика и управление Vite
-        viteInspectorPlugin()
-      ]
-    })
+        viteInspectorPlugin(),
+      ],
+    }),
   ],
   resolve: {
     // ВАЖНО: Дедупликация Vue для предотвращения дублирования инстансов в монорепо
@@ -57,10 +57,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: [
-      'fsevents',
-      'lightningcss',
-    ],
+    exclude: ['fsevents', 'lightningcss'],
   },
   ssr: {
     noExternal: [
@@ -78,4 +75,3 @@ export default defineConfig({
     },
   },
 });
-

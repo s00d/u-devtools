@@ -26,4 +26,3 @@ export default createViteConfig({
   },
   external: ['@u-devtools/kit', 'json-to-ast', 'node:fs/promises'],
 });
-
