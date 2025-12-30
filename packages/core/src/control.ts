@@ -22,6 +22,16 @@ export interface OverlayContext {
   isOpen: boolean;
 
   /**
+   * Переключить на плагин по имени
+   */
+  switchPlugin: (pluginName: string) => void;
+
+  /**
+   * Переключить таб внутри плагина по имени таба
+   */
+  switchTab: (pluginName: string, tabName: string) => void;
+
+  /**
    * Создать временный мост для отправки сообщения.
    * Полезно, если у вас нет доступа к глобальному мосту плагина в данной области видимости.
    */
@@ -31,15 +41,33 @@ export interface OverlayContext {
 export interface OverlayMenuItem {
   id: string;
   label: string;
-  icon: string; // Имя иконки (Heroicons)
+  icon?: string; // Имя иконки (Heroicons) - для обратной совместимости
+  iconSvg?: string; // SVG как текст
+  iconUrl?: string; // URL к иконке
   order?: number;
   /**
-   * Теперь принимает контекст
+   * Обработчики событий (принимают контекст)
    */
-  onClick: (ctx: OverlayContext) => void;
+  onClick?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onDoubleClick?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onContextMenu?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onMouseEnter?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onMouseLeave?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onMouseDown?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onMouseUp?: (ctx: OverlayContext, event: MouseEvent) => void;
+  onKeyDown?: (ctx: OverlayContext, event: KeyboardEvent) => void;
+  onKeyUp?: (ctx: OverlayContext, event: KeyboardEvent) => void;
+  onFocus?: (ctx: OverlayContext, event: FocusEvent) => void;
+  onBlur?: (ctx: OverlayContext, event: FocusEvent) => void;
 }
 
 export const OVERLAY_EVENT = 'u-devtools:register-menu-item';
+
+declare global {
+  interface Window {
+    __UDEVTOOLS_MENU_ITEMS__?: OverlayMenuItem[];
+  }
+}
 
 /**
  * Функция для регистрации кнопки в оверлее (вызывается из app.ts плагина)
@@ -47,7 +75,20 @@ export const OVERLAY_EVENT = 'u-devtools:register-menu-item';
 export function registerMenuItem(item: OverlayMenuItem) {
   if (typeof window === 'undefined') return;
   
-  // Отправляем событие, которое поймает Vue-приложение оверлея
+  // Инициализируем глобальный массив, если его нет
+  if (!window.__UDEVTOOLS_MENU_ITEMS__) {
+    window.__UDEVTOOLS_MENU_ITEMS__ = [];
+  }
+  
+  // Сохраняем элемент в глобальный массив (для случаев, когда overlay еще не загружен)
+  const existingIdx = window.__UDEVTOOLS_MENU_ITEMS__.findIndex(i => i.id === item.id);
+  if (existingIdx !== -1) {
+    window.__UDEVTOOLS_MENU_ITEMS__[existingIdx] = item;
+  } else {
+    window.__UDEVTOOLS_MENU_ITEMS__.push(item);
+  }
+  
+  // Отправляем событие, которое поймает Vue-приложение оверлея (для обратной совместимости)
   window.dispatchEvent(new CustomEvent(OVERLAY_EVENT, {
     detail: item
   }));
@@ -117,6 +158,20 @@ export class DevToolsControl {
     };
     this.channel.addEventListener('message', handler);
     return () => this.channel.removeEventListener('message', handler);
+  }
+
+  /**
+   * Переключить на плагин по имени
+   */
+  switchPlugin(pluginName: string) {
+    this.channel.postMessage({ action: 'switch-plugin', pluginName });
+  }
+
+  /**
+   * Переключить таб внутри плагина по имени таба
+   */
+  switchTab(pluginName: string, tabName: string) {
+    this.channel.postMessage({ action: 'switch-tab', pluginName, tabName });
   }
 
   destroy() {

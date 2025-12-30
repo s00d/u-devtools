@@ -1,7 +1,10 @@
+---
+to: <%= projectName %>/package.json
+---
 {
-  "name": "@u-devtools/plugin-inspector",
-  "version": "0.1.0",
-  "description": "Element inspector plugin for Universal DevTools",
+  "name": "<%= packageName %>",
+  "version": "0.0.0",
+  "description": "<%= description %>",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "type": "module",
@@ -11,16 +14,15 @@
   ],
   "scripts": {
     "build": "vite build",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm build"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@u-devtools/core": "workspace:*",
-    "@u-devtools/ui": "workspace:*",
-    "@u-devtools/kit": "workspace:*",
+    "@u-devtools/core": "latest",
+    "@u-devtools/ui": "latest",
+    "@u-devtools/kit": "latest",
     "vue": "^3.5.26"
   },
   "devDependencies": {
@@ -28,3 +30,4 @@
     "typescript": "^5.9.3"
   }
 }
+

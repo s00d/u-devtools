@@ -28,6 +28,14 @@ const handleSelectNode = (payload: { type: 'parent' | 'sibling' | 'child'; index
   selectNode(payload.type, payload.index, currentElement);
 };
 
+// Обработка переключения таба из overlay
+const handleTabSwitch = (e: Event) => {
+  const detail = (e as CustomEvent<{ pluginName: string; tabName: string }>).detail;
+  if (detail.pluginName === 'Inspector' && ['Computed', 'Styles', 'A11y'].includes(detail.tabName)) {
+    activeTab.value = detail.tabName;
+  }
+};
+
 // Обработка событий от bridge
 onMounted(() => {
   // Обработка выбора элемента (из режима Pick Element или из дерева DOM)
@@ -39,6 +47,14 @@ onMounted(() => {
   bridge.on('inspector-cancelled', () => {
     isInspecting.value = false;
   });
+
+  // Обработка переключения таба из overlay
+  window.addEventListener('u-devtools:switch-tab', handleTabSwitch);
+});
+
+onUnmounted(() => {
+  bridge.close();
+  window.removeEventListener('u-devtools:switch-tab', handleTabSwitch);
 });
 
 onUnmounted(() => {

@@ -33,7 +33,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",

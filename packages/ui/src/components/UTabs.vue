@@ -4,7 +4,7 @@ defineProps<{
   modelValue?: string;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   'update:modelValue': [value: string];
 }>();
 

@@ -8,7 +8,6 @@ import { AppBridge, devtools, type OverlayContext, type OverlayMenuItem } from '
 const { isOpen } = useDevToolsState();
 const { items: menuItems } = useOverlayMenu();
 
-const isMenuOpen = ref(false);
 const isHovered = ref(false);
 let hideTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -23,18 +22,11 @@ const onMouseEnter = () => {
 };
 
 const onMouseLeave = () => {
-  if (isMenuOpen.value) return; // Не прятать, если открыто меню
-  
   // Прячем через 1.5 секунды бездействия
   hideTimeout = setTimeout(() => {
     isHovered.value = false;
   }, 1500);
 };
-
-// Скрываем меню при закрытии
-watch(isHovered, (val) => {
-  if (!val) isMenuOpen.value = false;
-});
 
 // Показываем кнопку при закрытии DevTools
 watch(isOpen, (val) => {
@@ -53,13 +45,9 @@ watch(isOpen, (val) => {
 
 // --- Действия ---
 
-const toggleMenu = () => {
-  if (menuItems.value.length === 0) {
-    // Используем devtools для синхронизации через BroadcastChannel
-    if (isOpen.value) devtools.close(); else devtools.open();
-  } else {
-    isMenuOpen.value = !isMenuOpen.value;
-  }
+const toggleMain = () => {
+  // Используем devtools для синхронизации через BroadcastChannel
+  if (isOpen.value) devtools.close(); else devtools.open();
 };
 
 const createContext = (): OverlayContext => ({
@@ -67,18 +55,76 @@ const createContext = (): OverlayContext => ({
   close: () => devtools.close(),
   toggle: () => devtools.toggle(),
   isOpen: isOpen.value,
+  switchPlugin: (pluginName: string) => devtools.switchPlugin(pluginName),
+  switchTab: (pluginName: string, tabName: string) => devtools.switchTab(pluginName, tabName),
   createBridge: (namespace: string) => new AppBridge(namespace)
 });
 
-const handleItemClick = (item: OverlayMenuItem) => {
-  item.onClick(createContext());
-  isMenuOpen.value = false;
+const handleItemClick = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onClick) {
+    item.onClick(createContext(), event);
+  }
 };
 
-const toggleMain = () => {
-  // Используем devtools для синхронизации через BroadcastChannel
-  if (isOpen.value) devtools.close(); else devtools.open();
-  isMenuOpen.value = false;
+const handleItemDoubleClick = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onDoubleClick) {
+    item.onDoubleClick(createContext(), event);
+  }
+};
+
+const handleItemContextMenu = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onContextMenu) {
+    event.preventDefault();
+    item.onContextMenu(createContext(), event);
+  }
+};
+
+const handleItemMouseEnter = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onMouseEnter) {
+    item.onMouseEnter(createContext(), event);
+  }
+};
+
+const handleItemMouseLeave = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onMouseLeave) {
+    item.onMouseLeave(createContext(), event);
+  }
+};
+
+const handleItemMouseDown = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onMouseDown) {
+    item.onMouseDown(createContext(), event);
+  }
+};
+
+const handleItemMouseUp = (item: OverlayMenuItem, event: MouseEvent) => {
+  if (item.onMouseUp) {
+    item.onMouseUp(createContext(), event);
+  }
+};
+
+const handleItemKeyDown = (item: OverlayMenuItem, event: KeyboardEvent) => {
+  if (item.onKeyDown) {
+    item.onKeyDown(createContext(), event);
+  }
+};
+
+const handleItemKeyUp = (item: OverlayMenuItem, event: KeyboardEvent) => {
+  if (item.onKeyUp) {
+    item.onKeyUp(createContext(), event);
+  }
+};
+
+const handleItemFocus = (item: OverlayMenuItem, event: FocusEvent) => {
+  if (item.onFocus) {
+    item.onFocus(createContext(), event);
+  }
+};
+
+const handleItemBlur = (item: OverlayMenuItem, event: FocusEvent) => {
+  if (item.onBlur) {
+    item.onBlur(createContext(), event);
+  }
 };
 
 // Анимация появления при загрузке
@@ -93,81 +139,87 @@ onMounted(() => {
 
 <template>
   <div 
-    class="fixed bottom-8 right-0 z-[2147483646] font-sans flex items-center"
+    class="fixed bottom-8 right-0 z-[2147483646] font-sans flex items-center gap-1"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
     <!-- 
-      MENU LIST (Popup) 
-      Появляется слева от кнопки
+      BUTTONS PANEL
+      Все кнопки на панели
     -->
-    <Transition name="fade-slide">
-      <div 
-        v-if="isMenuOpen"
-        class="absolute bottom-full right-0 mb-3 mr-2 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden w-48 origin-bottom-right"
+    <!-- Дополнительные кнопки из плагинов -->
+    <div
+      v-if="menuItems.length > 0"
+      class="transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center gap-1"
+      :class="[
+        // Если открыт iframe - прячем кнопки полностью
+        isOpen ? 'translate-x-[120%] opacity-0 pointer-events-none' : '',
+        // Если наведен - показываем полностью
+        // Если нет - прячем полностью
+        !isOpen && isHovered ? 'translate-x-0 opacity-100' : '',
+        !isOpen && !isHovered ? 'translate-x-[120%] opacity-0 pointer-events-none' : ''
+      ]"
+    >
+      <button
+        v-for="item in menuItems"
+        :key="item.id"
+        :title="item.label"
+        class="bg-[#18181b] text-white h-10 w-10 flex items-center justify-center shadow-lg cursor-pointer hover:bg-black transition-colors border border-[#333] rounded-lg relative"
+        @click="handleItemClick(item, $event)"
+        @dblclick="handleItemDoubleClick(item, $event)"
+        @contextmenu="handleItemContextMenu(item, $event)"
+        @mouseenter="handleItemMouseEnter(item, $event)"
+        @mouseleave="handleItemMouseLeave(item, $event)"
+        @mousedown="handleItemMouseDown(item, $event)"
+        @mouseup="handleItemMouseUp(item, $event)"
+        @keydown="handleItemKeyDown(item, $event)"
+        @keyup="handleItemKeyUp(item, $event)"
+        @focus="handleItemFocus(item, $event)"
+        @blur="handleItemBlur(item, $event)"
       >
-        <div class="py-1">
-          <!-- Main Toggle -->
-          <button 
-            @click="toggleMain"
-            class="w-full text-left px-4 py-2 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm font-medium text-gray-700 dark:text-gray-200 border-b border-gray-100 dark:border-gray-800"
-          >
-            <div class="p-1 bg-indigo-100 dark:bg-indigo-900/50 rounded text-indigo-600 dark:text-indigo-400">
-              <UIcon name="WrenchScrewdriver" class="w-4 h-4" />
-            </div>
-            {{ isOpen ? 'Close DevTools' : 'Open DevTools' }}
-          </button>
+        <!-- SVG как текст -->
+        <span 
+          v-if="item.iconSvg" 
+          v-html="item.iconSvg" 
+          class="w-5 h-5 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5 [&>svg]:fill-current" 
+        />
+        <!-- URL иконки -->
+        <img 
+          v-else-if="item.iconUrl" 
+          :src="item.iconUrl" 
+          :alt="item.label" 
+          class="w-5 h-5 object-contain" 
+        />
+        <!-- Имя иконки Heroicons (обратная совместимость) -->
+        <UIcon v-else-if="item.icon" :name="item.icon" class="w-5 h-5" />
+      </button>
+    </div>
 
-          <!-- Dynamic Items -->
-          <button
-            v-for="item in menuItems"
-            :key="item.id"
-            @click="handleItemClick(item)"
-            class="w-full text-left px-4 py-2 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm text-gray-600 dark:text-gray-400"
-          >
-            <UIcon :name="item.icon" class="w-4 h-4 opacity-70" />
-            {{ item.label }}
-          </button>
-        </div>
-      </div>
-    </Transition>
-
-    <!-- 
-      MAIN BUTTON (Docked Tab) 
-      Сдвигается вправо (translateX), оставляя 8px видимыми
-    -->
+    <!-- Основная кнопка DevTools -->
     <div
       class="transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center"
       :class="[
-        // Если открыт iframe - прячем кнопку полностью (или оставляем, на ваш выбор)
+        // Если открыт iframe - прячем кнопку полностью
         isOpen ? 'translate-x-[120%]' : '',
-        // Если наведен - показываем полностью (translate-0)
-        // Если нет - прячем, оставляя 10px (translate-x-[calc(100%-10px)])
+        // Если наведен - показываем полностью
+        // Если нет - прячем, оставляя 10px
         !isOpen && isHovered ? 'translate-x-0 opacity-100' : '',
         !isOpen && !isHovered ? 'translate-x-[calc(100%-10px)] opacity-60 grayscale' : ''
       ]"
     >
-      <!-- Левая часть кнопки (скругленная) -->
       <button 
-        @click="toggleMenu"
+        @click="toggleMain"
         class="bg-[#18181b] text-white h-10 pl-3 pr-4 rounded-l-lg shadow-lg cursor-pointer flex items-center gap-2 hover:bg-black transition-colors border-y border-l border-[#333] relative"
       >
         <UIcon 
           name="WrenchScrewdriver" 
-          class="w-5 h-5 transition-transform duration-300" 
-          :class="isMenuOpen ? 'rotate-90' : ''"
+          class="w-5 h-5"
         />
         <span 
           class="font-bold text-sm whitespace-nowrap overflow-hidden transition-all duration-300"
           :class="isHovered ? 'max-w-[100px] opacity-100 ml-1' : 'max-w-0 opacity-0 ml-0'"
         >
           DevTools
-        </span>
-        
-        <!-- Notification Dot -->
-        <span v-if="menuItems.length > 0" class="absolute top-2 right-2 flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
         </span>
       </button>
     </div>
@@ -177,16 +229,5 @@ onMounted(() => {
 
 <style scoped>
 @reference "tailwindcss";
-
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.2s ease;
-}
-
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(10px) scale(0.95);
-}
 </style>
 

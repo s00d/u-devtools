@@ -11,7 +11,7 @@ import SettingsModal from './components/settings/SettingsModal.vue';
 import CommandPalette from './components/CommandPalette.vue';
 import GlobalDialogs from './components/GlobalDialogs.vue';
 
-const { notifications, plugins, showSettings, isPaletteOpen } = useDevToolsState();
+const { notifications, plugins, showSettings, isPaletteOpen, activePluginId } = useDevToolsState();
 
 // Инициализация настроек
 initDefaultSettings(plugins.value);
@@ -30,8 +30,43 @@ const onKeyDown = (e: KeyboardEvent) => {
   }
 };
 
-onMounted(() => window.addEventListener('keydown', onKeyDown));
-onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
+// Обработка команд от overlay через BroadcastChannel
+let controlChannel: BroadcastChannel | null = null;
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeyDown);
+  
+  // Слушаем команды от overlay
+  controlChannel = new BroadcastChannel('u-devtools:control');
+  controlChannel.onmessage = (e) => {
+    const { action, pluginName, tabName } = e.data;
+    
+    if (action === 'switch-plugin' && pluginName) {
+      // Переключаем на плагин
+      const plugin = plugins.value.find(p => p.name === pluginName);
+      if (plugin) {
+        activePluginId.value = pluginName;
+      }
+    } else if (action === 'switch-tab' && pluginName && tabName) {
+      // Переключаем таб внутри плагина
+      if (activePluginId.value === pluginName) {
+        // Отправляем событие для переключения таба через bus
+        // Плагины могут слушать это событие
+        window.dispatchEvent(new CustomEvent('u-devtools:switch-tab', {
+          detail: { pluginName, tabName }
+        }));
+      }
+    }
+  };
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeyDown);
+  if (controlChannel) {
+    controlChannel.close();
+    controlChannel = null;
+  }
+});
 </script>
 
 <template>

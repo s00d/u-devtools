@@ -1,0 +1,38 @@
+{
+  "name": "create-u-devtools",
+  "version": "0.1.0",
+  "description": "CLI tool to scaffold Universal DevTools plugins",
+  "type": "module",
+  "bin": {
+    "create-u-devtools": "./dist/index.js",
+    "create-u-devtools-plugin": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "_templates"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "hygen": "hygen",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "devtools",
+    "plugin",
+    "scaffold",
+    "generator"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "hygen": "^6.2.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "enquirer": "^2.3.6",
+    "execa": "^5.1.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.3"
+  }
+}
+

@@ -23,7 +23,7 @@ defineProps<{
           <td v-for="col in columns" :key="col.key" class="px-4 py-2 text-gray-100 overflow-hidden">
             <slot :name="`cell-${col.key}`" :row="row" :val="(row as Record<string, unknown>)[col.key]">
               <div class="truncate">
-                {{ (row as Record<string, unknown>)[col.key] }}
+              {{ (row as Record<string, unknown>)[col.key] }}
               </div>
             </slot>
           </td>

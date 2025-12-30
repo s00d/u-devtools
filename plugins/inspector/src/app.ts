@@ -19,6 +19,45 @@ style.textContent = `
   .padding { background: rgba(195, 224, 180, 0.6); }
   .content { background: rgba(160, 197, 232, 0.6); }
   
+  .close-button {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    z-index: 1001;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  
+  .close-button:hover {
+    background: #27272a;
+    border-color: #52525b;
+    transform: scale(1.05);
+  }
+  
+  .close-button:active {
+    transform: scale(0.95);
+  }
+  
+  .close-button svg {
+    width: 20px;
+    height: 20px;
+    stroke: #f4f4f5;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+  
   .tooltip {
     position: fixed;
     background: #18181b;
@@ -65,7 +104,30 @@ const paddingBox = document.createElement('div'); paddingBox.className = 'box pa
 const contentBox = document.createElement('div'); contentBox.className = 'box content';
 const tooltip = document.createElement('div'); tooltip.className = 'tooltip';
 
-shadow.append(marginBox, paddingBox, contentBox, tooltip);
+// Кнопка закрытия инспектора
+const closeButton = document.createElement('button');
+closeButton.className = 'close-button';
+closeButton.style.display = 'none';
+closeButton.innerHTML = `
+  <svg viewBox="0 0 24 24">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+`;
+closeButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleInspector(false);
+  bridge.send('inspector-cancelled', {});
+  // Отменяем ожидание выбора элемента, если оно было
+  if (elementSelectionRejector) {
+    elementSelectionRejector();
+    elementSelectionResolver = null;
+    elementSelectionRejector = null;
+  }
+});
+
+shadow.append(marginBox, paddingBox, contentBox, tooltip, closeButton);
 
 // --- STATE ---
 
@@ -195,10 +257,19 @@ function getElementByUdtId(id: string): HTMLElement | null {
   return document.querySelector(`[${UDT_ID_ATTR}="${id}"]`);
 }
 
+// Promise для ожидания выбора элемента
+let elementSelectionResolver: ((element: HTMLElement) => void) | null = null;
+let elementSelectionRejector: (() => void) | null = null;
+
 function sendElementData(el: HTMLElement) {
   // Проверяем и открываем DevTools если нужно
   ensureDevToolsOpen();
   
+  // Отправляем данные элемента
+  sendElementDataInternal(el);
+}
+
+function sendElementDataInternal(el: HTMLElement) {
   const udtId = ensureUdtId(el);
   const rect = el.getBoundingClientRect();
   
@@ -461,7 +532,24 @@ const onClick = (e: MouseEvent) => {
 
   // При клике сохраняем ссылку на текущий элемент
   currentTarget = target;
-  sendElementData(currentTarget);
+  
+  // Если есть ожидающий resolver, передаем элемент через Promise
+  // Данные будут отправлены в обработчике onClick в registerMenuItem
+  if (elementSelectionResolver) {
+    const resolver = elementSelectionResolver;
+    elementSelectionResolver = null;
+    elementSelectionRejector = null;
+    
+    toggleInspector(false);
+    bridge.send('inspector-cancelled', {}); // Уведомляем UI о завершении
+    
+    // Передаем элемент через resolver
+    resolver(target);
+    return; // Выходим, данные будут отправлены в обработчике
+  }
+  
+  // Если нет ожидающего resolver, это обычный режим - отправляем данные сразу
+  sendElementData(target);
   toggleInspector(false);
   bridge.send('inspector-cancelled', {}); // Уведомляем UI о завершении
 };
@@ -475,17 +563,29 @@ const onScroll = () => {
 
 // --- CONTROL ---
 
-function toggleInspector(state: boolean) {
-  isActive = state;
-  overlayHost.style.display = isActive ? 'block' : 'none';
-  guidesHost.style.display = isActive ? 'block' : 'none';
-  
-  if (isActive) {
+function toggleInspector(state: boolean): Promise<HTMLElement> | undefined {
+  if (state) {
+    // Активируем режим инспектирования
+    isActive = true;
+    overlayHost.style.display = 'block';
+    guidesHost.style.display = 'block';
+    closeButton.style.display = 'flex'; // Показываем кнопку закрытия
     document.addEventListener('mouseover', onMouseOver, true); // true = capture phase
     document.addEventListener('click', onClick, true);
     window.addEventListener('scroll', onScroll, { capture: true, passive: true });
     document.body.style.cursor = 'crosshair';
+    
+    // Возвращаем Promise, который разрешится при выборе элемента
+    return new Promise<HTMLElement>((resolve, reject) => {
+      elementSelectionResolver = resolve;
+      elementSelectionRejector = reject;
+    });
   } else {
+    // Деактивируем режим инспектирования
+    isActive = false;
+    overlayHost.style.display = 'none';
+    guidesHost.style.display = 'none';
+    closeButton.style.display = 'none'; // Скрываем кнопку закрытия
     document.removeEventListener('mouseover', onMouseOver, true);
     document.removeEventListener('click', onClick, true);
     window.removeEventListener('scroll', onScroll, true);
@@ -496,6 +596,15 @@ function toggleInspector(state: boolean) {
     guideBottom.style.display = 'none';
     guideLeft.style.display = 'none';
     guideRight.style.display = 'none';
+    
+    // Отменяем ожидание выбора элемента, если оно было
+    if (elementSelectionRejector) {
+      elementSelectionRejector();
+      elementSelectionResolver = null;
+      elementSelectionRejector = null;
+    }
+    
+    return undefined;
   }
 }
 
@@ -503,11 +612,31 @@ const onKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'Escape' && isActive) {
     toggleInspector(false);
     bridge.send('inspector-cancelled', {});
+    // Отменяем ожидание выбора элемента
+    if (elementSelectionRejector) {
+      elementSelectionRejector();
+      elementSelectionResolver = null;
+      elementSelectionRejector = null;
+    }
   }
 };
 
 // Commands from UI
-bridge.on('toggle-inspector', (data: { state: boolean }) => toggleInspector(data.state));
+bridge.on('toggle-inspector', async (data: { state: boolean }) => {
+  const result = toggleInspector(data.state);
+  
+  // Если активировали режим инспектирования, ждем выбора элемента
+  if (data.state && result) {
+    try {
+      const element = await result;
+      // Отправляем данные выбранного элемента
+      sendElementData(element);
+    } catch {
+      // Пользователь отменил выбор (например, нажал Escape)
+      // Ничего не делаем
+    }
+  }
+});
 
 // --- ACTIONS HANDLERS ---
 
@@ -825,13 +954,44 @@ registerMenuItem({
   label: 'Inspect Element',
   icon: 'MagnifyingGlass',
   order: 10,
-  onClick: (ctx) => {
-    // 1. Закрываем DevTools, чтобы видеть страницу
-    if (ctx.isOpen) {
-      ctx.close();
+  onClick: async (ctx, _event) => {
+    // Активируем режим инспектирования и ждем выбора элемента
+    const elementPromise = toggleInspector(true);
+    
+    if (!elementPromise) {
+      return; // Не должно произойти, но на всякий случай
     }
     
-    // 2. Активируем логику инспектора
-    toggleInspector(true);
+    try {
+      // Ждем выбора элемента
+      const element = await elementPromise;
+      
+      // После получения элемента открываем DevTools и переключаем таб
+      if (!ctx.isOpen) {
+        // Если DevTools закрыт, открываем и ждем
+        ctx.open();
+        await new Promise<void>((resolve) => {
+          const unsubscribe = devtools.onStateChange((isOpen) => {
+            if (isOpen) {
+              unsubscribe();
+              resolve();
+            }
+          });
+        });
+      }
+      
+      // Переключаем на плагин и таб
+      devtools.switchPlugin('Inspector');
+      devtools.switchTab('Inspector', 'Computed');
+      
+      // Небольшая задержка для гарантии, что переключение произошло
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Отправляем данные элемента
+      sendElementDataInternal(element);
+    } catch {
+      // Пользователь отменил выбор (например, нажал Escape)
+      // Ничего не делаем
+    }
   }
 });

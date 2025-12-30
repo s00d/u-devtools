@@ -81,7 +81,7 @@ export function useElementData(bridge: AppBridge) {
     if (!className) return;
     bridge.send('add-class', { cls: className, udtId: id() });
     if (!cls) {
-      newClass.value = '';
+    newClass.value = '';
     }
   };
 

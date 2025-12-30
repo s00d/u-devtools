@@ -15,17 +15,6 @@ defineEmits<{
   click: [event: MouseEvent];
 }>();
 
-const sizeClasses = computed(() => {
-  const sizes = {
-    xs: 'px-2 py-0.5 text-xs gap-1',
-    sm: 'px-3 py-1 text-xs gap-1.5',
-    md: 'px-4 py-1.5 text-sm gap-2',
-    lg: 'px-5 py-2 text-base gap-2',
-    xl: 'px-6 py-2.5 text-lg gap-2.5',
-  };
-  return sizes[props.size];
-});
-
 const iconSize = computed(() => {
   const sizes = {
     xs: 'w-3 h-3',

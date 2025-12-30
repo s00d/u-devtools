@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "build": "vite build",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@u-devtools/core": "workspace:*",

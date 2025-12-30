@@ -92,14 +92,20 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
             }"
         @mouseenter="(e) => {
           if (activePluginId !== p.name) {
-            e.currentTarget.style.color = 'var(--udt-text)';
-            e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)';
+            const target = e.currentTarget as HTMLElement | null;
+            if (target) {
+              target.style.color = 'var(--udt-text)';
+              target.style.backgroundColor = 'var(--udt-bg-hover)';
+            }
           }
         }"
         @mouseleave="(e) => {
           if (activePluginId !== p.name) {
-            e.currentTarget.style.color = 'var(--udt-text-dim)';
-            e.currentTarget.style.backgroundColor = 'transparent';
+            const target = e.currentTarget as HTMLElement | null;
+            if (target) {
+              target.style.color = 'var(--udt-text-dim)';
+              target.style.backgroundColor = 'transparent';
+            }
           }
         }"
       >
@@ -126,14 +132,20 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
           :class="!isSidebarExpanded ? 'justify-center' : ''"
           @mouseenter="(e) => {
             if (!isMenuOpen) {
-              e.currentTarget.style.color = 'var(--udt-text)';
-              e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)';
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.color = 'var(--udt-text)';
+                target.style.backgroundColor = 'var(--udt-bg-hover)';
+              }
             }
           }"
           @mouseleave="(e) => {
             if (!isMenuOpen) {
-              e.currentTarget.style.color = 'var(--udt-text-dim)';
-              e.currentTarget.style.backgroundColor = 'transparent';
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.color = 'var(--udt-text-dim)';
+                target.style.backgroundColor = 'transparent';
+              }
             }
           }"
           title="Manage"
@@ -157,8 +169,20 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
             @click="handleMenuItemClick('settings')"
             class="flex items-center gap-2 px-4 py-2 text-sm text-left w-full transition-colors"
             :style="{ color: 'var(--udt-text-dim)' }"
-            @mouseenter="(e) => { e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)'; e.currentTarget.style.color = 'var(--udt-text)'; }"
-            @mouseleave="(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--udt-text-dim)'; }"
+            @mouseenter="(e) => { 
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.backgroundColor = 'var(--udt-bg-hover)';
+                target.style.color = 'var(--udt-text)';
+              }
+            }"
+            @mouseleave="(e) => { 
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.backgroundColor = 'transparent';
+                target.style.color = 'var(--udt-text-dim)';
+              }
+            }"
           >
             <UIcon name="AdjustmentsHorizontal" class="w-4 h-4" /> Settings
           </button>
@@ -169,11 +193,20 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
             :style="isManagerActive 
               ? { backgroundColor: 'var(--udt-bg-hover)', color: 'var(--udt-text)' }
               : { color: 'var(--udt-text-dim)' }"
-            @mouseenter="(e) => { e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)'; e.currentTarget.style.color = 'var(--udt-text)'; }"
+            @mouseenter="(e) => { 
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.backgroundColor = 'var(--udt-bg-hover)';
+                target.style.color = 'var(--udt-text)';
+              }
+            }"
             @mouseleave="(e) => { 
               if (!isManagerActive) {
-                e.currentTarget.style.backgroundColor = 'transparent'; 
-                e.currentTarget.style.color = 'var(--udt-text-dim)'; 
+                const target = e.currentTarget as HTMLElement | null;
+                if (target) {
+                  target.style.backgroundColor = 'transparent'; 
+                  target.style.color = 'var(--udt-text-dim)'; 
+                }
               }
             }"
           >
@@ -186,8 +219,20 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
             @click="handleMenuItemClick('about')"
             class="flex items-center gap-2 px-4 py-2 text-sm text-left w-full transition-colors"
             :style="{ color: 'var(--udt-text-dim)' }"
-            @mouseenter="(e) => { e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)'; e.currentTarget.style.color = 'var(--udt-text)'; }"
-            @mouseleave="(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--udt-text-dim)'; }"
+            @mouseenter="(e) => { 
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.backgroundColor = 'var(--udt-bg-hover)';
+                target.style.color = 'var(--udt-text)';
+              }
+            }"
+            @mouseleave="(e) => { 
+              const target = e.currentTarget as HTMLElement | null;
+              if (target) {
+                target.style.backgroundColor = 'transparent';
+                target.style.color = 'var(--udt-text-dim)';
+              }
+            }"
           >
             <UIcon name="InformationCircle" class="w-4 h-4" /> About
           </button>
@@ -205,12 +250,18 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
         border: '1px solid var(--udt-border)'
       }"
       @mouseenter="(e) => {
-        e.currentTarget.style.backgroundColor = 'var(--udt-bg-hover)';
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        const target = e.currentTarget as HTMLElement | null;
+        if (target) {
+          target.style.backgroundColor = 'var(--udt-bg-hover)';
+          target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        }
       }"
       @mouseleave="(e) => {
-        e.currentTarget.style.backgroundColor = 'var(--udt-bg-surface)';
-        e.currentTarget.style.borderColor = 'var(--udt-border)';
+        const target = e.currentTarget as HTMLElement | null;
+        if (target) {
+          target.style.backgroundColor = 'var(--udt-bg-surface)';
+          target.style.borderColor = 'var(--udt-border)';
+        }
       }"
       title="Toggle Sidebar"
     >
