@@ -9,7 +9,9 @@
 
 ## 📹 Preview
 
-[![Universal DevTools Kit Preview](https://img.youtube.com/vi/e48xwfp9W-0/0.jpg)](https://www.youtube.com/watch?v=e48xwfp9W-0)
+[![Universal DevTools Kit Preview](https://img.youtube.com/vi/e48xwfp9W-0/0.jpg)](https://www.youtube.com/watch?v=e48xwfp9W-0 "Universal DevTools Kit Preview")
+
+*Click the image above to watch the demo video*
 
 ## What is Universal DevTools Kit?
 
