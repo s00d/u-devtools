@@ -9,14 +9,23 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "publishConfig": {
+    "access": "public",
     "main": "./dist/index.js",
-    "types": "./dist/index.d.ts"
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    }
   },
   "scripts": {
     "build": "vite build",

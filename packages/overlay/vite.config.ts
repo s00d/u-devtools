@@ -1,37 +1,29 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
-  plugins: [vue(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
+const baseConfig = createViteConfig({
+  name: 'UDTOverlay',
+  entry: 'src/main.ts',
+  dir: __dirname,
+  useVue: true,
+  formats: ['es'],
+  fileName: 'index',
+  dtsOptions: {
+    insertTypesEntry: true,
+    exclude: ['src/**/*.vue'],
+    skipDiagnostics: true,
   },
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/main.ts'),
-      name: 'UDTOverlay',
-      fileName: 'index',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: (id) => {
-        if (id === 'vue') return true;
-        return false;
-      },
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
-    cssCodeSplit: false,
+  additionalPlugins: [tailwindcss()],
+  resolveAlias: {
+    '@': './src',
   },
+  cssCodeSplit: false,
 });
+
+export default mergeConfig(baseConfig, defineConfig({}));
 

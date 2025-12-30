@@ -1,35 +1,36 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { defineConfig, mergeConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
+const baseConfig = createViteConfig({
+  name: 'CreateUDevTools',
+  entry: 'src/index.ts',
+  dir: __dirname,
+  useVue: false,
+  formats: ['es'],
+  fileName: 'index',
+  dtsOptions: {
+    insertTypesEntry: true,
+  },
+  external: [
+    'hygen',
+    'hygen/dist/logger.js',
+    'enquirer',
+    'execa',
+  ],
+});
+
+export default mergeConfig(baseConfig, defineConfig({
   build: {
-    lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'CreateUDevTools',
-      fileName: 'index',
-      formats: ['es'],
-    },
     rollupOptions: {
-      external: [
-        'hygen',
-        'hygen/dist/logger.js',
-        'enquirer',
-        'execa',
-        'node:path',
-        'node:url',
-        'node:module',
-      ],
       output: {
         banner: '#!/usr/bin/env node',
-        globals: {},
       },
     },
     minify: true,
-    outDir: 'dist',
   },
-});
+}));
 

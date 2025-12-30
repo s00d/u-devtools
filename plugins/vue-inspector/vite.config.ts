@@ -1,56 +1,31 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import vue from '@vitejs/plugin-vue';
-import path from 'node:path';
-import { cleanTimestampFiles } from '../../shared/clean-timestamp-plugin';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
-export default defineConfig({
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export default createViteConfig({
+  name: 'UDevToolsVueInspector',
+  entry: {
+    index: 'src/index.ts',
+    client: 'src/client.ts',
+    app: 'src/app.ts',
+  },
+  dir: __dirname,
   clearScreen: false,
-  plugins: [
-    vue(),
-    dts({
-      insertTypesEntry: true,
-      exclude: ['src/ui/**/*.vue'],
-      tsconfigPath: './tsconfig.json',
-      rollupTypes: true,
-      copyDtsFiles: false,
-    }),
-    cleanTimestampFiles(__dirname),
-  ],
-  resolve: {
-    alias: {
-      '@u-devtools/core': path.resolve(__dirname, '../../packages/core/src'),
-      '@u-devtools/ui': path.resolve(__dirname, '../../packages/ui/src'),
-    },
+  useVue: true,
+  formats: ['es'],
+  fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
+  dtsOptions: {
+    insertTypesEntry: true,
+    exclude: ['src/ui/**/*.vue'],
+    rollupTypes: true,
+    copyDtsFiles: false,
   },
-  build: {
-    lib: {
-      entry: {
-        index: 'src/index.ts',
-        client: 'src/client.ts',
-        app: 'src/app.ts',
-      },
-      name: 'UDevToolsVueInspector',
-      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: [
-        'vue', 
-        '@u-devtools/core', 
-        '@u-devtools/ui', 
-        '@u-devtools/kit',
-        'node:path', 
-        'node:url',
-        'vite-plugin-vue-inspector',
-        /^vite-plugin-vue-inspector/,
-      ],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
+  resolveAlias: {
+    '@u-devtools/core': '../../packages/core/src',
+    '@u-devtools/ui': '../../packages/ui/src',
   },
+  external: ['@u-devtools/kit', 'vite-plugin-vue-inspector'],
 });
 

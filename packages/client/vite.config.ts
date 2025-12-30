@@ -1,30 +1,37 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { dirname } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
+const baseConfig = createViteConfig({
+  name: 'DevToolsClient',
+  entry: 'src/main.ts',
+  dir: __dirname,
   clearScreen: false,
-  plugins: [vue(), tailwindcss()],
+  useVue: true,
+  formats: ['es'],
+  fileName: 'main',
+  dtsOptions: {
+    insertTypesEntry: true,
+    exclude: ['src/**/*.vue'],
+    skipDiagnostics: true,
+  },
+  additionalPlugins: [tailwindcss()],
+  external: ['virtual:u-devtools-plugins'],
+});
+
+export default mergeConfig(baseConfig, defineConfig({
   build: {
-    lib: {
-      entry: resolve(__dirname, 'src/main.ts'),
-      name: 'DevToolsClient',
-      fileName: 'main',
-      formats: ['es'],
-    },
     rollupOptions: {
-      // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
-      // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
-      external: ['vue', 'virtual:u-devtools-plugins'],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
+      external: (id: string) => {
+        // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
+        // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
+        if (id === 'vue' || id === 'virtual:u-devtools-plugins') return true;
+        return false;
       },
     },
   },
-});
+}));

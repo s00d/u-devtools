@@ -11,6 +11,7 @@
     "src"
   ],
   "publishConfig": {
+    "access": "public",
     "main": "./dist/index.cjs.js",
     "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",

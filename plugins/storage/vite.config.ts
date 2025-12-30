@@ -1,46 +1,30 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import vue from '@vitejs/plugin-vue';
-import path from 'node:path';
-import { cleanTimestampFiles } from '../../shared/clean-timestamp-plugin';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
-export default defineConfig({
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export default createViteConfig({
+  name: 'UDevToolsStorage',
+  entry: {
+    index: 'src/index.ts',
+    client: 'src/client.ts',
+    app: 'src/app.ts',
+  },
+  dir: __dirname,
   clearScreen: false,
-  plugins: [
-    vue(),
-    dts({
-      insertTypesEntry: true,
-      exclude: ['src/ui/**/*.vue'],
-      tsconfigPath: './tsconfig.json',
-    }),
-    cleanTimestampFiles(__dirname),
-  ],
-  resolve: {
-    alias: {
-      '@u-devtools/core': path.resolve(__dirname, '../../packages/core/src'),
-      '@u-devtools/ui': path.resolve(__dirname, '../../packages/ui/src'),
-    },
+  useVue: true,
+  formats: ['es'],
+  fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
+  dtsOptions: {
+    insertTypesEntry: true,
+    exclude: ['src/ui/**/*.vue'],
   },
-  build: {
-    lib: {
-      entry: {
-        index: 'src/index.ts',
-        client: 'src/client.ts',
-        app: 'src/app.ts',
-      },
-      name: 'UDevToolsStorage',
-      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
-      formats: ['es'],
-    },
-    rollupOptions: {
-      // idb should be bundled in app.js, not external
-      external: ['vue', '@u-devtools/core', '@u-devtools/ui', '@u-devtools/kit', 'node:path', 'node:url'],
-      output: {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
+  resolveAlias: {
+    '@u-devtools/core': '../../packages/core/src',
+    '@u-devtools/ui': '../../packages/ui/src',
   },
+  external: ['@u-devtools/kit'],
+  // idb should be bundled in app.js, not external
 });
 

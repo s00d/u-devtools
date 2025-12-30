@@ -9,9 +9,17 @@
     "src"
   ],
   "publishConfig": {
+    "access": "public",
     "main": "./dist/main.js",
+    "module": "./dist/main.js",
+    "types": "./dist/main.d.ts",
     "exports": {
-      ".": "./dist/main.js",
+      ".": {
+        "types": "./dist/main.d.ts",
+        "import": "./dist/main.js"
+      },
+      "./style.css": "./dist/main.css",
+      "./main.css": "./dist/main.css",
       "./package.json": "./package.json"
     }
   },

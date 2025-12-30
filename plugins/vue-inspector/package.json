@@ -13,14 +13,30 @@
     "./app": {
       "types": "./dist/app.d.ts",
       "import": "./dist/app.js"
-    }
+    },
+    "./plugin-vue-inspector.css": "./dist/plugin-vue-inspector.css",
+    "./style.css": "./dist/plugin-vue-inspector.css",
+    "./main.css": "./dist/plugin-vue-inspector.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "publishConfig": {
+    "access": "public",
     "main": "./dist/index.js",
-    "types": "./dist/index.d.ts"
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./app": {
+        "types": "./dist/app.d.ts",
+        "import": "./dist/app.js"
+      }
+    }
   },
   "scripts": {
     "build": "vite build",

@@ -1,48 +1,30 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import path from 'node:path';
-import { cleanTimestampFiles } from '../../shared/clean-timestamp-plugin';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
-export default defineConfig({
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export default createViteConfig({
+  name: 'UDevToolsVite',
+  entry: 'src/index.ts',
+  dir: __dirname,
   clearScreen: false,
-  plugins: [
-    dts({
-      insertTypesEntry: true,
-      tsconfigPath: './tsconfig.json',
-    }),
-    cleanTimestampFiles(__dirname),
+  useVue: false,
+  formats: ['es'],
+  fileName: 'index',
+  dtsOptions: {
+    insertTypesEntry: true,
+  },
+  resolveAlias: {
+    '@u-devtools/core': '../core/src',
+    '@u-devtools/bridge': '../bridge/src',
+  },
+  external: [
+    'launch-editor',
+    'node:fs',
+    'node:https',
+    'node:child_process',
+    'node:util',
   ],
-  resolve: {
-    alias: {
-      '@u-devtools/core': path.resolve(__dirname, '../core/src'),
-      '@u-devtools/bridge': path.resolve(__dirname, '../bridge/src'),
-    },
-  },
-  build: {
-    lib: {
-      entry: 'src/index.ts',
-      name: 'UDevToolsVite',
-      fileName: 'index',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: [
-        'vite',
-        '@u-devtools/bridge',
-        '@u-devtools/core',
-        'launch-editor',
-        'node:path',
-        'node:url',
-        'node:module',
-        'node:fs',
-        'node:https',
-        'node:child_process',
-        'node:util',
-      ],
-      output: {
-        globals: {},
-      },
-    },
-  },
 });
 

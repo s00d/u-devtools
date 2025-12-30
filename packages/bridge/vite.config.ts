@@ -1,33 +1,21 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import path from 'node:path';
+import { createViteConfig } from '../../shared/vite.config.base';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
-export default defineConfig({
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+export default createViteConfig({
+  name: 'UDevToolsBridge',
+  entry: 'src/index.ts',
+  dir: __dirname,
   clearScreen: false,
-  plugins: [
-    dts({
-      insertTypesEntry: true,
-      tsconfigPath: './tsconfig.json',
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@u-devtools/core': path.resolve(__dirname, '../core/src'),
-    },
+  useVue: false,
+  dtsOptions: {
+    insertTypesEntry: true,
   },
-  build: {
-    lib: {
-      entry: 'src/index.ts',
-      name: 'UDevToolsBridge',
-      fileName: (format) => `index.${format === 'es' ? 'es' : 'cjs'}.js`,
-      formats: ['es', 'cjs'],
-    },
-    rollupOptions: {
-      external: ['vite'],
-      output: {
-        globals: {},
-      },
-    },
+  resolveAlias: {
+    '@u-devtools/core': '../core/src',
   },
+  external: ['vite'],
 });
 

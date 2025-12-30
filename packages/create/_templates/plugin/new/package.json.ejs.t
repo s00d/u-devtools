@@ -27,7 +27,10 @@ to: <%= projectName %>/package.json
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
-    "typescript": "^5.9.3"
+    "@vitejs/plugin-vue": "^6.0.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-plugin-dts": "^4.5.4"
   }
 }
 
