@@ -154,6 +154,11 @@ import { packageInspectorPlugin } from '@u-devtools/plugin-package-inspector';
 import { vueInspectorPlugin } from '@u-devtools/plugin-vue-inspector';
 import { viteInspectorPlugin } from '@u-devtools/plugin-vite-inspector';
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -190,9 +195,31 @@ export default defineConfig({
   resolve: {
     // IMPORTANT: Deduplicate Vue to prevent duplicate instances in monorepo
     dedupe: ['vue'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    // IMPORTANT: File system access configuration
+    // Vite requires explicit permission to access files outside the project root.
+    // DevTools plugins (like i18n) need to read/write files in your project,
+    // so we need to grant access to the project directory.
+    fs: {
+      allow: [__dirname],
+    },
+    // Optional: Enable polling for file watching (useful in some environments)
+    watch: {
+      usePolling: true,
+    },
   },
 });
 ```
+
+**Important Configuration Notes:**
+
+- **`server.fs.allow`**: Vite requires explicit permission to access files outside the project root. Since DevTools plugins (like the i18n plugin) need to read and write files in your project directory, you must grant access using `fs.allow: [__dirname]`. This allows plugins to perform file system operations safely.
+
+- **`server.watch.usePolling`**: Optional setting that enables polling-based file watching. This is useful in certain environments (like Docker, WSL, or network file systems) where native file system events may not work reliably. You can omit this if your environment supports native file watching.
 
 ### Step 4: Run Your Dev Server
 
