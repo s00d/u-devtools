@@ -1,4 +1,4 @@
-import { createViteConfig } from '../../shared/vite.config.base';
+import { createViteConfig } from '../core/vite/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';

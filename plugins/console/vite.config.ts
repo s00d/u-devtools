@@ -1,4 +1,4 @@
-import { createViteConfig } from '../../shared/vite.config.base';
+import { createViteConfig } from '../../packages/core/vite/vite.config.base';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -18,7 +18,6 @@ export default createViteConfig({
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/ui/**/*.vue'],
-    skipDiagnostics: true,
   },
   resolveAlias: {
     '@u-devtools/core': '../../packages/core/src',

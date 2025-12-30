@@ -24,6 +24,14 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.es.js",
         "require": "./dist/index.cjs.js"
+      },
+      "./vite.config.base": {
+        "types": "./vite/vite.config.base.ts",
+        "import": "./vite/vite.config.base.ts"
+      },
+      "./clean-timestamp-plugin": {
+        "types": "./vite/clean-timestamp-plugin.ts",
+        "import": "./vite/clean-timestamp-plugin.ts"
       }
     }
   },
@@ -33,7 +41,8 @@
   "types": "./src/index.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "vite"
   ],
   "scripts": {
     "build": "vite build",

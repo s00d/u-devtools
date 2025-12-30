@@ -1,4 +1,4 @@
-import { createViteConfig } from '../../shared/vite.config.base';
+import { createViteConfig } from '../core/vite/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +17,6 @@ const baseConfig = createViteConfig({
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/**/*.vue'],
-    skipDiagnostics: true,
   },
   additionalPlugins: [tailwindcss()],
   external: ['virtual:u-devtools-plugins'],

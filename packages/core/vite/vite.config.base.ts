@@ -16,7 +16,6 @@ interface ConfigOptions {
   dtsOptions?: {
     insertTypesEntry?: boolean;
     exclude?: string[];
-    skipDiagnostics?: boolean;
     rollupTypes?: boolean;
     copyDtsFiles?: boolean;
   };
@@ -50,7 +49,6 @@ export function createViteConfig({
       rollupTypes: dtsOptions.rollupTypes ?? !(dtsOptions.insertTypesEntry ?? false),
       insertTypesEntry: dtsOptions.insertTypesEntry ?? false,
       exclude: dtsOptions.exclude,
-      skipDiagnostics: dtsOptions.skipDiagnostics,
       copyDtsFiles: dtsOptions.copyDtsFiles,
       tsconfigPath: resolve(dir, 'tsconfig.json'),
     }),
@@ -119,3 +117,4 @@ export function createViteConfig({
     },
   });
 }
+
