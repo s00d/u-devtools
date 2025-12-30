@@ -65,8 +65,8 @@ const cancel = () => {
 </script>
 
 <template>
-  <div 
-    @dblclick.stop="startEdit" 
+  <div
+    @dblclick.stop="startEdit"
     class="relative flex items-center justify-center min-w-[20px] h-4 cursor-text group"
     :title="`Change ${prop}`"
   >
@@ -74,7 +74,7 @@ const cancel = () => {
     <span v-if="!isEditing" class="truncate max-w-[50px] hover:text-black dark:hover:text-white transition-colors duration-200">
       {{ displayValue }}
     </span>
-    
+
     <!-- Edit Mode -->
       <input
         v-else
@@ -87,8 +87,3 @@ const cancel = () => {
       />
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

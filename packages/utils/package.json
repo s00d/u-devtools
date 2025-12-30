@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "./src/index.ts",
   "publishConfig": {
@@ -21,7 +21,12 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "devtools",
+    "utilities",
+    "helpers",
+    "u-devtools"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

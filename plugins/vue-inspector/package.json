@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-vue-inspector",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue Inspector plugin for Universal DevTools",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,9 +14,6 @@
       "types": "./dist/app.d.ts",
       "import": "./dist/app.js"
     },
-    "./plugin-vue-inspector.css": "./dist/plugin-vue-inspector.css",
-    "./style.css": "./dist/plugin-vue-inspector.css",
-    "./main.css": "./dist/plugin-vue-inspector.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -24,7 +21,14 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "vue",
+    "inspector",
+    "components",
+    "vue3"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

@@ -33,12 +33,12 @@ const debugResolve = async () => {
     <div class="max-w-2xl mx-auto w-full">
       <h2 class="text-xl font-bold mb-2 text-white">Resolve Debugger</h2>
       <p class="text-gray-400 mb-6 text-sm">Check how Vite resolves imports and aliases.</p>
-      
+
       <div class="flex gap-2 mb-6">
-        <UInput 
-          v-model="resolveInput" 
-          placeholder="e.g. @/components/App.vue or vue or ./Button" 
-          class="flex-1" 
+        <UInput
+          v-model="resolveInput"
+          placeholder="e.g. @/components/App.vue or vue or ./Button"
+          class="flex-1"
           @keydown.enter="debugResolve"
         />
         <UButton variant="primary" @click="debugResolve" :disabled="resolving">
@@ -59,7 +59,7 @@ const debugResolve = async () => {
         <div v-else>
           <div class="text-xs text-gray-400 uppercase font-bold mb-1">Resolved Path</div>
           <div class="font-mono break-all text-green-400 mb-4 text-sm">{{ resolveResult.id }}</div>
-          
+
           <div class="text-xs text-gray-400 uppercase font-bold mb-1">External</div>
           <div class="font-mono text-sm text-gray-300">
             <UBadge :color="resolveResult.external ? 'yellow' : 'green'">
@@ -71,8 +71,3 @@ const debugResolve = async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

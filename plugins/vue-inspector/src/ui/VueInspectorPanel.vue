@@ -68,7 +68,3 @@ const currentRoute = computed(() => router.currentRoute.value);
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

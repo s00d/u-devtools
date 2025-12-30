@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-i18n",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "i18n plugin for Universal DevTools",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -20,9 +20,6 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./plugin-i18n.css": "./dist/plugin-i18n.css",
-      "./style.css": "./dist/plugin-i18n.css",
-      "./main.css": "./dist/plugin-i18n.css",
       "./package.json": "./package.json"
     }
   },
@@ -31,7 +28,14 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "i18n",
+    "internationalization",
+    "localization",
+    "translations"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

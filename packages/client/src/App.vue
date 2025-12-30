@@ -73,16 +73,11 @@ onUnmounted(() => {
 
 <template>
   <!-- 
-    Убираем жесткие цвета фона. 
-    bg-transparent позволяет видеть цвет body, который мы настроили в CSS.
-    text-gray-800 и dark:text... заменяем на text-[var(--udt-text)] или просто наследуем.
     Применяем масштаб и прозрачность через CSS переменные.
   -->
   <div 
-    class="flex h-screen w-screen font-sans overflow-hidden udt-reset relative"
+    class="flex h-screen w-screen font-sans overflow-hidden udt-reset relative bg-zinc-950 text-gray-200"
     :style="{ 
-      backgroundColor: 'var(--udt-bg-root)',
-      color: 'var(--udt-text)',
       zoom: 'var(--udt-scale)',
       opacity: 'var(--udt-opacity)'
     }"
@@ -110,7 +105,7 @@ onUnmounted(() => {
       <div
         v-for="n in notifications"
         :key="n.id"
-        class="px-4 py-2 rounded shadow-lg text-sm text-white transform transition-all animate-fade-in-up pointer-events-auto"
+        class="px-4 py-2 rounded shadow-lg text-sm text-white transform transition-all animate-[fade-in-up_0.2s_ease-out] pointer-events-auto"
         :class="{
           'bg-gray-800': n.type === 'info',
           'bg-red-600': n.type === 'error',
@@ -122,29 +117,3 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-
-<style>
-/* Global scrollbar hide utility */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.2s ease-out;
-}
-</style>

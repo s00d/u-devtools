@@ -99,9 +99,9 @@ onMounted(() => {
     <!-- List -->
     <div class="w-1/3 border-r border-gray-700 flex flex-col min-w-[300px] bg-gray-800 min-h-0 overflow-hidden">
       <div class="p-2 border-b border-gray-700">
-        <UInput 
-          v-model="searchQuery" 
-          placeholder="Search modules..." 
+        <UInput
+          v-model="searchQuery"
+          placeholder="Search modules..."
           @enter="loadModules"
           class="w-full"
         >
@@ -149,7 +149,7 @@ onMounted(() => {
       <div v-else-if="loadingDetails" class="m-auto">
         <ULoading />
       </div>
-      
+
       <div v-else-if="moduleDetails" class="flex-1 flex flex-col h-full">
         <div class="px-4 py-3 border-b border-gray-700 bg-gray-800 flex items-center gap-2">
           <UIcon name="DocumentText" class="w-4 h-4 text-gray-400 shrink-0" />
@@ -161,18 +161,18 @@ onMounted(() => {
               {{ moduleDetails.id }}
             </div>
           </div>
-          <UButton 
-            v-if="moduleDetails.file" 
-            variant="ghost" 
-            size="sm" 
-            icon="CodeBracket" 
+          <UButton
+            v-if="moduleDetails.file"
+            variant="ghost"
+            size="sm"
+            icon="CodeBracket"
             @click="openInEditor(moduleDetails.file, 1, 1)"
             title="Open in IDE"
           >
             Open in IDE
           </UButton>
         </div>
-        
+
         <USplitter :defaultSize="400" class="flex-1 min-h-0 min-w-0">
           <template #left>
             <div class="h-full flex flex-col border-r border-gray-700 min-w-0 min-h-0 overflow-hidden">
@@ -203,8 +203,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

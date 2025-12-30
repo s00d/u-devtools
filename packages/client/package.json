@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/client",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Client-side UI shell for Universal DevTools",
   "type": "module",
   "main": "./src/main.ts",
@@ -19,8 +19,6 @@
         "types": "./dist/main.d.ts",
         "import": "./dist/main.js"
       },
-      "./style.css": "./dist/main.css",
-      "./main.css": "./dist/main.css",
       "./package.json": "./package.json"
     }
   },
@@ -29,7 +27,13 @@
     "typecheck": "vue-tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "devtools",
+    "client",
+    "ui",
+    "shell",
+    "u-devtools"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {
@@ -47,6 +51,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vue-tsc": "^3.2.1"
   }
 }

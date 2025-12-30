@@ -34,11 +34,11 @@ const cancel = () => {
 </script>
 
 <template>
-  <div 
+  <div
     class="relative cursor-text font-mono text-xs text-gray-200 hover:text-indigo-400 transition-colors"
     title="Double click to edit"
   >
-    <span 
+    <span
       v-if="!isEditing"
       @dblclick.stop="startEdit"
       class="truncate select-all block"
@@ -59,7 +59,4 @@ const cancel = () => {
   </div>
 </template>
 
-<style scoped>
-@reference "tailwindcss";
-</style>
 

@@ -49,12 +49,12 @@ const removeClass = (cls: string) => {
 
 <template>
   <div class="space-y-4 select-none">
-    
+
     <!-- Custom Class Input -->
     <div class="flex gap-2">
-      <UInput 
-        v-model="customClass" 
-        placeholder="Add custom class..." 
+      <UInput
+        v-model="customClass"
+        placeholder="Add custom class..."
         size="sm"
         class="flex-1"
         @keydown.enter="addCustomClass"
@@ -64,9 +64,9 @@ const removeClass = (cls: string) => {
 
     <!-- Active Classes List -->
     <div v-if="classes.length > 0" class="flex flex-wrap gap-1.5 p-2.5 bg-gray-800 rounded border border-gray-700">
-       <div 
-         v-for="cls in classes" 
-         :key="cls" 
+       <div
+         v-for="cls in classes"
+         :key="cls"
          class="group flex items-center gap-1.5 px-2.5 py-1 bg-gray-700 rounded border border-gray-600 text-xs font-mono hover:border-gray-500 transition-colors"
        >
           <span class="text-indigo-400">{{ cls }}</span>
@@ -76,7 +76,7 @@ const removeClass = (cls: string) => {
 
     <!-- GUI Controls -->
     <div class="space-y-4 border-t border-gray-700 pt-4">
-      
+
       <!-- LAYOUT -->
       <div class="space-y-2">
         <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Display</div>
@@ -89,7 +89,7 @@ const removeClass = (cls: string) => {
       </div>
 
       <!-- FLEX ALIGNMENT -->
-      <div v-if="has('flex')" class="space-y-3 animate-fade-in">
+      <div v-if="has('flex')" class="space-y-3 animate-[fadeIn_0.2s_ease-out]">
         <div class="grid grid-cols-2 gap-3">
            <!-- Direction -->
            <div>
@@ -133,7 +133,7 @@ const removeClass = (cls: string) => {
             <button v-for="i in ['0','1','2','4','6','8']" :key="i" @click="toggleClass(`p-${i}`, /^p-\d+/)" :class="{'bg-indigo-900/30 text-indigo-300 border-indigo-800': has(`p-${i}`), 'bg-gray-800 text-gray-400 border-gray-700': !has(`p-${i}`)}" class="text-xs py-1.5 rounded border hover:bg-gray-800 transition">{{i}}</button>
          </div>
       </div>
-      
+
       <div class="space-y-2">
          <div class="text-[10px] font-bold text-gray-400 uppercase">Margin</div>
          <div class="grid grid-cols-6 gap-1.5">
@@ -145,22 +145,3 @@ const removeClass = (cls: string) => {
 
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-
-.animate-fade-in { 
-  animation: fadeIn 0.2s ease-out; 
-}
-
-@keyframes fadeIn { 
-  from { 
-    opacity: 0; 
-    transform: translateY(-5px); 
-  } 
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  } 
-}
-</style>

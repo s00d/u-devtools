@@ -52,18 +52,18 @@ const handleHover = () => {
         @click.stop="toggleExpand"
         class="shrink-0 w-3 h-3 flex items-center justify-center"
       >
-        <UIcon 
-          :name="isExpanded ? 'ChevronDown' : 'ChevronRight'" 
-          class="w-3 h-3 text-gray-400" 
+        <UIcon
+          :name="isExpanded ? 'ChevronDown' : 'ChevronRight'"
+          class="w-3 h-3 text-gray-400"
         />
       </button>
       <div v-else class="w-3 shrink-0" />
       <span class="font-mono flex-1 truncate">{{ node.name }}</span>
       <div v-if="node.tags && node.tags.length > 0" class="flex gap-1 ml-auto shrink-0">
-        <UBadge 
-          v-for="(tag, idx) in node.tags" 
+        <UBadge
+          v-for="(tag, idx) in node.tags"
           :key="`${node.id}-tag-${idx}`"
-          size="xs" 
+          size="xs"
           color="gray"
         >
           {{ typeof tag === 'string' ? tag : tag.label }}
@@ -90,8 +90,4 @@ const handleHover = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

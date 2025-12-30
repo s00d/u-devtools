@@ -75,12 +75,12 @@ onMounted(() => {
 
 <template>
   <div class="udt-overlay font-sans text-gray-800">
-    
+
     <!-- IFRAME CONTAINER -->
-    <div 
+    <div
       class="fixed bottom-0 left-0 w-full bg-white dark:bg-[#0f172a] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] flex flex-col transition-transform duration-300 ease-in-out"
-      :style="{ 
-        height: `${height}px`, 
+      :style="{
+        height: `${height}px`,
         zIndex: 2147483647,
         transform: isOpen ? 'translateY(0)' : 'translateY(110%)',
         visibility: isOpen ? 'visible' : 'hidden',
@@ -90,22 +90,22 @@ onMounted(() => {
       @mouseleave="unblockPageScroll"
     >
       <!-- Resizer Handle -->
-      <div 
+      <div
         class="absolute -top-1.5 left-0 w-full h-3 cursor-row-resize z-50 group flex items-center justify-center"
         @pointerdown="onPointerDown"
       >
-        <div 
+        <div
           class="w-full h-[1px] bg-gray-200 dark:bg-gray-700 transition-all group-hover:bg-indigo-500 group-hover:h-[2px]"
         />
       </div>
-      
+
       <!-- Overlay to catch mouse events during resize -->
-      <div 
+      <div
         class="absolute inset-0 z-50 bg-transparent pointer-events-none"
       />
 
-      <iframe 
-        :src="`${props.base}/index.html`" 
+      <iframe
+        :src="`${props.base}/index.html`"
         class="w-full h-full border-none bg-white dark:bg-[#0f172a]"
       />
     </div>
@@ -115,8 +115,4 @@ onMounted(() => {
 
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

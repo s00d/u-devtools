@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-terminal",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Terminal plugin for running npm scripts from DevTools",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,7 +16,13 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "terminal",
+    "shell",
+    "command-line"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {
@@ -34,9 +40,6 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./plugin-terminal.css": "./dist/plugin-terminal.css",
-      "./style.css": "./dist/plugin-terminal.css",
-      "./main.css": "./dist/plugin-terminal.css",
       "./package.json": "./package.json"
     }
   },

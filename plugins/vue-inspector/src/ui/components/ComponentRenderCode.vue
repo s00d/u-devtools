@@ -32,8 +32,3 @@ function close() {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

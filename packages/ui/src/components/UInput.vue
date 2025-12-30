@@ -106,50 +106,14 @@ const inputBorderRadiusClasses = computed(() => {
   return classes.join(' ');
 });
 
-const handleFocus = (e: FocusEvent) => {
-  const target = e.currentTarget as HTMLInputElement | null;
-  if (target) {
-    target.style.borderColor = 'rgba(99, 102, 241, 0.5)';
-    target.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
-  }
-  emit('focus', e);
-};
-
-const handleBlur = (e: FocusEvent) => {
-  const target = e.currentTarget as HTMLInputElement | null;
-  if (target) {
-    target.style.borderColor = 'transparent';
-    target.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-  }
-  emit('blur', e);
-};
-
-const handleMouseEnter = (e: MouseEvent) => {
-  const target = e.currentTarget as HTMLInputElement | null;
-  if (target && window.document.activeElement !== target) {
-    target.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
-  }
-};
-
-const handleMouseLeave = (e: MouseEvent) => {
-  const target = e.currentTarget as HTMLInputElement | null;
-  if (target && window.document.activeElement !== target) {
-    target.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-  }
-};
 </script>
 
 <template>
-  <div class="udt-input-wrapper flex items-center w-full">
-    <!-- Prepend (внешний текст слева) -->
+  <div class="flex items-center w-full">
+      <!-- Prepend (внешний текст слева) -->
     <div
       v-if="hasPrepend"
-      class="udt-input-prepend flex items-center px-3 border border-r-0 rounded-l"
-      :style="{
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        color: 'var(--udt-text)'
-      }"
+      class="flex items-center px-3 border border-r-0 rounded-l border-white/10 bg-black/30 text-gray-200"
       :class="prependSizeClasses"
     >
       <slot name="prepend">
@@ -158,11 +122,11 @@ const handleMouseLeave = (e: MouseEvent) => {
     </div>
 
     <!-- Input container -->
-    <div class="udt-input-container flex-1 relative">
+    <div class="flex-1 relative">
       <!-- Prefix (внутренний текст/иконка слева) -->
       <div
         v-if="hasPrefix"
-        class="udt-input-prefix absolute left-0 top-0 bottom-0 flex items-center justify-center text-gray-400 pointer-events-none z-10"
+        class="absolute left-0 top-0 bottom-0 flex items-center justify-center text-gray-400 pointer-events-none z-10"
         :class="{
           'pl-2': !hasPrepend,
           'pl-3': hasPrepend,
@@ -182,8 +146,10 @@ const handleMouseLeave = (e: MouseEvent) => {
         :disabled="disabled"
         :readonly="readonly"
         :class="[
-          'udt-input w-full border border-transparent rounded-lg transition-all duration-200',
-          'focus:outline-none focus:ring-4 focus:ring-indigo-500/20',
+          'w-full border border-transparent rounded-lg transition-all duration-200',
+          'bg-black/20 text-gray-200',
+          'focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500/50 focus:bg-black/40',
+          'hover:bg-black/40',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           sizeClasses,
           inputPaddingClasses,
@@ -191,15 +157,6 @@ const handleMouseLeave = (e: MouseEvent) => {
           hasPrefix ? (!hasPrepend ? 'pl-8' : 'pl-10') : '',
           hasSuffix ? (!hasAppend ? 'pr-8' : 'pr-10') : '',
         ]"
-        :style="{
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          color: 'var(--udt-text)',
-          borderColor: 'transparent'
-        }"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         @keydown="handleKeydown"
         @keyup="emit('keyup', $event)"
@@ -208,15 +165,15 @@ const handleMouseLeave = (e: MouseEvent) => {
       <!-- Suffix (внутренний текст/иконка справа) -->
       <div
         v-if="hasSuffix"
-        class="udt-input-suffix absolute right-0 top-0 bottom-0 flex items-center justify-center z-10"
+        class="absolute right-0 top-0 bottom-0 flex items-center justify-center z-10"
         :class="{
           'pr-2': !hasAppend,
           'pr-3': hasAppend,
         }"
       >
         <slot name="suffix">
-          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5'" :style="{ color: 'var(--udt-text-dim)' }" />
-          <span v-else-if="suffix" class="text-xs" :style="{ color: 'var(--udt-text-dim)' }">{{ suffix }}</span>
+          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="[size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5', 'text-gray-400']" />
+          <span v-else-if="suffix" class="text-xs text-gray-400">{{ suffix }}</span>
         </slot>
       </div>
     </div>
@@ -224,12 +181,7 @@ const handleMouseLeave = (e: MouseEvent) => {
     <!-- Append (внешний текст справа) -->
     <div
       v-if="hasAppend"
-      class="udt-input-append flex items-center px-3 border border-l-0 rounded-r"
-      :style="{
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        color: 'var(--udt-text)'
-      }"
+      class="flex items-center px-3 border border-l-0 rounded-r border-white/10 bg-black/30 text-gray-200"
       :class="appendSizeClasses"
     >
       <slot name="append">
@@ -238,7 +190,3 @@ const handleMouseLeave = (e: MouseEvent) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

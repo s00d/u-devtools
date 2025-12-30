@@ -178,14 +178,14 @@ onUnmounted(() => bridge.close());
 
 <template>
   <div class="flex h-full w-full bg-gray-900 text-gray-200">
-    
+
     <!-- Sidebar (Navigation) -->
     <div class="w-64 border-r border-gray-700 flex flex-col bg-gray-800 overflow-y-auto">
       <div class="p-3 text-xs font-bold text-gray-400 uppercase">Storage Types</div>
-      
+
       <!-- Flat Storages -->
-      <button 
-        v-for="type in (['local', 'session', 'cookie'] as const)" 
+      <button
+        v-for="type in (['local', 'session', 'cookie'] as const)"
         :key="type"
         @click="activeType = type; activeDb = ''; activeStore = '';"
         class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
@@ -202,31 +202,31 @@ onUnmounted(() => bridge.close());
           <UIcon name="ArrowPath" class="w-3 h-3" />
         </button>
       </div>
-      
+
       <div v-for="db in storageData.indexeddb" :key="db.name">
         <div class="px-4 py-1 text-sm font-semibold text-gray-300 flex items-center gap-2">
           <UIcon name="CircleStack" class="w-3 h-3" /> {{ db.name }}
         </div>
-        <button 
-          v-for="store in db.stores" 
+        <button
+          v-for="store in db.stores"
           :key="store.name"
           @click="activeType = 'indexeddb'; activeDb = db.name; activeStore = store.name;"
           class="w-full text-left px-8 py-1.5 text-xs flex justify-between hover:bg-gray-700 border-l-2 transition-colors"
-          :class="(activeType === 'indexeddb' && activeStore === store.name && activeDb === db.name) 
-            ? 'border-indigo-500 bg-gray-700 text-indigo-300' 
+          :class="(activeType === 'indexeddb' && activeStore === store.name && activeDb === db.name)
+            ? 'border-indigo-500 bg-gray-700 text-indigo-300'
             : 'border-transparent text-gray-400'"
         >
           <span>{{ store.name }}</span>
           <span class="opacity-60">{{ store.entries.length }}</span>
         </button>
       </div>
-      
+
       <div v-if="storageData.indexeddb.length === 0" class="px-4 py-2 text-xs text-gray-500 italic">No DBs found</div>
 
       <!-- Advanced Storages -->
       <div class="mt-4 p-3 text-xs font-bold text-gray-400 uppercase">Advanced</div>
-      
-      <button 
+
+      <button
         @click="activeType = 'cache'; activeDb = ''; activeStore = '';"
         class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
         :class="activeType === 'cache' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-300'"
@@ -236,7 +236,7 @@ onUnmounted(() => bridge.close());
         </div>
       </button>
 
-      <button 
+      <button
         @click="activeType = 'opfs'; activeDb = 'root'; activeStore = '';"
         class="px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
         :class="activeType === 'opfs' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-300'"
@@ -264,7 +264,7 @@ onUnmounted(() => bridge.close());
           <UButton variant="ghost" size="sm" icon="ArrowPath" @click="refresh" />
         </div>
         <div class="flex gap-2 items-center">
-          <USelect 
+          <USelect
             v-if="activeType === 'cache' && storageData.cache.length > 0"
             v-model="activeDb"
             :options="storageData.cache.map(c => ({ label: c.name, value: c.name }))"
@@ -272,11 +272,11 @@ onUnmounted(() => bridge.close());
           />
           <UInput v-model="filter" placeholder="Filter..." class="w-40" />
           <UButton variant="danger" size="sm" icon="Trash" @click="clearAll">Clear</UButton>
-          <UButton 
+          <UButton
             v-if="activeType !== 'cache' && activeType !== 'opfs'"
-            variant="primary" 
-            size="sm" 
-            icon="Plus" 
+            variant="primary"
+            size="sm"
+            icon="Plus"
             @click="openAdd"
           >
             Add
@@ -286,22 +286,22 @@ onUnmounted(() => bridge.close());
 
       <!-- Table -->
       <div class="flex-1 overflow-auto p-4 bg-gray-900/50">
-        <UTable 
+        <UTable
           v-if="filteredList.length > 0"
-          :rows="filteredList" 
+          :rows="filteredList"
           :columns="[
-            {key:'key', label:'Key', width:'25%'}, 
-            {key:'value', label:'Value', width:'50%'}, 
+            {key:'key', label:'Key', width:'25%'},
+            {key:'value', label:'Value', width:'50%'},
             {key:'actions', label:'', width:'80px'}
           ]"
         >
           <template #cell-key="{ val, row }">
             <div class="flex items-center gap-2">
               <span class="font-mono text-sm font-bold text-indigo-400 break-all">{{ val }}</span>
-              <UBadge 
-                v-if="isHttpOnlyCookie(row)" 
-                color="yellow" 
-                size="xs" 
+              <UBadge
+                v-if="isHttpOnlyCookie(row)"
+                color="yellow"
+                size="xs"
                 title="HttpOnly (Server side)"
               >
                 HTTP
@@ -309,7 +309,7 @@ onUnmounted(() => bridge.close());
             </div>
           </template>
           <template #cell-value="{ val, row }">
-            <div 
+            <div
               @dblclick.stop="openEdit(row as StorageItem)"
               class="text-xs font-mono text-gray-300 cursor-pointer hover:text-indigo-400 transition-colors group relative w-full"
               :title="typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)"
@@ -325,15 +325,15 @@ onUnmounted(() => bridge.close());
           </template>
           <template #cell-actions="{ row }">
             <div class="flex justify-end gap-1">
-              <button 
+              <button
                 v-if="activeType !== 'cache' && activeType !== 'opfs'"
-                @click="openEdit(row as StorageItem)" 
+                @click="openEdit(row as StorageItem)"
                 class="p-1 text-gray-400 hover:text-indigo-400"
               >
                 <UIcon name="Pencil" class="w-4 h-4"/>
               </button>
-              <button 
-                @click="remove((row as StorageItem).key)" 
+              <button
+                @click="remove((row as StorageItem).key)"
                 class="p-1 text-gray-400 hover:text-red-400"
               >
                 <UIcon name="Trash" class="w-4 h-4"/>
@@ -350,15 +350,15 @@ onUnmounted(() => bridge.close());
       <div class="space-y-4">
         <div>
           <label class="text-sm font-bold text-gray-200">Key</label>
-          <UInput 
-            v-model="editingItem.key" 
-            :disabled="editMode === 'edit' && activeType !== 'indexeddb'" 
+          <UInput
+            v-model="editingItem.key"
+            :disabled="editMode === 'edit' && activeType !== 'indexeddb'"
           />
         </div>
         <div>
           <label class="text-sm font-bold text-gray-200">Value (JSON supported)</label>
-          <textarea 
-            v-model="editingItem.value" 
+          <textarea
+            v-model="editingItem.value"
             class="w-full h-32 p-2 border border-gray-600 rounded bg-gray-800 text-gray-200 font-mono text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
           ></textarea>
         </div>
@@ -371,7 +371,3 @@ onUnmounted(() => bridge.close());
 
   </div>
 </template>
-
-<style scoped>
-/* Tailwind CSS v4 */
-</style>

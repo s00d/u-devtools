@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/kit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "SDK for creating Universal DevTools plugins",
   "type": "module",
   "main": "./src/index.ts",
@@ -29,7 +29,12 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "devtools",
+    "sdk",
+    "plugin-development",
+    "u-devtools"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

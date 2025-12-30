@@ -109,7 +109,3 @@ const PiniaTreeNode = defineComponent({
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

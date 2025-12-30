@@ -79,8 +79,3 @@ const tableRows = computed(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

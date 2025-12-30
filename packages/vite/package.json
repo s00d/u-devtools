@@ -1,13 +1,14 @@
 {
   "name": "@u-devtools/vite",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Universal DevTools Kit for Vite applications",
   "keywords": [
     "vite",
     "devtools",
     "plugin",
     "dx",
-    "debug"
+    "debug",
+    "u-devtools"
   ],
   "author": "",
   "license": "MIT",

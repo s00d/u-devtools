@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-package-inspector",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Package Inspector plugin for viewing dependencies from package.json",
   "type": "module",
   "main": "./dist/index.js",
@@ -17,7 +17,14 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "package",
+    "inspector",
+    "dependencies",
+    "npm"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

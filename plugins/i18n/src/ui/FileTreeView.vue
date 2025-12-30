@@ -52,32 +52,26 @@ const handleNodeSelect = (node: TreeNode) => {
     <template #node="{ node, isExpanded, toggleExpand, handleClick }">
       <div
         class="py-1 px-2 my-1 cursor-pointer flex items-center text-sm rounded transition-all duration-200"
-        :class="node.isSelected 
-          ? 'bg-indigo-900/30 border border-indigo-500 text-indigo-300 font-medium' 
+        :class="node.isSelected
+          ? 'bg-indigo-900/30 border border-indigo-500 text-indigo-300 font-medium'
           : 'border border-transparent hover:bg-gray-700'"
         @click="handleClick(node, $event)"
       >
         <UIcon
           v-if="node.children && node.children.length > 0"
           :name="isExpanded ? 'ChevronDown' : 'ChevronRight'"
-          class="w-3 h-3 mr-2"
-          :style="{ color: 'var(--udt-text-dim)' }"
+          class="w-3 h-3 mr-2 text-gray-400"
           @click.stop="toggleExpand(node, $event)"
         />
         <UIcon
           :name="node.icon || 'DocumentText'"
-          class="w-4 h-4 mr-2"
-          :style="{ color: 'var(--udt-text-dim)' }"
+          class="w-4 h-4 mr-2 text-gray-400"
         />
-        <span :style="{ color: node.isSelected ? 'var(--udt-text)' : 'var(--udt-text-dim)' }">
+        <span :class="node.isSelected ? 'text-gray-200' : 'text-gray-400'">
           {{ node.label }}
         </span>
       </div>
     </template>
   </UTreeView>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

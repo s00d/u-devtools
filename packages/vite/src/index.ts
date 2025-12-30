@@ -5,7 +5,6 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import https from 'node:https';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -219,51 +218,61 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
       // --- PLUGIN MANAGER: MARKETPLACE ---
 
-      // 1. Поиск плагинов в NPM (Marketplace)
+      // Хелпер для выполнения команд
+      const runCommand = async (cmd: string, cwd: string) => {
+        const { exec } = await import('node:child_process');
+        const { promisify } = await import('node:util');
+        const execAsync = promisify(exec);
+        return execAsync(cmd, { cwd, maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
+      };
+
+      // Хелпер для определения текущего пакетного менеджера проекта
+      const getPackageManager = () => {
+        const userAgent = process.env.npm_config_user_agent;
+        if (userAgent?.startsWith('pnpm')) return 'pnpm';
+        if (userAgent?.startsWith('yarn')) return 'yarn';
+        if (userAgent?.startsWith('bun')) return 'bun';
+        return 'npm';
+      };
+
+      // 1. Поиск плагинов в NPM (через npm search)
       rpcServer.handle('sys:plugins:search', async (payload: unknown) => {
         const query = payload as string;
-        const text = query || 'keywords:u-devtools-plugin';
-        return new Promise((resolve) => {
-          https
-            .get(
-              `https://registry.npmjs.org/-/v1/search?text=${encodeURIComponent(text)}&size=20`,
-              { headers: { 'User-Agent': 'u-devtools' } },
-              (res) => {
-                let data = '';
-                res.on('data', (chunk) => {
-                  data += chunk;
-                });
-                res.on('end', () => {
-                  try {
-                    const json = JSON.parse(data);
-                    const results = json.objects.map(
-                      (obj: {
-                        package: {
-                          name: string;
-                          version: string;
-                          description?: string;
-                          publisher?: { username: string };
-                          links?: { npm?: string };
-                        };
-                      }) => ({
-                        name: obj.package.name,
-                        version: obj.package.version,
-                        description: obj.package.description || 'No description',
-                        author: obj.package.publisher?.username || 'Unknown',
-                        homepage:
-                          obj.package.links?.npm ||
-                          `https://www.npmjs.com/package/${obj.package.name}`,
-                      })
-                    );
-                    resolve(results);
-                  } catch {
-                    resolve([]);
-                  }
-                });
-              }
-            )
-            .on('error', () => resolve([]));
-        });
+        const text = query || 'keywords:u-devtools';
+
+        try {
+          // Используем 'npm search' с флагом --json.
+          // npm обычно установлен даже если используется pnpm/yarn.
+          // Это надежнее для парсинга, чем вывод pnpm/yarn search.
+          const { stdout } = await runCommand(`npm search ${text} --json`, ctx.root);
+
+          const data = JSON.parse(stdout);
+
+          // Приводим формат npm search к нужному нам интерфейсу
+          return Array.isArray(data)
+            ? data.map(
+                (pkg: {
+                  name: string;
+                  version: string;
+                  description?: string;
+                  maintainers?: Array<{ username: string }>;
+                  author?: { name: string };
+                  links?: { npm?: string };
+                }) => ({
+                  name: pkg.name,
+                  version: pkg.version,
+                  description: pkg.description || 'No description',
+                  author:
+                    pkg.maintainers?.[0]?.username || pkg.author?.name || 'Unknown',
+                  homepage:
+                    pkg.links?.npm || `https://www.npmjs.com/package/${pkg.name}`,
+                })
+              )
+            : [];
+        } catch (e) {
+          console.warn('[u-devtools] npm search failed:', e);
+          return [];
+        }
       });
 
       // 2. Установка плагина
@@ -271,17 +280,6 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const pkgName = payload as string;
         // Динамический импорт для избежания проблем с ESM
         const { loadFile, writeFile, builders } = await import('magicast');
-        const { exec } = await import('node:child_process');
-        const { promisify } = await import('node:util');
-        const execAsync = promisify(exec);
-
-        // Хелпер для определения пакетного менеджера
-        const getPackageManager = () => {
-          const userAgent = process.env.npm_config_user_agent;
-          if (userAgent?.startsWith('pnpm')) return 'pnpm';
-          if (userAgent?.startsWith('yarn')) return 'yarn';
-          return 'npm';
-        };
 
         // Хелпер для преобразования имени пакета в имя переменной
         const packageToImportName = (pkgName: string): string => {
@@ -290,11 +288,17 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         };
 
         const pm = getPackageManager();
-        const cmd = pm === 'npm' ? `npm install -D ${pkgName}` : `${pm} add -D ${pkgName}`;
+        // Формируем команду установки для конкретного менеджера
+        const cmd =
+          pm === 'npm'
+            ? `npm install -D ${pkgName}`
+            : pm === 'yarn'
+              ? `yarn add -D ${pkgName}`
+              : `${pm} add -D ${pkgName}`;
 
         try {
-          // 1. Установка пакета
-          await execAsync(cmd, { cwd: ctx.root });
+          // 1. Установка пакета через CLI
+          await runCommand(cmd, ctx.root);
 
           // 2. Модификация vite.config.ts
           const configPath = path.resolve(ctx.root, 'vite.config.ts');
@@ -348,24 +352,17 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       // 3. Удаление плагина
       rpcServer.handle('sys:plugins:uninstall', async (payload: unknown) => {
         const pkgName = payload as string;
-        const { exec } = await import('node:child_process');
-        const { promisify } = await import('node:util');
-        const execAsync = promisify(exec);
-
-        // Хелпер для определения пакетного менеджера
-        const getPackageManager = () => {
-          const userAgent = process.env.npm_config_user_agent;
-          if (userAgent?.startsWith('pnpm')) return 'pnpm';
-          if (userAgent?.startsWith('yarn')) return 'yarn';
-          return 'npm';
-        };
-
         const pm = getPackageManager();
-        const cmd = pm === 'npm' ? `npm uninstall ${pkgName}` : `${pm} remove ${pkgName}`;
+        const cmd =
+          pm === 'npm'
+            ? `npm uninstall ${pkgName}`
+            : pm === 'yarn'
+              ? `yarn remove ${pkgName}`
+              : `${pm} remove ${pkgName}`;
 
         try {
           // Удаление пакета
-          await execAsync(cmd, { cwd: ctx.root });
+          await runCommand(cmd, ctx.root);
 
           // Примечание: Автоматическое удаление из vite.config.ts через magicast сложно,
           // так как нужно найти и удалить конкретный вызов функции из массива.
@@ -378,46 +375,26 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         }
       });
 
-      // 4. Проверка обновлений (NPM Registry)
+      // 4. Проверка обновлений (через npm view)
       rpcServer.handle('sys:plugins:checkUpdates', async (payload: unknown) => {
         const packages = payload as string[];
         const updates: Record<string, string> = {};
 
+        // Запускаем проверки параллельно
         await Promise.all(
-          packages.map(
-            (pkgName) =>
-              new Promise<void>((resolve) => {
-                if (!pkgName || pkgName === 'unknown') {
-                  resolve();
-                  return;
-                }
-
-                const req = https.get(
-                  `https://registry.npmjs.org/${pkgName}/latest`,
-                  { headers: { 'User-Agent': 'u-devtools' } },
-                  (res) => {
-                    let data = '';
-                    res.on('data', (chunk) => {
-                      data += chunk;
-                    });
-                    res.on('end', () => {
-                      try {
-                        if (res.statusCode === 200) {
-                          const info = JSON.parse(data);
-                          updates[pkgName] = info.version;
-                        }
-                      } catch {
-                        // ignore parse errors
-                      }
-                      resolve();
-                    });
-                  }
-                );
-
-                req.on('error', () => resolve());
-                req.end();
-              })
-          )
+          packages.map(async (pkgName) => {
+            if (!pkgName || pkgName === 'unknown') return;
+            try {
+              // 'npm view <pkg> version' возвращает последнюю версию строкой
+              const { stdout } = await runCommand(`npm view ${pkgName} version`, ctx.root);
+              const latestVersion = stdout.trim();
+              if (latestVersion) {
+                updates[pkgName] = latestVersion;
+              }
+            } catch (e) {
+              // Пакет не найден или ошибка сети
+            }
+          })
         );
 
         return updates;

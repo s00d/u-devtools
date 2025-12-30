@@ -69,7 +69,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-@reference "tailwindcss";
-</style>
 

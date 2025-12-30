@@ -51,7 +51,7 @@ const isJson = (data: unknown) =>
 
     <!-- Content -->
     <div class="flex-1 overflow-auto p-4 bg-gray-900">
-      
+
       <!-- HEADERS -->
       <div v-if="activeTab === 'Headers'" class="space-y-6">
         <div>
@@ -101,12 +101,8 @@ const isJson = (data: unknown) =>
         <div v-else-if="request.status === 0" class="text-gray-400 text-sm italic">Pending...</div>
         <div v-else class="text-gray-400 text-sm italic">No response data available</div>
       </div>
-      
+
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

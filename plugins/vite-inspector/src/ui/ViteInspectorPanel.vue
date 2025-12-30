@@ -24,7 +24,3 @@ const activeTab = ref('Modules');
     <EventsTab v-else-if="activeTab === 'Events'" :api="props.api" />
   </div>
 </template>
-
-<style scoped>
-/* Tailwind CSS v4 */
-</style>

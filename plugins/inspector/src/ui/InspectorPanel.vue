@@ -72,12 +72,12 @@ onUnmounted(() => {
 
 <template>
   <div class="h-full flex flex-col bg-gray-900 text-gray-200">
-    
+
     <!-- Toolbar -->
     <div class="h-10 border-b border-gray-800 flex items-center px-3 gap-2 bg-gray-800 flex-none">
-      <UButton 
-        :variant="isInspecting ? 'primary' : 'ghost'" 
-        icon="MagnifyingGlass" 
+      <UButton
+        :variant="isInspecting ? 'primary' : 'ghost'"
+        icon="MagnifyingGlass"
         size="sm"
         @click="toggleInspect"
         :class="{ 'animate-pulse': isInspecting }"
@@ -95,7 +95,7 @@ onUnmounted(() => {
 
     <div v-if="data" class="flex-1 overflow-hidden relative">
       <USplitter :defaultSize="300" :min="200" :max="600">
-        
+
         <!-- LEFT: DOM TREE -->
         <template #left>
           <DomTreeAdapter :domContext="data.domContext" @select-node="handleSelectNode" />
@@ -110,16 +110,16 @@ onUnmounted(() => {
             </div>
 
             <div class="flex-1 overflow-auto">
-              
+
               <!-- COMPUTED TAB -->
-              <ComputedTab 
+              <ComputedTab
                 v-if="activeTab === 'Computed'"
                 :data="data"
                 @update-style="updateStyle"
               />
 
               <!-- STYLES TAB -->
-              <StylesTab 
+              <StylesTab
                 v-if="activeTab === 'Styles'"
                 :data="data"
                 @update-classes="updateClasses"
@@ -131,7 +131,7 @@ onUnmounted(() => {
               />
 
               <!-- A11Y TAB -->
-              <A11yTab 
+              <A11yTab
                 v-if="activeTab === 'A11y'"
                 :data="data"
               />
@@ -145,7 +145,3 @@ onUnmounted(() => {
     <UEmpty v-else title="Inspect Element" description="Select an element to view details" icon="MagnifyingGlass" />
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

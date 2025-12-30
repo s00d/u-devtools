@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-vite-inspector",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vite Inspector plugin for Universal DevTools - deep dive into Vite configuration and server",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,9 +10,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./plugin-vite-inspector.css": "./dist/plugin-vite-inspector.css",
-    "./style.css": "./dist/plugin-vite-inspector.css",
-    "./main.css": "./dist/plugin-vite-inspector.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -20,7 +17,13 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "vite",
+    "inspector",
+    "configuration"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

@@ -29,71 +29,19 @@ const iconSize = computed(() => {
   return sizes[props.size];
 });
 
-const buttonStyle = computed(() => {
+const variantClasses = computed(() => {
   if (props.variant === 'primary') {
-    return {
-      backgroundColor: '#6366f1',
-      color: 'white',
-      boxShadow: '0 4px 12px -2px rgba(79,70,229,0.4)',
-    };
+    return 'bg-indigo-600 text-white shadow-[0_4px_12px_-2px_rgba(79,70,229,0.4)] hover:bg-indigo-700 hover:shadow-[0_6px_16px_-2px_rgba(79,70,229,0.6)]';
   } else if (props.variant === 'secondary') {
-    return {
-      backgroundColor: 'var(--udt-bg-surface)',
-      color: 'var(--udt-text)',
-      border: '1px solid var(--udt-border)',
-    };
+    return 'bg-zinc-800 text-gray-200 border border-zinc-800 hover:bg-zinc-700';
   } else if (props.variant === 'ghost') {
-    return {
-      color: 'var(--udt-text-dim)',
-      backgroundColor: 'transparent',
-    };
+    return 'text-gray-400 bg-transparent hover:text-gray-200 hover:bg-white/5';
   } else if (props.variant === 'danger') {
-    return {
-      backgroundColor: 'rgba(239, 68, 68, 0.1)',
-      color: '#ef4444',
-    };
+    return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
   } else {
-    return {
-      border: '1px solid var(--udt-border)',
-      backgroundColor: 'var(--udt-bg-surface)',
-      color: 'var(--udt-text)',
-    };
+    return 'border border-zinc-800 bg-zinc-800 text-gray-200 hover:bg-zinc-700';
   }
 });
-
-const handleMouseEnter = (e: MouseEvent) => {
-  const target = e.currentTarget as HTMLElement;
-  if (props.variant === 'primary') {
-    target.style.backgroundColor = '#4f46e5';
-    target.style.boxShadow = '0 6px 16px -2px rgba(79,70,229,0.6)';
-  } else if (props.variant === 'secondary') {
-    target.style.backgroundColor = 'var(--udt-bg-hover)';
-  } else if (props.variant === 'ghost') {
-    target.style.color = 'var(--udt-text)';
-    target.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-  } else if (props.variant === 'danger') {
-    target.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
-  } else {
-    target.style.backgroundColor = 'var(--udt-bg-hover)';
-  }
-};
-
-const handleMouseLeave = (e: MouseEvent) => {
-  const target = e.currentTarget as HTMLElement;
-  if (props.variant === 'primary') {
-    target.style.backgroundColor = '#6366f1';
-    target.style.boxShadow = '0 4px 12px -2px rgba(79,70,229,0.4)';
-  } else if (props.variant === 'secondary') {
-    target.style.backgroundColor = 'var(--udt-bg-surface)';
-  } else if (props.variant === 'ghost') {
-    target.style.color = 'var(--udt-text-dim)';
-    target.style.backgroundColor = 'transparent';
-  } else if (props.variant === 'danger') {
-    target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-  } else {
-    target.style.backgroundColor = 'var(--udt-bg-surface)';
-  }
-};
 </script>
 
 <template>
@@ -106,10 +54,8 @@ const handleMouseLeave = (e: MouseEvent) => {
       size === 'md' ? 'px-4 py-2 text-sm gap-2 rounded-lg' :
       size === 'lg' ? 'px-5 py-2.5 text-base gap-2.5 rounded-xl' :
       'px-6 py-3 text-lg gap-3 rounded-xl',
+      variantClasses,
     ]"
-    :style="buttonStyle"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
     @click="$emit('click', $event)"
   >
     <!-- Добавляем легкий блик для primary -->

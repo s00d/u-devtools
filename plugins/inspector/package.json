@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-inspector",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Element inspector plugin for Universal DevTools",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -20,9 +20,6 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./plugin-inspector.css": "./dist/plugin-inspector.css",
-      "./style.css": "./dist/plugin-inspector.css",
-      "./main.css": "./dist/plugin-inspector.css",
       "./package.json": "./package.json"
     }
   },
@@ -31,7 +28,13 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "inspector",
+    "dom",
+    "elements"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

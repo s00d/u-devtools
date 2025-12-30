@@ -144,7 +144,7 @@ onUnmounted(() => {
     <!-- Output Area -->
     <div
       ref="containerRef"
-      class="flex-1 overflow-y-auto p-4 whitespace-pre-wrap break-all leading-snug scrollbar-thin"
+      class="flex-1 overflow-y-auto p-4 whitespace-pre-wrap break-all leading-snug [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-[#111827] [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb:hover]:bg-indigo-600"
       :style="{ fontSize: `${fontSize}px` }"
     >
       {{ output }}
@@ -167,20 +167,3 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.scrollbar-thin::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: #111827;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 4px;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
-}
-</style>

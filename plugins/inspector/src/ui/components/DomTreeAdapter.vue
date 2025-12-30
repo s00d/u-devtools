@@ -120,25 +120,14 @@ const handleNodeSelect = (node: TreeNode) => {
           :hasChildren="node.data.hasChildren as boolean"
         />
       </div>
-      
+
       <div
         v-else-if="node.data?.type === 'sibling'"
         @click="!node.isCurrent && handleClick(node, $event)"
-        class="rounded transition-colors"
-        :class="node.isCurrent ? 'ring-1 ring-indigo-500/50' : 'hover:opacity-80 cursor-pointer'"
-        :style="node.isCurrent 
-          ? { backgroundColor: 'rgba(99, 102, 241, 0.15)' }
-          : {}"
-        @mouseenter="(e: MouseEvent) => {
-          if (!node.isCurrent && e.currentTarget) {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--udt-bg-hover)';
-          }
-        }"
-        @mouseleave="(e: MouseEvent) => {
-          if (!node.isCurrent && e.currentTarget) {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-          }
-        }"
+        class="rounded transition-colors cursor-pointer"
+        :class="node.isCurrent
+          ? 'ring-1 ring-indigo-500/50 bg-indigo-500/15'
+          : 'hover:opacity-80 hover:bg-zinc-800/50'"
       >
         <!-- Node Line -->
         <div class="py-1.5 px-2">
@@ -154,24 +143,13 @@ const handleNodeSelect = (node: TreeNode) => {
         <!-- CHILDREN (Visible only for current) -->
         <div
           v-if="node.isCurrent && node.children && node.children.length > 0"
-          class="pl-4 pb-1 space-y-0.5 border-l ml-2 mb-1"
-          :style="{ borderColor: 'var(--udt-border-subtle)' }"
+          class="pl-4 pb-1 space-y-0.5 border-l border-zinc-900 ml-2 mb-1"
         >
           <div
             v-for="child in node.children"
             :key="child.id"
             @click.stop="handleClick(child, $event)"
-            class="px-2 py-1 rounded cursor-pointer transition-colors"
-            @mouseenter="(e: MouseEvent) => { 
-              if (e.currentTarget) {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--udt-bg-hover)';
-              }
-            }"
-            @mouseleave="(e: MouseEvent) => { 
-              if (e.currentTarget) {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-              }
-            }"
+            class="px-2 py-1 rounded cursor-pointer transition-colors hover:bg-zinc-800/50"
           >
             <UDomNode
               v-if="child.data"
@@ -182,12 +160,11 @@ const handleNodeSelect = (node: TreeNode) => {
             />
           </div>
         </div>
-        
+
         <!-- Closing Tag -->
         <div
           v-if="node.isCurrent && node.children && node.children.length > 0"
-          class="px-2 pb-1 text-xs font-mono"
-          :style="{ color: 'var(--udt-text-dim)' }"
+          class="px-2 pb-1 text-xs font-mono text-gray-400"
         >
           &lt;/{{ node.data.tagName }}&gt;
         </div>
@@ -195,8 +172,3 @@ const handleNodeSelect = (node: TreeNode) => {
     </template>
   </UTreeView>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

@@ -9,7 +9,7 @@ defineProps<{
   <div class="w-full overflow-auto border border-gray-700 rounded">
     <table class="w-full text-left text-sm table-fixed">
       <colgroup>
-        <col v-for="col in columns" :key="col.key" :style="{ width: col.width || 'auto' }" />
+        <col v-for="col in columns" :key="col.key" :style="col.width ? { width: col.width } : undefined" />
       </colgroup>
       <thead class="bg-gray-800 border-b border-gray-700 font-semibold text-gray-200">
         <tr>

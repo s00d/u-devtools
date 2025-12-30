@@ -77,7 +77,7 @@ onMounted(() => {
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
     <div
-      class="relative w-[500px] bg-[#18181b]/95 backdrop-blur-md rounded-xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[60vh] animate-fade-in"
+      class="relative w-[500px] bg-[#18181b]/95 backdrop-blur-md rounded-xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[60vh] animate-[fadeIn-scale_0.1s_ease-out]"
     >
       <div class="p-3 border-b border-white/5">
         <div class="relative">
@@ -136,21 +136,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.animate-fade-in {
-  animation: fadeIn 0.1s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-</style>
 

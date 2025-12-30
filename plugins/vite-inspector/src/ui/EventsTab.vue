@@ -80,8 +80,8 @@ onMounted(() => {
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Toolbar -->
     <div class="p-3 border-b border-gray-700 bg-gray-800 flex items-center gap-3 flex-wrap">
-      <USelect 
-        v-model="eventsFilter" 
+      <USelect
+        v-model="eventsFilter"
         :options="[
           { value: 'all', label: 'All Types' },
           { value: 'hmr', label: 'HMR' },
@@ -93,17 +93,17 @@ onMounted(() => {
         ]"
         class="w-40"
       />
-      <UInput 
-        v-model.number="eventsLimit" 
-        type="number" 
-        placeholder="Limit" 
+      <UInput
+        v-model.number="eventsLimit"
+        type="number"
+        placeholder="Limit"
         class="w-24"
         min="10"
         max="500"
       />
       <div class="flex-1"></div>
       <div v-if="eventsStats" class="text-xs text-gray-400">
-        Total: {{ eventsStats.total }} | 
+        Total: {{ eventsStats.total }} |
         <span v-for="(count, type) in eventsStats.byType" :key="type" class="ml-2">
           {{ type }}: {{ count }}
         </span>
@@ -125,8 +125,8 @@ onMounted(() => {
         <p>No events recorded yet</p>
       </div>
       <div v-else class="divide-y divide-gray-800">
-        <div 
-          v-for="event in events" 
+        <div
+          v-for="event in events"
           :key="event.id"
           class="p-3 hover:bg-gray-800 transition-colors"
         >
@@ -157,8 +157,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-

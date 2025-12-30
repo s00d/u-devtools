@@ -46,14 +46,13 @@ const handleScroll = (e: Event) => {
 <template>
   <div
     v-bind="containerProps"
-    class="udt-virtual-list h-full overflow-auto"
+    class="h-full overflow-auto"
     @scroll="handleScroll"
   >
     <div v-bind="wrapperProps">
       <div
         v-for="{ data: item, index } in list"
         :key="getItemKey(item, index)"
-        class="udt-virtual-list-item"
       >
         <slot :item="item" :index="index" />
       </div>
@@ -66,7 +65,3 @@ const handleScroll = (e: Event) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

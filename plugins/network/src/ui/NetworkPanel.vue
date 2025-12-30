@@ -151,7 +151,7 @@ onUnmounted(() => {
     <!-- Main Content with Splitter -->
     <div class="flex-1 overflow-hidden relative">
       <USplitter :default-size="400" :min="200" :max="800">
-        
+
         <!-- LEFT: Table -->
         <template #left>
           <div class="h-full overflow-auto bg-gray-900">
@@ -176,8 +176,8 @@ onUnmounted(() => {
               </template>
 
               <template #cell-url="{ val, row }">
-                <div 
-                  class="truncate max-w-[400px] cursor-pointer hover:text-indigo-400 transition-colors" 
+                <div
+                  class="truncate max-w-[400px] cursor-pointer hover:text-indigo-400 transition-colors"
                   :title="val as string"
                   :class="selectedId === (row as NetRequest).id ? 'text-indigo-400 font-medium' : ''"
                   @click="selectRequest(row as NetRequest)"
@@ -193,25 +193,25 @@ onUnmounted(() => {
                 <span v-else class="text-gray-500 text-xs">-</span>
               </template>
             </UTable>
-            <UEmpty 
-              v-else 
-              icon="GlobeAlt" 
-              title="No network requests" 
-              description="Network requests will appear here when you make HTTP calls" 
+            <UEmpty
+              v-else
+              icon="GlobeAlt"
+              title="No network requests"
+              description="Network requests will appear here when you make HTTP calls"
             />
           </div>
         </template>
 
         <!-- RIGHT: Details -->
         <template #right>
-          <NetworkDetails 
-            v-if="selectedRequest" 
-            :request="selectedRequest" 
+          <NetworkDetails
+            v-if="selectedRequest"
+            :request="selectedRequest"
             @close="selectedId = null"
             @replay="replay"
           />
-          <div 
-            v-else 
+          <div
+            v-else
             class="h-full flex items-center justify-center text-gray-400 bg-gray-900/50"
           >
             <div class="text-center">
@@ -224,7 +224,3 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>

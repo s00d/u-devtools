@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-storage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Storage Manager plugin for viewing and editing LocalStorage, SessionStorage, and Cookies",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,9 +14,6 @@
       "types": "./dist/app.d.ts",
       "import": "./dist/app.js"
     },
-    "./plugin-storage.css": "./dist/plugin-storage.css",
-    "./style.css": "./dist/plugin-storage.css",
-    "./main.css": "./dist/plugin-storage.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -24,7 +21,15 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "storage",
+    "localstorage",
+    "sessionstorage",
+    "cookies",
+    "indexeddb"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

@@ -1,11 +1,12 @@
 {
   "name": "@u-devtools/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Core types and interfaces for Universal DevTools",
   "keywords": [
     "devtools",
     "types",
-    "core"
+    "core",
+    "u-devtools"
   ],
   "author": "",
   "license": "MIT",

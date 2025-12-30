@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/bridge",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "RPC bridge for Universal DevTools communication",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -29,7 +29,13 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "devtools",
+    "rpc",
+    "bridge",
+    "communication",
+    "u-devtools"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

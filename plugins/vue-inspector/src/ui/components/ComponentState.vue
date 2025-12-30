@@ -153,7 +153,3 @@ const stateObject = computed(() => {
   </div>
 </template>
 
-<style scoped>
-@reference "tailwindcss";
-</style>
-

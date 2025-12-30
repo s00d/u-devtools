@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/overlay",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "main": "./src/main.ts",
   "publishConfig": {
@@ -13,8 +13,6 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./style.css": "./dist/index.css",
-      "./index.css": "./dist/index.css",
       "./package.json": "./package.json"
     }
   },
@@ -23,7 +21,12 @@
     "src",
     "README.md"
   ],
-  "keywords": [],
+  "keywords": [
+    "devtools",
+    "overlay",
+    "ui",
+    "u-devtools"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {
@@ -43,9 +46,10 @@
     "vue": "^3.5.26"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vue-tsc": "^2.0.0"
   }
 }

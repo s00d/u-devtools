@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-network",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Network logger plugin for Universal DevTools",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -20,9 +20,6 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./plugin-network.css": "./dist/plugin-network.css",
-      "./style.css": "./dist/plugin-network.css",
-      "./main.css": "./dist/plugin-network.css",
       "./package.json": "./package.json"
     }
   },
@@ -31,7 +28,14 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "network",
+    "http",
+    "requests",
+    "fetch"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

@@ -11,8 +11,7 @@ const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
 
 <template>
   <div 
-    class="flex-1 flex flex-col min-w-0 min-h-0 relative z-0 overflow-hidden"
-    style="background-color: var(--udt-bg-root);"
+    class="flex-1 flex flex-col min-w-0 min-h-0 relative z-0 overflow-hidden bg-zinc-950"
   >
     <!-- Internal Views -->
     <AboutPanel v-if="isAboutActive" />

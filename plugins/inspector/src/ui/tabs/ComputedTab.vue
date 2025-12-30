@@ -64,7 +64,7 @@ const updateStyle = (payload: { prop: string; value: string }) => {
 <template>
   <div class="p-4 space-y-4">
     <BoxModel v-if="data.computed" :styles="data.computed" @update="updateStyle" />
-    
+
     <div v-for="(styles, group) in computedGroups" :key="group" class="border-t border-gray-800 pt-4 first:border-0 first:pt-0">
       <div class="border border-gray-800 rounded-lg bg-gray-800 overflow-hidden">
         <div class="border-b border-gray-800 bg-gray-800 px-4 py-2.5">
@@ -72,14 +72,14 @@ const updateStyle = (payload: { prop: string; value: string }) => {
         </div>
         <div class="p-4">
           <div class="space-y-1.5">
-            <div 
-              v-for="(val, key) in styles" 
-              :key="key" 
+            <div
+              v-for="(val, key) in styles"
+              :key="key"
               class="flex items-center gap-4 py-2 px-3 bg-gray-900/50 rounded border border-gray-800 hover:border-gray-700 transition-colors group"
             >
               <div class="text-gray-400 font-mono text-xs w-32 flex-shrink-0 truncate" :title="key">{{ key }}</div>
-              <EditableValue 
-                :value="String(val)" 
+              <EditableValue
+                :value="String(val)"
                 :prop="key"
                 @update="updateStyle"
                 class="flex-1"
@@ -91,8 +91,4 @@ const updateStyle = (payload: { prop: string; value: string }) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

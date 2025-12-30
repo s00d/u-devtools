@@ -25,27 +25,23 @@ const emit = defineEmits<{
     <BoxModel v-if="data.computed" :styles="data.computed" />
 
     <!-- 2. Tailwind Editor -->
-    <div 
-      class="rounded-lg p-3 border"
-      :style="{
-        backgroundColor: 'rgba(18, 18, 20, 0.4)',
-        borderColor: 'var(--udt-border-subtle)'
-      }"
+    <div
+      class="rounded-lg p-3 border bg-zinc-900/40 border-zinc-900"
     >
       <div class="text-xs font-bold text-gray-400 uppercase mb-3">Quick Styles (Tailwind)</div>
       <TailwindEditor :classes="data.classes" @update="(classes) => emit('update-classes', classes)" />
     </div>
 
     <!-- 3. Class List -->
-    <ClassesEditor 
-      :classes="data.classes" 
+    <ClassesEditor
+      :classes="data.classes"
       @add="(cls) => emit('add-class', cls)"
       @remove="(cls) => emit('remove-class', cls)"
     />
 
     <!-- 4. Attributes -->
-    <AttributesEditor 
-      :attrs="data.attrs" 
+    <AttributesEditor
+      :attrs="data.attrs"
       @update="(payload) => emit('update-attr', payload.name, payload.value)"
       @delete="(name) => emit('delete-attr', name)"
       @add="(payload) => emit('add-attr', payload.name, payload.value)"
@@ -53,7 +49,4 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style scoped>
-@reference "tailwindcss";
-</style>
 

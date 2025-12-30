@@ -58,7 +58,3 @@ const handleToggleExpanded = (nodeId: string) => {
   </div>
 </template>
 
-<style scoped>
-@reference "tailwindcss";
-</style>
-

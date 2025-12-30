@@ -252,7 +252,7 @@ watch(
     <!-- Highlighted code -->
     <div
       v-else-if="showHighlighted"
-      class="shiki-container p-4 overflow-auto flex-1 min-h-0"
+      class="p-4 overflow-auto flex-1 min-h-0 [&_pre]:bg-transparent [&_pre]:m-0 [&_pre]:p-0 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed [&_pre]:overflow-visible [&_code]:block [&_code]:w-full [&_code]:bg-transparent [&_code]:p-0 [&_code]:m-0 [&_code]:font-inherit [&_code]:text-inherit [&_code]:leading-inherit"
       v-html="highlightedCode"
     />
     
@@ -270,64 +270,3 @@ watch(
     </pre>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-
-/* Стили для Shiki */
-:deep(.shiki-container) {
-  background: transparent;
-}
-
-:deep(.shiki-container pre) {
-  background: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  overflow: visible;
-  text-indent: 0 !important;
-}
-
-:deep(.shiki-container code) {
-  display: block;
-  width: 100%;
-  background: transparent;
-  padding: 0 !important;
-  margin: 0 !important;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  text-indent: 0 !important;
-}
-
-/* Убираем лишние обертки от Shiki */
-:deep(.shiki-container > pre) {
-  background: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-indent: 0 !important;
-}
-
-/* Убираем отступы у pre и code */
-pre {
-  margin: 0;
-  padding: 0;
-  text-indent: 0;
-}
-
-code {
-  margin: 0;
-  padding: 0;
-  text-indent: 0;
-}
-
-/* Убираем дефолтные отступы браузера */
-.shiki-container pre code,
-.shiki-container pre {
-  text-indent: 0 !important;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-</style>

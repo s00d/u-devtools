@@ -139,12 +139,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div 
+  <div
     class="fixed bottom-8 right-0 z-[2147483646] font-sans flex items-center gap-1"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <!-- 
+    <!--
       BUTTONS PANEL
       Все кнопки на панели
     -->
@@ -179,17 +179,17 @@ onMounted(() => {
         @blur="handleItemBlur(item, $event)"
       >
         <!-- SVG как текст -->
-        <span 
-          v-if="item.iconSvg" 
-          v-html="item.iconSvg" 
-          class="w-5 h-5 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5 [&>svg]:fill-current" 
+        <span
+          v-if="item.iconSvg"
+          v-html="item.iconSvg"
+          class="w-5 h-5 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5 [&>svg]:fill-current"
         />
         <!-- URL иконки -->
-        <img 
-          v-else-if="item.iconUrl" 
-          :src="item.iconUrl" 
-          :alt="item.label" 
-          class="w-5 h-5 object-contain" 
+        <img
+          v-else-if="item.iconUrl"
+          :src="item.iconUrl"
+          :alt="item.label"
+          class="w-5 h-5 object-contain"
         />
         <!-- Имя иконки Heroicons (обратная совместимость) -->
         <UIcon v-else-if="item.icon" :name="item.icon" class="w-5 h-5" />
@@ -208,15 +208,15 @@ onMounted(() => {
         !isOpen && !isHovered ? 'translate-x-[calc(100%-10px)] opacity-60 grayscale' : ''
       ]"
     >
-      <button 
+      <button
         @click="toggleMain"
         class="bg-[#18181b] text-white h-10 pl-3 pr-4 rounded-l-lg shadow-lg cursor-pointer flex items-center gap-2 hover:bg-black transition-colors border-y border-l border-[#333] relative"
       >
-        <UIcon 
-          name="WrenchScrewdriver" 
+        <UIcon
+          name="WrenchScrewdriver"
           class="w-5 h-5"
         />
-        <span 
+        <span
           class="font-bold text-sm whitespace-nowrap overflow-hidden transition-all duration-300"
           :class="isHovered ? 'max-w-[100px] opacity-100 ml-1' : 'max-w-0 opacity-0 ml-0'"
         >
@@ -227,8 +227,4 @@ onMounted(() => {
 
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
 

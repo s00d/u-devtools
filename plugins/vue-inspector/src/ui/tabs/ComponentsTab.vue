@@ -322,7 +322,7 @@ onUnmounted(() => {
         </template>
       </USplitter>
     </div>
-    
+
     <!-- Inspect Component Dialog -->
     <UModal
       :visible="inspectComponentTipVisible"
@@ -336,8 +336,3 @@ onUnmounted(() => {
     </UModal>
   </div>
 </template>
-
-<style scoped>
-@reference "tailwindcss";
-</style>
-
