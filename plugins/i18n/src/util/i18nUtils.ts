@@ -4,7 +4,7 @@ export function flattenTranslations(
   result: Record<string, string> = {}
 ): Record<string, string> {
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (Object.hasOwn(obj, key)) {
       const newKey = parentKey ? `${parentKey}.${key}` : key;
       const value = obj[key];
 
@@ -37,7 +37,7 @@ export const unflattenTranslations = <T = Record<string, unknown>>(
   const result = {} as T;
 
   for (const key in flat) {
-    if (Object.prototype.hasOwnProperty.call(flat, key)) {
+    if (Object.hasOwn(flat, key)) {
       const keys = key.split('.');
       let current: unknown = result;
       let parent: unknown = null;

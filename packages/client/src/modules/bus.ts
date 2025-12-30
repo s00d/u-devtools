@@ -2,12 +2,14 @@ import type { EventBusApi } from '@u-devtools/core';
 
 // Простая реализация Event Bus без внешних зависимостей
 class SimpleEventBus {
-  private listeners = new Map<string, Set<Function>>();
+  private listeners = new Map<string, Set<(data: unknown) => void>>();
 
   emit(event: string, data?: unknown) {
     const handlers = this.listeners.get(event);
     if (handlers) {
-      handlers.forEach((fn) => fn(data));
+      handlers.forEach((fn) => {
+        fn(data);
+      });
     }
   }
 
@@ -15,7 +17,10 @@ class SimpleEventBus {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(handler);
+    const handlers = this.listeners.get(event);
+    if (handlers) {
+      handlers.add(handler);
+    }
 
     // Возвращаем функцию отписки
     return () => {

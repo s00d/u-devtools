@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ViteRpcClient, ViteRpcServer } from '../src/index';
 
 class MockTransport {
-  listeners = new Map<string, Function>();
+  listeners = new Map<string, (...args: unknown[]) => unknown>();
   peer?: MockTransport;
 
-  on(event: string, fn: Function) {
+  on(event: string, fn: (...args: unknown[]) => unknown) {
     this.listeners.set(event, fn);
   }
 
@@ -43,10 +43,10 @@ describe('RPC Bridge', () => {
     serverTransport.peer = clientTransport;
 
     const client = new ViteRpcClient(
-      clientTransport as unknown as { send: Function; on: Function }
+      clientTransport as unknown as { send: (event: string, data: unknown) => void; on: (event: string, fn: (...args: unknown[]) => unknown) => void }
     );
     const server = new ViteRpcServer(
-      serverTransport as unknown as { on: Function; send: Function }
+      serverTransport as unknown as { on: (event: string, fn: (...args: unknown[]) => unknown) => void; send: (event: string, data: unknown) => void }
     );
 
     server.handle('math:add', ({ a, b }: { a: number; b: number }) => {
@@ -65,10 +65,10 @@ describe('RPC Bridge', () => {
     serverTransport.peer = clientTransport;
 
     const client = new ViteRpcClient(
-      clientTransport as unknown as { send: Function; on: Function }
+      clientTransport as unknown as { send: (event: string, data: unknown) => void; on: (event: string, fn: (...args: unknown[]) => unknown) => void }
     );
     const server = new ViteRpcServer(
-      serverTransport as unknown as { on: Function; send: Function }
+      serverTransport as unknown as { on: (event: string, fn: (...args: unknown[]) => unknown) => void; send: (event: string, data: unknown) => void }
     );
 
     server.handle('error:throw', () => {
@@ -85,10 +85,10 @@ describe('RPC Bridge', () => {
     serverTransport.peer = clientTransport;
 
     const client = new ViteRpcClient(
-      clientTransport as unknown as { send: Function; on: Function }
+      clientTransport as unknown as { send: (event: string, data: unknown) => void; on: (event: string, fn: (...args: unknown[]) => unknown) => void }
     );
     const server = new ViteRpcServer(
-      serverTransport as unknown as { on: Function; send: Function }
+      serverTransport as unknown as { on: (event: string, fn: (...args: unknown[]) => unknown) => void; send: (event: string, data: unknown) => void }
     );
 
     const events: unknown[] = [];

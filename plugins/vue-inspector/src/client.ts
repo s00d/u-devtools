@@ -1,4 +1,4 @@
-import type { ClientApi, PluginClientInstance } from '@u-devtools/core';
+import type { PluginClientInstance } from '@u-devtools/core';
 import { createApp } from 'vue';
 import VueInspectorPanel from './ui/VueInspectorPanel.vue';
 

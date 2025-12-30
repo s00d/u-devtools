@@ -174,7 +174,7 @@ onMounted(() => {
       case 'ArrowRight': {
         // Expand if collapsed and has children
         const node = flattened.find(n => n.id === selectedId);
-        if (node && node.children && node.children.length > 0) {
+        if (node?.children && node.children.length > 0) {
           if (!componentTree.expandedNodes.value.has(selectedId)) {
             componentTree.toggleExpanded(selectedId);
           }

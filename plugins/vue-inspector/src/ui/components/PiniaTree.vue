@@ -23,7 +23,7 @@ const PiniaTreeNode = defineComponent({
     expandedNodes: { type: Object as PropType<Set<string>>, required: true },
   },
   emits: ['select', 'toggle-expanded'],
-  setup(props, { emit }) {
+  setup(props) {
     const isSelected = computed(() => props.selectedId === props.node.id);
     const hasChildren = computed(() => props.node.children && props.node.children.length > 0);
     const isExpanded = computed(() => props.expandedNodes.has(props.node.id));

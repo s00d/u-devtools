@@ -8,8 +8,10 @@ export class IndexedDBDriver implements StorageDriver {
   async fetchAll() {
     if (!('indexedDB' in window)) return [];
     
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dbsInfo = await (window.indexedDB as any).databases();
+    const indexedDBWithDatabases = window.indexedDB as IDBFactory & {
+      databases(): Promise<IDBDatabaseInfo[]>;
+    };
+    const dbsInfo = await indexedDBWithDatabases.databases();
     const result = [];
 
     for (const info of dbsInfo) {
@@ -43,16 +45,14 @@ export class IndexedDBDriver implements StorageDriver {
     const { db: dbName, store, key, value } = payload as { db: string; store: string; key: unknown; value: unknown };
     const database = await openDB(dbName);
     // Используем put для upsert (вставка или обновление)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await database.put(store, value as any, key as any);
+    await database.put(store, value, key as IDBValidKey);
     database.close();
   }
 
   async remove(payload: { db: string; store: string; key: unknown }) {
     const { db: dbName, store, key } = payload as { db: string; store: string; key: unknown };
     const database = await openDB(dbName);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await database.delete(store, key as any);
+    await database.delete(store, key as IDBValidKey);
     database.close();
   }
 

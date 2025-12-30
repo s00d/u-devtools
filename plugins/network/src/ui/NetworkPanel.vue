@@ -139,7 +139,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  unsubscribes.forEach((unsub) => unsub());
+  unsubscribes.forEach((unsub) => {
+    unsub();
+  });
   bridge.close();
 });
 </script>

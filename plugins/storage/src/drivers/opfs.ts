@@ -1,16 +1,17 @@
-import type { StorageDriver } from './types';
+import type { StorageDriver, StorageEntry } from './types';
 
 export class OPFSDriver implements StorageDriver {
   type = 'opfs';
   name = 'OPFS (Files)';
 
   async fetchAll() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!(navigator.storage as any)?.getDirectory) return [];
+    const storageManager = navigator.storage as StorageManager & {
+      getDirectory?: () => Promise<FileSystemDirectoryHandle>;
+    };
+    if (!storageManager.getDirectory) return [];
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const root = await (navigator.storage as any).getDirectory();
+      const root = await storageManager.getDirectory();
       const entries = await this.scanDir(root, '');
       
       // OPFS - это одна большая "база", но для совместимости с UI вернем как массив
@@ -18,21 +19,23 @@ export class OPFSDriver implements StorageDriver {
         name: 'root', 
         entries 
       }];
-    } catch (e) {
+    } catch (_e) {
       return [];
     }
   }
 
   // Рекурсивный скан
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async scanDir(dirHandle: FileSystemDirectoryHandle, pathPrefix: string): Promise<any[]> {
-    const entries = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for await (const [name, handle] of (dirHandle as any).entries()) {
+  private async scanDir(dirHandle: FileSystemDirectoryHandle, pathPrefix: string): Promise<StorageEntry[]> {
+    const entries: StorageEntry[] = [];
+    const dirWithEntries = dirHandle as FileSystemDirectoryHandle & {
+      entries: () => AsyncIterableIterator<[string, FileSystemHandle]>;
+    };
+    for await (const [name, handle] of dirWithEntries.entries()) {
       const path = pathPrefix ? `${pathPrefix}/${name}` : name;
       
       if (handle.kind === 'file') {
-        const file = await handle.getFile();
+        const fileHandle = handle as FileSystemFileHandle;
+        const file = await fileHandle.getFile();
         entries.push({
           key: path,
           value: {
@@ -43,7 +46,8 @@ export class OPFSDriver implements StorageDriver {
         });
       } else if (handle.kind === 'directory') {
         // Рекурсия
-        const subEntries = await this.scanDir(handle, path);
+        const dirHandle = handle as FileSystemDirectoryHandle;
+        const subEntries = await this.scanDir(dirHandle, path);
         entries.push(...subEntries);
       }
     }
@@ -56,11 +60,15 @@ export class OPFSDriver implements StorageDriver {
 
   async remove(payload: { key: string }) {
     const { key } = payload as { key: string };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const root = await (navigator.storage as any).getDirectory();
+    const storageManager = navigator.storage as StorageManager & {
+      getDirectory?: () => Promise<FileSystemDirectoryHandle>;
+    };
+    if (!storageManager.getDirectory) return;
+    const root = await storageManager.getDirectory();
     // Удаление файла по пути "folder/subfolder/file.txt"
     const parts = key.split('/');
-    const fileName = parts.pop()!;
+    const fileName = parts.pop();
+    if (!fileName) return;
     
     let currentDir = root;
     for (const part of parts) {
@@ -71,10 +79,13 @@ export class OPFSDriver implements StorageDriver {
   }
 
   async clear() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const root = await (navigator.storage as any).getDirectory();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for await (const [name] of root.keys()) {
+    const storageManager = navigator.storage as StorageManager & {
+      getDirectory?: () => Promise<FileSystemDirectoryHandle>;
+    };
+    if (!storageManager.getDirectory) return;
+    const root = await storageManager.getDirectory();
+    const rootWithKeys = root as FileSystemDirectoryHandle & { keys: () => AsyncIterableIterator<string> };
+    for await (const name of rootWithKeys.keys()) {
       await root.removeEntry(name, { recursive: true });
     }
   }

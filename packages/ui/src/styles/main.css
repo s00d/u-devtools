@@ -25,8 +25,7 @@
 
 .udt-btn:focus {
   outline: none;
-  ring: 2px;
-  ring-color: var(--udt-primary);
+  box-shadow: 0 0 0 2px var(--udt-primary);
 }
 
 .udt-btn-primary {
@@ -94,8 +93,7 @@
 .udt-input:focus {
   outline: none;
   border-color: var(--udt-primary);
-  ring: 2px;
-  ring-color: var(--udt-primary);
+  box-shadow: 0 0 0 2px var(--udt-primary);
 }
 
 .udt-card {

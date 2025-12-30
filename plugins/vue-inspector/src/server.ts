@@ -17,7 +17,7 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
 
   // Component tree - forwarded to app.ts via AppBridge from client
   // This handler is a fallback that returns empty data
-  rpc.handle('vue-inspector:getComponentTree', async (payload: unknown) => {
+  rpc.handle('vue-inspector:getComponentTree', async (_payload: unknown) => {
     console.warn('[Vue Inspector] getComponentTree called on server - this should be handled by app.ts via AppBridge');
     return [];
   });

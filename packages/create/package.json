@@ -12,7 +12,7 @@
     "_templates"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "vite build",
     "hygen": "hygen",
     "prepublishOnly": "pnpm build"
   },
@@ -31,7 +31,6 @@
     "@types/node": "^20.19.27",
     "enquirer": "^2.3.6",
     "execa": "^5.1.1",
-    "tsup": "^8.0.0",
     "typescript": "^5.9.3"
   }
 }

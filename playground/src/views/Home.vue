@@ -14,9 +14,10 @@ const makeFetch = async (url: string) => {
     const data = await res.json();
     console.log('Fetch Data:', data);
     requestStatus.value = 'Fetch Success';
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('Fetch Error:', e);
-    requestStatus.value = `Fetch Error: ${e.message}`;
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    requestStatus.value = `Fetch Error: ${message}`;
   }
 };
 </script>

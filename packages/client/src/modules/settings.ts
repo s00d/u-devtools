@@ -21,7 +21,7 @@ watch(
   () => {
     try {
       localStorage.setItem(STORAGE_KEY, safeJsonStringify(globalState));
-    } catch (e) {
+    } catch (_e) {
       // ignore quota errors
     }
   },

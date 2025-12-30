@@ -11,7 +11,9 @@ function generateId() {
 function parseHeaders(headers: Headers | string): Record<string, string> {
   const res: Record<string, string> = {};
   if (headers instanceof Headers) {
-    headers.forEach((v, k) => (res[k] = v));
+    headers.forEach((v, k) => {
+      res[k] = v;
+    });
   } else if (typeof headers === 'string') {
     headers.split(/[\r\n]+/).forEach((line) => {
       const parts = line.split(': ');
@@ -235,8 +237,7 @@ bridge.on('replay', async (data: unknown) => {
 });
 
 // --- CLEANUP (HMR) ---
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot;
+const hot = (import.meta as { hot?: { dispose: (fn: () => void) => void } }).hot;
 if (hot) {
   hot.dispose(() => {
     console.log('[U-DevTools] Network agent cleaning up');

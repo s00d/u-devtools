@@ -28,7 +28,7 @@ export function useTimeline() {
       result = result.filter((event) => {
         return event.type?.toLowerCase().includes(filter) ||
                event.title?.toLowerCase().includes(filter) ||
-               (event.subtitle && event.subtitle.toLowerCase().includes(filter));
+               (event.subtitle?.toLowerCase().includes(filter));
       });
     }
 
@@ -54,7 +54,7 @@ export function useTimeline() {
     try {
       isLoading.value = true;
       bridge.send('inspector:getTimelineEvents', { layerId: layerId || selectedLayerId.value });
-    } catch (e) {
+    } catch (_e) {
       isLoading.value = false;
       // Ignore if bridge is closed
     }
@@ -63,7 +63,7 @@ export function useTimeline() {
   const getTimelineLayers = () => {
     try {
       bridge.send('inspector:getTimelineLayers');
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is closed
     }
   };

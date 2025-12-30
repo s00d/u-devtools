@@ -30,7 +30,7 @@ export function useRouterInfo() {
     try {
       isLoading.value = true;
       bridge.send('inspector:getRouterInfo');
-    } catch (e) {
+    } catch (_e) {
       isLoading.value = false;
       // Ignore if bridge is closed
     }
@@ -43,7 +43,7 @@ export function useRouterInfo() {
       setTimeout(() => {
         getRouterInfo();
       }, 100);
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is closed
     }
   };

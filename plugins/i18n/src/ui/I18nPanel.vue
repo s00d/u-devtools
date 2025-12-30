@@ -125,7 +125,7 @@ const statistics = computed(() => {
   const flat = flattenedContent.value;
   const defaultFlat = defaultLocaleFlatContent.value;
   const totalKeys = Object.keys(defaultFlat).length;
-  const translatedKeys = Object.values(flat).filter((v) => v && v.trim()).length;
+  const translatedKeys = Object.values(flat).filter((v) => v?.trim()).length;
   const percentage = totalKeys ? ((translatedKeys / totalKeys) * 100).toFixed(2) : '0.00';
   const missingKeys = totalKeys - translatedKeys;
 

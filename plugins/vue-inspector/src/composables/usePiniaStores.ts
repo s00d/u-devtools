@@ -23,8 +23,8 @@ export function usePiniaStores() {
 
     const filter = filterStoreKey.value.toLowerCase();
     const filterNode = (node: CustomInspectorNode): CustomInspectorNode | null => {
-      const matches = node.label.toLowerCase().includes(filter) || 
-                     (node.name && node.name.toLowerCase().includes(filter));
+      const matches = node.label.toLowerCase().includes(filter) ||
+                     (node.name?.toLowerCase().includes(filter));
       const filteredChildren = node.children
         ?.map(filterNode)
         .filter((n): n is CustomInspectorNode => n !== null) || [];
@@ -86,7 +86,7 @@ export function usePiniaStores() {
     try {
       isLoading.value = true;
       bridge.send('inspector:getPiniaTree', { filter: filterStoreKey.value });
-    } catch (e) {
+    } catch (_e) {
       isLoading.value = false;
       // Ignore if bridge is closed
     }
@@ -96,7 +96,7 @@ export function usePiniaStores() {
     try {
       isLoading.value = true;
       bridge.send('inspector:getPiniaState', { nodeId });
-    } catch (e) {
+    } catch (_e) {
       isLoading.value = false;
       // Ignore if bridge is closed
     }
@@ -105,7 +105,7 @@ export function usePiniaStores() {
   const selectStore = (node: CustomInspectorNode) => {
     selectedStoreId.value = node.id;
     getStoreState(node.id);
-    
+
     // Expand parent nodes
     const expandParents = (nodes: CustomInspectorNode[], targetId: string, path: string[] = []): string[] | null => {
       for (const node of nodes) {
@@ -116,7 +116,9 @@ export function usePiniaStores() {
         if (node.children) {
           const found = expandParents(node.children, targetId, currentPath);
           if (found) {
-            found.forEach((id) => expandedNodes.value.add(id));
+            found.forEach((id) => {
+              expandedNodes.value.add(id);
+            });
             return found;
           }
         }
@@ -129,7 +131,7 @@ export function usePiniaStores() {
   const editState = async (payload: { nodeId: string; path: string[]; type: 'state' | 'getters'; value: unknown }) => {
     try {
       bridge.send('inspector:editPiniaState', payload);
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is closed
     }
   };
@@ -163,7 +165,7 @@ export function usePiniaStores() {
   bridge.on('inspector:piniaTree', (tree: CustomInspectorNode[]) => {
     storesTree.value = tree || [];
     isLoading.value = false;
-    
+
     // Auto-select first store
     if (tree && tree.length > 0 && !selectedStoreId.value) {
       selectedStoreId.value = tree[0].id;
@@ -182,7 +184,7 @@ export function usePiniaStores() {
     storeState.value = state || {};
     isLoading.value = false;
     // Auto-expand state sections
-    Object.keys(storeState.value).forEach((key, index) => {
+    Object.keys(storeState.value).forEach((_key, index) => {
       expandedStateNodes.value.add(String(index));
     });
   });
@@ -210,7 +212,7 @@ export function usePiniaStores() {
         getStoreState(selectedStoreId.value);
       }
     }, 1000);
-    
+
     onUnmounted(() => {
       clearInterval(timer);
       clearInterval(timerState);

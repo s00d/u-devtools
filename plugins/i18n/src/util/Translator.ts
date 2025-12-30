@@ -317,7 +317,7 @@ export class Translator {
       a = (a & 2147483647) + 2147483648;
     }
     a %= 1e6;
-    return a.toString() + '.' + (a ^ tkk);
+    return `${a.toString()}.${a ^ tkk}`;
   }
 
   private tokenTransform(value: number, seed: string): number {

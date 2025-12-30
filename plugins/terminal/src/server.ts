@@ -57,8 +57,9 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
         rpc.broadcast('term:data', `Error: ${err.message}\n`);
       });
 
-    } catch (e: any) {
-      rpc.broadcast('term:data', `Execution failed: ${e.message}\n`);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      rpc.broadcast('term:data', `Execution failed: ${message}\n`);
     }
   });
 }

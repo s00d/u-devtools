@@ -4,7 +4,14 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "off",
+        "noUnusedFunctionParameters": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
     }
   },
   "formatter": {
@@ -33,9 +40,30 @@
           "recommended": true
         }
       }
+    },
+    {
+      "includes": ["**/*.vue"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.css"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
+          }
+        }
+      }
     }
   ],
   "files": {
-    "includes": ["**", "!**/node_modules", "!**/dist", "!**/*.log"]
+    "includes": ["**", "!**/node_modules", "!**/dist", "!**/*.log", "!**/style.css", "!**/*.js"]
   }
 }

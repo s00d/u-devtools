@@ -123,7 +123,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const clientPlugins = plugins.filter((p) => p.clientPath);
         if (clientPlugins.length === 0) return 'export const plugins = []';
         // Добавляем .replace(/\\/g, '/') для совместимости с Windows
-        const imports = clientPlugins.map((p, i) => `import plugin${i} from '${p.clientPath!.replace(/\\/g, '/')}'`).join('\n');
+        const imports = clientPlugins.map((p, i) => `import plugin${i} from '${p.clientPath?.replace(/\\/g, '/') ?? ''}'`).join('\n');
         const exports = `export const plugins = [${clientPlugins.map((_, i) => `plugin${i}`).join(', ')}]`;
         return `${imports}\n${exports}`;
       }
@@ -132,7 +132,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         const appPlugins = plugins.filter((p) => p.appPath);
         if (appPlugins.length === 0) return '';
         // Добавляем .replace(/\\/g, '/') для совместимости с Windows
-        return appPlugins.map((p) => `import '${p.appPath!.replace(/\\/g, '/')}';`).join('\n');
+        return appPlugins.map((p) => `import '${p.appPath?.replace(/\\/g, '/') ?? ''}';`).join('\n');
       }
       return null;
     },
@@ -142,7 +142,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       try {
         const { setViteServerContext } = require('@vue/devtools-kit');
         setViteServerContext(server);
-      } catch (e) {
+      } catch (_e) {
         // @vue/devtools-kit might not be available, ignore
       }
 
@@ -257,7 +257,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         // Хелпер для преобразования имени пакета в имя переменной
         const packageToImportName = (pkgName: string): string => {
           const name = pkgName.split('/').pop()?.replace('plugin-', '') || '';
-          return name.replace(/-(\w)/g, (_, c) => c.toUpperCase()) + 'Plugin';
+          return `${name.replace(/-(\w)/g, (_, c) => c.toUpperCase())}Plugin`;
         };
 
         const pm = getPackageManager();

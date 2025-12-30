@@ -85,7 +85,7 @@ export function useComponentTree() {
   const scrollToComponent = (id: string) => {
     try {
       bridge.send('inspector:scrollToComponent', { id });
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is closed
     }
   };
@@ -95,18 +95,18 @@ export function useComponentTree() {
     return new Promise((resolve) => {
       try {
         bridge.send('inspector:getComponentRenderCode', { nodeId });
-        
+
         const handler = (result: { code: string }) => {
           unsubscribe();
           resolve(result.code || '');
         };
         const unsubscribe = bridge.on('inspector:componentRenderCode', handler);
-        
+
         const timeoutId = setTimeout(() => {
           unsubscribe();
           resolve('');
         }, 5000);
-        
+
         const originalResolve = resolve;
         resolve = (value) => {
           clearTimeout(timeoutId);
@@ -123,18 +123,18 @@ export function useComponentTree() {
     return new Promise((resolve) => {
       try {
         bridge.send('inspector:inspectComponentInspector');
-        
+
         const handler = (result: { data: { id: string } | null }) => {
           unsubscribe();
           resolve(result.data);
         };
         const unsubscribe = bridge.on('inspector:inspectComponentInspector:result', handler);
-        
+
         const timeoutId = setTimeout(() => {
           unsubscribe();
           resolve(null);
         }, 10000);
-        
+
         const originalResolve = resolve;
         resolve = (value) => {
           clearTimeout(timeoutId);
@@ -166,7 +166,7 @@ export function useComponentTree() {
   const unhighlightComponent = () => {
     try {
       bridge.send('inspector:unhighlight');
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is closed
     }
   };
@@ -188,7 +188,7 @@ export function useComponentTree() {
   bridge.on('inspector:componentTree', (tree: ComponentTreeNode[]) => {
     componentTree.value = tree || [];
     isLoading.value = false;
-    
+
     // Auto-expand first level
     if (tree && tree.length > 0 && expandedNodes.value.size === 0) {
       tree.forEach((node) => {
@@ -230,7 +230,7 @@ export function useComponentTree() {
     // Just unhighlight
     try {
       unhighlightComponent();
-    } catch (e) {
+    } catch (_e) {
       // Ignore if bridge is already closed
     }
   });

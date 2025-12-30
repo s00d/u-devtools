@@ -1,6 +1,6 @@
 import { AppBridge } from '@u-devtools/core';
-import { 
-  initDevTools, 
+import {
+  initDevTools,
   onDevToolsConnected,
   devtools,
   activeAppRecord,
@@ -38,7 +38,7 @@ onDevToolsConnected(() => {
   console.log('[Vue Inspector] Connected to Vue App');
   isConnected = true;
   checkAvailableInspectors();
-  bridge.send('inspector:ready', { 
+  bridge.send('inspector:ready', {
     enabled: true,
     hasPinia,
     hasRouter,
@@ -55,9 +55,9 @@ bridge.on('inspector:getComponentTree', async (payload: { filter?: string }) => 
     return;
   }
   try {
-    const tree = await devtools.ctx.api.getInspectorTree({ 
-      inspectorId: 'components', 
-      filter: payload.filter || '' 
+    const tree = await devtools.ctx.api.getInspectorTree({
+      inspectorId: 'components',
+      filter: payload.filter || ''
     });
     bridge.send('inspector:componentTree', serialize(tree || []));
   } catch (e) {
@@ -73,14 +73,14 @@ function normalizeComponentState(data: any): any {
   if (!data) {
     return null;
   }
-  
+
   // Check if data has a 'state' property (CustomInspectorState format)
   const stateArray = data.state;
   if (!stateArray || !Array.isArray(stateArray)) {
     console.warn(`[Vue Inspector] State is not an array. Data keys: ${data ? Object.keys(data).join(', ') : 'null'}`);
     return null;
   }
-  
+
   // Initialize result structure
   const props: any[] = [];
   const dataItems: any[] = [];
@@ -91,25 +91,25 @@ function normalizeComponentState(data: any): any {
   const provide: any[] = [];
   const inject: any[] = [];
   const refs: any[] = [];
-  
+
   // Group states by type and stateType
   stateArray.forEach((item: any, index: number) => {
     // Log first few items to understand structure
     if (index < 3) {
       console.log(`[Vue Inspector] State item ${index}: key="${item.key}", type="${item.type}", stateType="${item.stateType || item.stateTypeName || 'none'}", valueType="${typeof item.value}"`);
     }
-    
+
     const itemType = item.type || '';
     const stateType = item.stateType || item.stateTypeName || '';
     const valueType = typeof item.value;
-    
+
     const stateItem = {
       key: item.key,
       type: item.type || 'unknown',
       value: item.value,
       editable: item.editable !== false,
     };
-    
+
     // Handle props
     if (itemType === 'props' || stateType === 'props') {
       props.push(stateItem);
@@ -156,13 +156,13 @@ function normalizeComponentState(data: any): any {
       setupStateItems.push(stateItem);
     }
   });
-  
+
   // Convert setupState array to object
   const setupStateObj = setupStateItems.length > 0 ? setupStateItems.reduce((acc: any, item: any) => {
     acc[item.key] = item.value;
     return acc;
   }, {}) : undefined;
-  
+
   const normalized = {
     props,
     data: dataItems,
@@ -174,11 +174,11 @@ function normalizeComponentState(data: any): any {
     inject,
     refs,
   };
-  
+
   // Log for debugging
   const setupStateKeys = setupStateObj ? Object.keys(setupStateObj).join(', ') : 'none';
   console.log(`[Vue Inspector] normalizeComponentState result: arrayLength=${stateArray.length}, props=${normalized.props.length}, data=${normalized.data.length}, computed=${normalized.computed.length}, setupState=[${setupStateKeys}], methods=${normalized.methods.length}`);
-  
+
   return normalized;
 }
 
@@ -189,16 +189,16 @@ bridge.on('inspector:getComponentState', async (payload: { id: string }) => {
   }
   try {
     console.log(`[Vue Inspector] getComponentState requested: id="${payload.id}"`);
-    const state = await devtools.ctx.api.getInspectorState({ 
-      inspectorId: 'components', 
-      nodeId: payload.id 
+    const state = await devtools.ctx.api.getInspectorState({
+      inspectorId: 'components',
+      nodeId: payload.id
     });
-    
+
     const stateKeys = state ? Object.keys(state).join(', ') : 'none';
     const stateType = state?.state ? (Array.isArray(state.state) ? 'array' : typeof state.state) : 'none';
     const stateArrayLength = state?.state ? (Array.isArray(state.state) ? state.state.length : 0) : 0;
     console.log(`[Vue Inspector] getComponentState raw result: hasState=${!!state}, stateKeys=[${stateKeys}], stateType=${stateType}, stateArrayLength=${stateArrayLength}`);
-    
+
     // Normalize state to ComponentState format
     const normalized = normalizeComponentState(state);
     const hasProps = !!(normalized?.props?.length);
@@ -207,7 +207,7 @@ bridge.on('inspector:getComponentState', async (payload: { id: string }) => {
     const hasSetupState = !!normalized?.setupState;
     const hasMethods = !!(normalized?.methods?.length);
     console.log(`[Vue Inspector] getComponentState normalized: props=${hasProps}, data=${hasData}, computed=${hasComputed}, setupState=${hasSetupState}, methods=${hasMethods}`);
-    
+
     bridge.send('inspector:componentState', serialize(normalized || null));
   } catch (e) {
     console.error(`[Vue Inspector] getComponentState error: ${e instanceof Error ? e.message : String(e)}`);
@@ -234,15 +234,15 @@ bridge.on('inspector:editState', async (payload: EditStatePayload) => {
       inspectorId: payload.inspectorId,
       nodeId: payload.nodeId,
       path: payload.path,
-      state: { 
+      state: {
         value: payload.value,
       } as any, // Type assertion needed as API adds app and set internally
       type: payload.type,
     } as any);
     // Refresh state after edit
-    const state = await devtools.ctx.api.getInspectorState({ 
-      inspectorId: payload.inspectorId, 
-      nodeId: payload.nodeId 
+    const state = await devtools.ctx.api.getInspectorState({
+      inspectorId: payload.inspectorId,
+      nodeId: payload.nodeId
     });
     bridge.send('inspector:componentState', serialize(state || null));
   } catch (e) {
@@ -258,9 +258,9 @@ bridge.on('inspector:getPiniaTree', async (payload: { filter?: string }) => {
     return;
   }
   try {
-    const tree = await devtools.ctx.api.getInspectorTree({ 
-      inspectorId: 'pinia', 
-      filter: payload.filter || '' 
+    const tree = await devtools.ctx.api.getInspectorTree({
+      inspectorId: 'pinia',
+      filter: payload.filter || ''
     });
     bridge.send('inspector:piniaTree', serialize(tree || []));
   } catch (e) {
@@ -275,9 +275,9 @@ bridge.on('inspector:getPiniaState', async (payload: { nodeId: string }) => {
     return;
   }
   try {
-    const state = await devtools.ctx.api.getInspectorState({ 
-      inspectorId: 'pinia', 
-      nodeId: payload.nodeId 
+    const state = await devtools.ctx.api.getInspectorState({
+      inspectorId: 'pinia',
+      nodeId: payload.nodeId
     });
     bridge.send('inspector:piniaState', serialize(state || {}));
   } catch (e) {
@@ -288,7 +288,7 @@ bridge.on('inspector:getPiniaState', async (payload: { nodeId: string }) => {
 
 // --- EDIT PINIA STATE ---
 
-bridge.on('inspector:editPiniaState', async (payload: { 
+bridge.on('inspector:editPiniaState', async (payload: {
   nodeId: string;
   path: string[];
   type: 'state' | 'getters';
@@ -301,15 +301,15 @@ bridge.on('inspector:editPiniaState', async (payload: {
       inspectorId: 'pinia',
       nodeId: payload.nodeId,
       path: payload.path,
-      state: { 
+      state: {
         value: payload.value,
       } as any, // Type assertion needed as API adds app and set internally
       type: payload.type,
     } as any);
     // Refresh state after edit
-    const state = await devtools.ctx.api.getInspectorState({ 
-      inspectorId: 'pinia', 
-      nodeId: payload.nodeId 
+    const state = await devtools.ctx.api.getInspectorState({
+      inspectorId: 'pinia',
+      nodeId: payload.nodeId
     });
     bridge.send('inspector:piniaState', serialize(state || {}));
   } catch (e) {
@@ -324,11 +324,11 @@ bridge.on('inspector:getRouterInfo', () => {
     bridge.send('inspector:routerInfo', null);
     return;
   }
-  
+
   // Try to find router in global properties
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const router = (activeAppRecord.value.app as any)?.config?.globalProperties?.$router;
-  
+
   if (!router) {
     bridge.send('inspector:routerInfo', null);
     return;
@@ -393,7 +393,7 @@ bridge.on('inspector:getTimelineLayers', async () => {
   bridge.send('inspector:timelineLayers', []);
 });
 
-bridge.on('inspector:getTimelineEvents', async (payload: { layerId?: string }) => {
+bridge.on('inspector:getTimelineEvents', async (_payload: { layerId?: string }) => {
   if (!isConnected) {
     bridge.send('inspector:timelineEvents', []);
     return;

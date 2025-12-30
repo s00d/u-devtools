@@ -5,12 +5,12 @@ import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
   api: ClientApi;
-  renderer?: (el: HTMLElement, api: ClientApi) => UnmountFn | void;
+  renderer?: (el: HTMLElement, api: ClientApi) => UnmountFn | undefined;
 }>();
 
 const container = ref<HTMLElement | null>(null);
 const error = ref<Error | null>(null);
-let cleanup: UnmountFn | undefined | void;
+let cleanup: UnmountFn | undefined;
 
 const mount = () => {
   error.value = null;

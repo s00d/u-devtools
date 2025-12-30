@@ -1,5 +1,5 @@
 import type { Component } from 'vue';
-import { computed, ref, type Ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { VirtualRoute } from '../types';
 
 /**

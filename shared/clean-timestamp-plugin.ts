@@ -15,7 +15,7 @@ export function cleanTimestampFiles(dir: string): Plugin {
           if (file.includes('.timestamp-') && file.endsWith('.mjs')) {
             try {
               unlinkSync(join(dir, file));
-            } catch (e) {
+            } catch (_e) {
               // Игнорируем ошибки удаления
             }
           }

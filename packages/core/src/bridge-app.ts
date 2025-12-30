@@ -4,7 +4,7 @@
  */
 export class AppBridge {
   private channel: BroadcastChannel;
-  private listeners = new Map<string, Set<Function>>();
+  private listeners = new Map<string, Set<(data: unknown) => void>>();
 
   constructor(public namespace: string) {
     // Автоматическое пространство имен
@@ -24,7 +24,7 @@ export class AppBridge {
   /**
    * Отправить событие "на ту сторону".
    */
-  send(event: string, data?: any): void {
+  send(event: string, data?: unknown): void {
     try {
       this.channel.postMessage({ event, data });
     } catch (e) {
@@ -40,16 +40,20 @@ export class AppBridge {
   /**
    * Слушать события "с той стороны".
    */
-  on<T = any>(event: string, cb: (data: T) => void): () => void {
+  on<T = unknown>(event: string, cb: (data: T) => void): () => void {
     const eventStr = String(event);
     if (!this.listeners.has(eventStr)) {
       this.listeners.set(eventStr, new Set());
     }
-    this.listeners.get(eventStr)!.add(cb);
+    const handlers = this.listeners.get(eventStr);
+    const wrappedCb = cb as (data: unknown) => void;
+    if (handlers) {
+      handlers.add(wrappedCb);
+    }
 
     // Возвращаем функцию отписки
     return () => {
-      this.listeners.get(eventStr)?.delete(cb);
+      this.listeners.get(eventStr)?.delete(wrappedCb);
     };
   }
 

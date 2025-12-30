@@ -62,8 +62,7 @@ if (typeof window !== 'undefined') {
 }
 
 // --- CLEANUP (ВАЖНО!) ---
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot;
+const hot = (import.meta as { hot?: { dispose: (fn: () => void) => void } }).hot;
 if (hot) {
   hot.dispose(() => {
     // Восстанавливаем консоль

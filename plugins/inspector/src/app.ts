@@ -170,15 +170,15 @@ function getComputedStylesData(el: HTMLElement) {
 
 function getStylesByCategory(el: HTMLElement) {
   const s = window.getComputedStyle(el);
-  
+
   // Группируем стили для удобства
   return {
     layout: {
       display: s.display,
       position: s.position,
-      top: s.top, 
-      right: s.right, 
-      bottom: s.bottom, 
+      top: s.top,
+      right: s.right,
+      bottom: s.bottom,
       left: s.left,
       width: s.width,
       height: s.height,
@@ -264,7 +264,7 @@ let elementSelectionRejector: (() => void) | null = null;
 function sendElementData(el: HTMLElement) {
   // Проверяем и открываем DevTools если нужно
   ensureDevToolsOpen();
-  
+
   // Отправляем данные элемента
   sendElementDataInternal(el);
 }
@@ -272,7 +272,7 @@ function sendElementData(el: HTMLElement) {
 function sendElementDataInternal(el: HTMLElement) {
   const udtId = ensureUdtId(el);
   const rect = el.getBoundingClientRect();
-  
+
   const attrs: Record<string, string> = {};
   Array.from(el.attributes).forEach(attr => {
     if (attr.name !== UDT_ID_ATTR) { // Скрываем наш служебный атрибут
@@ -326,11 +326,11 @@ function serializeNodeSummary(el: Element) {
 // Хелпер для сбора контекста DOM (Родитель + Соседи + Дети)
 function getDomContext(el: HTMLElement) {
   const parent = el.parentElement;
-  
+
   // Фильтруем DevTools элементы из соседей
   const allSiblings = parent ? Array.from(parent.children) : [el];
   const validSiblings = allSiblings.filter(child => !isDevToolsElement(child as HTMLElement));
-  
+
   // Соседи (братья и сестры) с индексами (только валидные элементы)
   const siblings = validSiblings.map((child, index) => ({
     ...serializeNodeSummary(child),
@@ -363,18 +363,18 @@ function rgbToHex(rgb: string): string {
   if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return '#000000';
   const res = rgb.match(/\d+/g);
   if (!res || res.length < 3) return rgb;
-  const r = parseInt(res[0]);
-  const g = parseInt(res[1]);
-  const b = parseInt(res[2]);
-  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+  const r = parseInt(res[0], 10);
+  const g = parseInt(res[1], 10);
+  const b = parseInt(res[2], 10);
+  return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function getContrast(el: HTMLElement) {
   const style = window.getComputedStyle(el);
   const color = style.color;
   const bg = style.backgroundColor;
-  return { 
-    color: rgbToHex(color), 
+  return {
+    color: rgbToHex(color),
     bg: rgbToHex(bg),
     colorRaw: color,
     bgRaw: bg
@@ -385,7 +385,7 @@ function getContrast(el: HTMLElement) {
 
 function updateOverlay(el: HTMLElement) {
   if (!el || !isActive) return;
-  
+
   const rect = el.getBoundingClientRect();
   const styles = window.getComputedStyle(el);
 
@@ -399,7 +399,7 @@ function updateOverlay(el: HTMLElement) {
   const pb = parseFloat(styles.paddingBottom) || 0;
   const pl = parseFloat(styles.paddingLeft) || 0;
   const pr = parseFloat(styles.paddingRight) || 0;
-  
+
   const bt = parseFloat(styles.borderTopWidth) || 0;
   const bb = parseFloat(styles.borderBottomWidth) || 0;
   const bl = parseFloat(styles.borderLeftWidth) || 0;
@@ -412,7 +412,7 @@ function updateOverlay(el: HTMLElement) {
   // Padding Box (Inside border)
   // top = rect.top + border-top
   setPos(paddingBox, rect.left + bl, rect.top + bt, rect.width - bl - br, rect.height - bt - bb);
-  
+
   // Content Box (Inside padding)
   // top = rect.top + border-top + padding-top
   setPos(contentBox, rect.left + bl + pl, rect.top + bt + pt, rect.width - bl - br - pl - pr, rect.height - bt - bb - pt - pb);
@@ -422,9 +422,9 @@ function updateOverlay(el: HTMLElement) {
   let classStr = '';
   if (el.classList.length > 0) {
     const classes = Array.from(el.classList).join('.');
-    classStr = `<span class="class">.${classes.length > 20 ? classes.slice(0, 20) + '...' : classes}</span>`;
+    classStr = `<span class="class">.${classes.length > 20 ? `${classes.slice(0, 20)}...` : classes}</span>`;
   }
-  
+
   tooltip.innerHTML = `
     <span class="tag">${el.tagName.toLowerCase()}</span>
     ${idStr}
@@ -434,30 +434,30 @@ function updateOverlay(el: HTMLElement) {
 
   // Smart Tooltip Positioning
   // Пытаемся разместить сверху, если не влезает - снизу
-  const tooltipHeight = 30; 
+  const tooltipHeight = 30;
   let tooltipTop = rect.top - mt - tooltipHeight - 5;
   if (tooltipTop < 0) {
     tooltipTop = rect.bottom + mb + 5;
   }
-  
+
   tooltip.style.transform = `translate(${rect.left}px, ${tooltipTop}px)`;
-  
+
   // RULERS UPDATE
   guidesHost.style.display = isActive ? 'block' : 'none';
-  
+
   // Рисуем линии от краев элемента до краев экрана
   // Top Line
   guideTop.style.transform = `translateY(${rect.top}px)`;
   guideTop.style.display = 'block';
-  
+
   // Bottom Line
   guideBottom.style.transform = `translateY(${rect.bottom}px)`;
   guideBottom.style.display = 'block';
-  
+
   // Left Line
   guideLeft.style.transform = `translateX(${rect.left}px)`;
   guideLeft.style.display = 'block';
-  
+
   // Right Line
   guideRight.style.transform = `translateX(${rect.right}px)`;
   guideRight.style.display = 'block';
@@ -499,17 +499,17 @@ const onMouseOver = (e: MouseEvent) => {
   if (!isActive) return;
   // Игнорируем сам оверлей (хотя pointer-events: none спасает, но на всякий)
   if (e.target === overlayHost) return;
-  
+
   const target = e.target as HTMLElement;
-  
+
   // Игнорируем элементы DevTools
   if (isDevToolsElement(target)) {
     return;
   }
-  
+
   e.stopPropagation();
   e.preventDefault();
-  
+
   if (target !== currentTarget) {
     currentTarget = target;
     updateOverlay(target);
@@ -518,36 +518,36 @@ const onMouseOver = (e: MouseEvent) => {
 
 const onClick = (e: MouseEvent) => {
   if (!isActive) return;
-  
+
   const target = e.target as HTMLElement;
-  
+
   // Игнорируем элементы DevTools
   if (isDevToolsElement(target)) {
     return;
   }
-  
+
   e.preventDefault();
   e.stopPropagation();
   e.stopImmediatePropagation(); // Блокируем клики на странице полностью
 
   // При клике сохраняем ссылку на текущий элемент
   currentTarget = target;
-  
+
   // Если есть ожидающий resolver, передаем элемент через Promise
   // Данные будут отправлены в обработчике onClick в registerMenuItem
   if (elementSelectionResolver) {
     const resolver = elementSelectionResolver;
     elementSelectionResolver = null;
     elementSelectionRejector = null;
-    
+
     toggleInspector(false);
     bridge.send('inspector-cancelled', {}); // Уведомляем UI о завершении
-    
+
     // Передаем элемент через resolver
     resolver(target);
     return; // Выходим, данные будут отправлены в обработчике
   }
-  
+
   // Если нет ожидающего resolver, это обычный режим - отправляем данные сразу
   sendElementData(target);
   toggleInspector(false);
@@ -574,7 +574,7 @@ function toggleInspector(state: boolean): Promise<HTMLElement> | undefined {
     document.addEventListener('click', onClick, true);
     window.addEventListener('scroll', onScroll, { capture: true, passive: true });
     document.body.style.cursor = 'crosshair';
-    
+
     // Возвращаем Promise, который разрешится при выборе элемента
     return new Promise<HTMLElement>((resolve, reject) => {
       elementSelectionResolver = resolve;
@@ -596,14 +596,14 @@ function toggleInspector(state: boolean): Promise<HTMLElement> | undefined {
     guideBottom.style.display = 'none';
     guideLeft.style.display = 'none';
     guideRight.style.display = 'none';
-    
+
     // Отменяем ожидание выбора элемента, если оно было
     if (elementSelectionRejector) {
       elementSelectionRejector();
       elementSelectionResolver = null;
       elementSelectionRejector = null;
     }
-    
+
     return undefined;
   }
 }
@@ -624,7 +624,7 @@ const onKeyDown = (e: KeyboardEvent) => {
 // Commands from UI
 bridge.on('toggle-inspector', async (data: { state: boolean }) => {
   const result = toggleInspector(data.state);
-  
+
   // Если активировали режим инспектирования, ждем выбора элемента
   if (data.state && result) {
     try {
@@ -644,7 +644,7 @@ bridge.on('toggle-inspector', async (data: { state: boolean }) => {
 function mutate(udtId: string | undefined, action: (el: HTMLElement) => void) {
   // Если ID не передан, используем currentTarget (фолбэк)
   const el = udtId ? getElementByUdtId(udtId) : currentTarget;
-  
+
   if (!el) {
     console.warn('[Inspector] Target element not found for mutation');
     return;
@@ -669,7 +669,7 @@ bridge.on('highlight', () => {
     guidesHost.style.display = 'block';
     updateOverlay(currentTarget);
     // Скрываем через 2 сек
-    setTimeout(() => { 
+    setTimeout(() => {
       if(!isActive) {
         overlayHost.style.display = 'none';
         guidesHost.style.display = 'none';
@@ -696,10 +696,10 @@ bridge.on('update-text', ({ udtId, text }: { udtId?: string, text: string }) => 
 bridge.on('delete-node', ({ udtId }: { udtId?: string }) => {
   const el = udtId ? getElementByUdtId(udtId) : currentTarget;
   if (!el) return;
-  
+
   const parent = el.parentElement;
   el.remove();
-  
+
   // Если удалили текущий, переключаемся на родителя
   if (parent) {
     currentTarget = parent;
@@ -772,13 +772,13 @@ bridge.on('update-style', ({ udtId, prop, value }: { udtId?: string, prop: strin
 bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
   const el = udtId ? getElementByUdtId(udtId) : currentTarget;
   if (!el) return;
-  
+
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  
+
   // Пытаемся сфокусировать элемент, если он фокусируемый
-  if (el instanceof HTMLElement && 
-      (el instanceof HTMLInputElement || 
-       el instanceof HTMLButtonElement || 
+  if (el instanceof HTMLElement &&
+      (el instanceof HTMLInputElement ||
+       el instanceof HTMLButtonElement ||
        el instanceof HTMLAnchorElement ||
        el.tabIndex >= 0)) {
     try {
@@ -787,7 +787,7 @@ bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
       // Игнорируем ошибки фокусировки
     }
   }
-  
+
   // Визуальный эффект
   const originalOutline = el.style.outline;
   const originalOutlineOffset = el.style.outlineOffset;
@@ -816,7 +816,7 @@ bridge.on('toggle-visibility', ({ udtId, mode }: { udtId?: string, mode: 'hide' 
 function findElementBySelector(tagName: string, id: string, classesStr: string): HTMLElement | null {
   // Преобразуем строку классов обратно в массив
   const classes = classesStr ? classesStr.split(' ').filter(c => c.trim()) : [];
-  
+
   // Сначала пробуем найти по ID (самый надежный способ)
   if (id) {
     const byId = document.getElementById(id);
@@ -824,16 +824,16 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
       return byId;
     }
   }
-  
+
   // Пробуем найти по селектору (tag + id + classes)
   let selector = tagName.toLowerCase();
   if (id) {
     selector += `#${id}`;
   }
   if (classes.length > 0) {
-    selector += '.' + classes.join('.');
+    selector += `.${classes.join('.')}`;
   }
-  
+
   try {
     const elements = document.querySelectorAll(selector);
     for (const el of Array.from(elements)) {
@@ -841,7 +841,7 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
         // Проверяем, что классы совпадают
         const elClasses = Array.from(el.classList).sort();
         const targetClasses = [...classes].sort();
-        if (elClasses.length === targetClasses.length && 
+        if (elClasses.length === targetClasses.length &&
             elClasses.every((c, i) => c === targetClasses[i])) {
           return el;
         }
@@ -850,20 +850,20 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
   } catch {
     // Игнорируем ошибки селектора
   }
-  
+
   return null;
 }
 
 // Добавляем команду навигации по дереву (выбор соседа/родителя из UI)
-bridge.on('select-node', (payload: { 
-  type: 'parent' | 'sibling' | 'child', 
+bridge.on('select-node', (payload: {
+  type: 'parent' | 'sibling' | 'child',
   index?: number,
   // Добавляем информацию о текущем элементе для поиска (classes как строка для сериализации)
   currentElement?: { tagName: string; id: string; classes: string }
 }) => {
   // Если currentTarget не установлен, пытаемся найти элемент по переданным характеристикам
   let baseElement = currentTarget;
-  
+
   if (!baseElement && payload.currentElement) {
     baseElement = findElementBySelector(
       payload.currentElement.tagName,
@@ -871,14 +871,14 @@ bridge.on('select-node', (payload: {
       payload.currentElement.classes || ''
     );
   }
-  
+
   if (!baseElement) {
     console.warn('[Inspector] select-node: cannot find base element, currentTarget is null and no currentElement provided');
     return;
   }
-  
+
   let target: Element | null = null;
-  
+
   if (payload.type === 'parent') {
     target = baseElement.parentElement;
     // Игнорируем DevTools элементы
@@ -914,7 +914,7 @@ bridge.on('select-node', (payload: {
     updateOverlay(currentTarget);
     // Скроллим к элементу, чтобы не потерять контекст
     target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    
+
     // Автоматически скрываем подсветку через 2 секунды после выбора (если режим инспектирования выключен)
     setTimeout(() => {
       if (!isActive) {
@@ -957,15 +957,15 @@ registerMenuItem({
   onClick: async (ctx, _event) => {
     // Активируем режим инспектирования и ждем выбора элемента
     const elementPromise = toggleInspector(true);
-    
+
     if (!elementPromise) {
       return; // Не должно произойти, но на всякий случай
     }
-    
+
     try {
       // Ждем выбора элемента
       const element = await elementPromise;
-      
+
       // После получения элемента открываем DevTools и переключаем таб
       if (!ctx.isOpen) {
         // Если DevTools закрыт, открываем и ждем
@@ -979,14 +979,14 @@ registerMenuItem({
           });
         });
       }
-      
+
       // Переключаем на плагин и таб
       devtools.switchPlugin('Inspector');
       devtools.switchTab('Inspector', 'Computed');
-      
+
       // Небольшая задержка для гарантии, что переключение произошло
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Отправляем данные элемента
       sendElementDataInternal(element);
     } catch {

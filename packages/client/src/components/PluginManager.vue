@@ -43,7 +43,7 @@ const loadInstalled = async () => {
     // Проверка обновлений для не-core плагинов
     const npmPackages = list
       .filter((p) => !p.isCore && p.meta.name && p.meta.name !== 'unknown')
-      .map((p) => p.meta.name!);
+      .map((p) => p.meta.name as string);
 
     if (npmPackages.length > 0) {
       const updates = await props.api.rpc.call<Record<string, string>>(
@@ -106,8 +106,9 @@ const install = async (pkg: MarketPlugin) => {
     } else {
       props.api.notify(`Installation failed: ${res.error || 'Unknown error'}`, 'error');
     }
-  } catch (e: any) {
-    props.api.notify(`Installation failed: ${e.message || 'Unknown error'}`, 'error');
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    props.api.notify(`Installation failed: ${message}`, 'error');
   } finally {
     processing.value = null;
   }
@@ -135,8 +136,9 @@ const uninstall = async (pkgName: string) => {
     } else {
       props.api.notify(`Uninstall failed: ${res.error || 'Unknown error'}`, 'error');
     }
-  } catch (e: any) {
-    props.api.notify(`Uninstall failed: ${e.message || 'Unknown error'}`, 'error');
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    props.api.notify(`Uninstall failed: ${message}`, 'error');
   } finally {
     processing.value = null;
   }

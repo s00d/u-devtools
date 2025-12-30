@@ -26,7 +26,7 @@ const router = createRouter({
 
 // Экспортируем для использования в DevTools плагине
 if (typeof window !== 'undefined') {
-  (window as any).__U_DEVTOOLS_VUE_ROUTER__ = router;
+  (window as Window & { __U_DEVTOOLS_VUE_ROUTER__?: typeof router }).__U_DEVTOOLS_VUE_ROUTER__ = router;
 }
 
 export default router;

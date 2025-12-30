@@ -7,7 +7,7 @@ try {
   if (saved) {
     Object.assign(settingsState, JSON.parse(saved));
   }
-} catch (e) {
+} catch (_e) {
   // Ignore
 }
 

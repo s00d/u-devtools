@@ -8,7 +8,7 @@
 export function serialize<T>(data: T): T {
   const seen = new WeakSet();
   
-  const replacer = (key: string, value: unknown): unknown => {
+  const replacer = (_key: string, value: unknown): unknown => {
     // Remove functions
     if (typeof value === 'function') {
       return undefined;
@@ -16,7 +16,7 @@ export function serialize<T>(data: T): T {
     // Remove native code objects (like String constructor)
     if (value && typeof value === 'object') {
       const proto = Object.getPrototypeOf(value);
-      if (proto && proto.constructor && proto.constructor.name === 'String') {
+      if (proto?.constructor && proto.constructor.name === 'String') {
         return String(value);
       }
       // Handle circular references
