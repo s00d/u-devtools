@@ -72,6 +72,12 @@ export function createViteConfig({
   return defineConfig({
     clearScreen,
     plugins,
+    // ВАЖНО: Это предотвращает замену import.meta.hot на false при сборке
+    // Теперь код в dist будет содержать проверку if (import.meta.hot)
+    // и HMR будет работать даже в собранной версии
+    define: {
+      'import.meta.hot': 'import.meta.hot',
+    },
     resolve: resolveAlias
       ? {
           alias: Object.fromEntries(

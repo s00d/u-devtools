@@ -63,14 +63,10 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const clientPkgPath = require.resolve('@u-devtools/client/package.json');
       const clientRoot = path.dirname(clientPkgPath);
       const clientPkg = require(clientPkgPath);
-      // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
-      // Если src/main.ts существует, используем его, иначе fallback на dist/main.js
-      const clientSrcPath = path.resolve(clientRoot, 'src/main.ts');
-      const clientDistPath = path.resolve(
+      clientEntryPath = path.resolve(
         clientRoot,
         clientPkg.publishConfig?.main || 'dist/main.js'
       );
-      clientEntryPath = fs.existsSync(clientSrcPath) ? clientSrcPath : clientDistPath;
 
       // 2. Overlay
       const overlayPkgPath = require.resolve('@u-devtools/overlay/package.json');
@@ -113,8 +109,21 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
     apply: 'serve',
 
     config() {
-      // Vite автоматически резолвит через package.json, алиасы не нужны
-      return {};
+      return {
+        optimizeDeps: {
+          // ВАЖНО: Исключаем пакеты из пре-бандлинга.
+          // Vite будет обрабатывать файлы внутри node_modules как исходный код:
+          // 1. Сохранится import.meta.hot (HMR заработает).
+          // 2. CSS импорты будут разрешаться корректно (стили починятся).
+          exclude: ['@u-devtools/client', '@u-devtools/overlay'],
+        },
+        // Для надежности явно разрешаем доступ к FS
+        server: {
+          fs: {
+            allow: ['node_modules/@u-devtools'],
+          },
+        },
+      };
     },
 
     resolveId(id) {
