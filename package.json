@@ -25,6 +25,7 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
+    "publish:all": "pnpm -r publish",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
     "prepublishOnly": "pnpm run check && pnpm run test && pnpm run build",
     "playground:build": "pnpm run build && pnpm --filter './playground' run build && pnpm --filter './playground' run preview"
