@@ -74,22 +74,132 @@ Universal DevTools Kit operates in three distinct execution contexts, each servi
 
 ## 🚀 Installation & Quick Start
 
-### Step 1: Install the Core Package
+### Step 1: Install Dependencies
 
-First, install the Universal DevTools Kit core package:
+Install the Universal DevTools Kit core package and plugins:
 
 ```bash
 # Using npm
-npm install -D @u-devtools/vite
+npm install -D @u-devtools/vite @u-devtools/client @u-devtools/overlay
 
 # Using pnpm (recommended)
-pnpm add -D @u-devtools/vite
+pnpm add -D @u-devtools/vite @u-devtools/client @u-devtools/overlay
 
 # Using yarn
-yarn add -D @u-devtools/vite
+yarn add -D @u-devtools/vite @u-devtools/client @u-devtools/overlay
 ```
 
-### Step 2: Create Your First Plugin
+### Step 2: Install Plugins (Optional)
+
+Install the plugins you want to use:
+
+```bash
+# Using npm
+npm install -D \
+  @u-devtools/plugin-i18n@latest \
+  @u-devtools/plugin-network@latest \
+  @u-devtools/plugin-inspector@latest \
+  @u-devtools/plugin-terminal@latest \
+  @u-devtools/plugin-storage@latest \
+  @u-devtools/plugin-package-inspector@latest \
+  @u-devtools/plugin-vue-inspector@latest \
+  @u-devtools/plugin-vite-inspector@latest
+
+# Using pnpm (recommended)
+pnpm add -D \
+  @u-devtools/plugin-i18n@latest \
+  @u-devtools/plugin-network@latest \
+  @u-devtools/plugin-inspector@latest \
+  @u-devtools/plugin-terminal@latest \
+  @u-devtools/plugin-storage@latest \
+  @u-devtools/plugin-package-inspector@latest \
+  @u-devtools/plugin-vue-inspector@latest \
+  @u-devtools/plugin-vite-inspector@latest
+
+# Using yarn
+yarn add -D \
+  @u-devtools/plugin-i18n@latest \
+  @u-devtools/plugin-network@latest \
+  @u-devtools/plugin-inspector@latest \
+  @u-devtools/plugin-terminal@latest \
+  @u-devtools/plugin-storage@latest \
+  @u-devtools/plugin-package-inspector@latest \
+  @u-devtools/plugin-vue-inspector@latest \
+  @u-devtools/plugin-vite-inspector@latest
+```
+
+### Step 3: Configure Vite
+
+Add the DevTools plugin to your `vite.config.ts`:
+
+```ts
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { createDevTools } from '@u-devtools/vite';
+import { i18nPlugin } from '@u-devtools/plugin-i18n';
+import { networkPlugin } from '@u-devtools/plugin-network';
+import { inspectorPlugin } from '@u-devtools/plugin-inspector';
+import { terminalPlugin } from '@u-devtools/plugin-terminal';
+import { storagePlugin } from '@u-devtools/plugin-storage';
+import { packageInspectorPlugin } from '@u-devtools/plugin-package-inspector';
+import { vueInspectorPlugin } from '@u-devtools/plugin-vue-inspector';
+import { viteInspectorPlugin } from '@u-devtools/plugin-vite-inspector';
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    createDevTools({
+      // Base path for DevTools UI (in iframe)
+      base: '/__devtools',
+      plugins: [
+        // i18n plugin: looks in src/locales directory
+        i18nPlugin({ dir: 'src/locales' }),
+
+        // Network plugin: intercepts fetch/xhr
+        networkPlugin(),
+
+        // Inspector plugin: allows selecting elements
+        inspectorPlugin(),
+
+        // Terminal plugin: full terminal with support for any commands
+        terminalPlugin(),
+
+        // Storage plugin: view LocalStorage/SessionStorage/Cookies
+        storagePlugin(),
+
+        // Package inspector plugin: view dependencies
+        packageInspectorPlugin(),
+
+        // Vue Inspector plugin: route inspector (Vue-specific)
+        vueInspectorPlugin(),
+
+        // Vite Inspector plugin: Vite diagnostics and management
+        viteInspectorPlugin(),
+      ],
+    }),
+  ],
+  resolve: {
+    // IMPORTANT: Deduplicate Vue to prevent duplicate instances in monorepo
+    dedupe: ['vue'],
+  },
+});
+```
+
+### Step 4: Run Your Dev Server
+
+Start your development server:
+
+```bash
+npm run dev
+# or
+pnpm dev
+# or
+yarn dev
+```
+
+You'll see a floating DevTools button (🛠️) in the bottom-right corner of your application. Click it to open the DevTools panel!
+
+### Step 5: Create Your Own Plugin (Optional)
 
 The easiest way to create a plugin is using the built-in generator:
 
@@ -124,43 +234,11 @@ The generator creates a complete plugin structure with examples for all selected
 
 If you prefer to create a plugin manually, see the [Plugin Development Guide](#4-plugin-development-guide) section.
 
-### Step 3: Configure Vite
-
-Add the DevTools plugin to your `vite.config.ts`:
-
-```ts
-import { defineConfig } from 'vite';
-import { createDevTools } from '@u-devtools/vite';
-import { myPlugin } from './plugins/my-plugin';
-
-export default defineConfig({
-  plugins: [
-    createDevTools({
-      plugins: [
-        myPlugin()
-      ]
-    })
-  ]
-});
-```
-
-### Step 4: Run Your Dev Server
-
-Start your development server:
-
-```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
-```
-
-You'll see a floating DevTools button (🛠️) in the bottom-right corner of your application. Click it to open the DevTools panel and see your plugin!
-
 ### Next Steps
 
-Now that you have a basic plugin working, you can:
+Now that you have DevTools set up, you can:
+- Explore the built-in plugins in the DevTools panel
+- Create your own custom plugins (see [Plugin Development Guide](#4-plugin-development-guide))
 - Add server-side logic (see [Server Setup](#44-server-setup-serverts))
 - Add app-side logic for DOM inspection (see [App Script](#45-app-script-appts))
 - Use UI components (see [UI Components Library](#7-ui-components-library))

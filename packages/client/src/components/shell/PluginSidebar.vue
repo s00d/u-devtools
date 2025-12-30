@@ -2,6 +2,7 @@
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import PluginRenderer from '../PluginRenderer.vue';
 import { createApiForPlugin } from '../../modules/clientApi';
+import { UIcon } from '@u-devtools/ui';
 
 const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
 </script>
