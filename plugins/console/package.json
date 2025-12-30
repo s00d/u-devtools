@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-console",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Console logger plugin for Universal DevTools",
   "type": "module",
   "main": "./dist/index.js",
