@@ -28,6 +28,7 @@
     "version:change": "beachball change",
     "version:bump": "beachball bump",
     "version:auto:apply": "beachball bump --yes",
+    "version:bump:all": "node scripts/bump-all.mjs",
     "release": "pnpm build && changeset publish",
     "publish:all": "pnpm -r publish",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",

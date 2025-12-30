@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/vite",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Universal DevTools Kit for Vite applications",
   "keywords": [
     "vite",
