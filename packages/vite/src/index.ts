@@ -64,14 +64,20 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const clientPkgPath = require.resolve('@u-devtools/client/package.json');
       const clientRoot = path.dirname(clientPkgPath);
       const clientPkg = require(clientPkgPath);
-      clientEntryPath = path.resolve(clientRoot, clientPkg.main || 'dist/main.js');
+      // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
+      // Если src/main.ts существует, используем его, иначе fallback на dist/main.js
+      const clientSrcPath = path.resolve(clientRoot, 'src/main.ts');
+      const clientDistPath = path.resolve(clientRoot, clientPkg.publishConfig?.main || 'dist/main.js');
+      clientEntryPath = fs.existsSync(clientSrcPath) ? clientSrcPath : clientDistPath;
 
       // 2. Overlay
       const overlayPkgPath = require.resolve('@u-devtools/overlay/package.json');
       const overlayRoot = path.dirname(overlayPkgPath);
       const overlayPkg = require(overlayPkgPath);
-      // Если в package.json overlay не указан main, фолбэк на dist/index.js
-      overlayEntryPath = path.resolve(overlayRoot, overlayPkg.main || 'dist/index.js');
+      // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
+      const overlaySrcPath = path.resolve(overlayRoot, 'src/main.ts');
+      const overlayDistPath = path.resolve(overlayRoot, overlayPkg.publishConfig?.main || 'dist/index.js');
+      overlayEntryPath = fs.existsSync(overlaySrcPath) ? overlaySrcPath : overlayDistPath;
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : String(e);
       throw new Error(
