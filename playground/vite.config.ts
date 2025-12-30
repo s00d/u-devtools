@@ -59,6 +59,15 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['fsevents', 'lightningcss'],
   },
+  server: {
+    // Разрешаем доступ к файловой системе для playground и корня монорепо
+    fs: {
+      allow: [
+        __dirname, // Директория playground
+        path.resolve(__dirname, '..'), // Корень монорепо
+      ],
+    },
+  },
   ssr: {
     noExternal: [
       '@u-devtools/plugin-i18n',
