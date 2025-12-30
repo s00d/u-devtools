@@ -2,7 +2,7 @@ import { createViteConfig } from '../../shared/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { dirname } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
