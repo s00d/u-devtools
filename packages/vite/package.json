@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/vite",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Universal DevTools Kit for Vite applications",
   "keywords": [
     "vite",
@@ -22,7 +22,8 @@
   "type": "module",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",

@@ -2,6 +2,8 @@
 
 CLI tool to scaffold Universal DevTools plugins. Built with [Hygen](https://www.hygen.io/) for easy template management.
 
+The generator provides templates for multiple frameworks, allowing you to create plugins using your preferred technology stack.
+
 ## Usage
 
 ### In Monorepo
@@ -29,6 +31,7 @@ The tool will ask you:
 - **Plugin display name** (e.g., `My Feature`)
 - **Package name** (e.g., `@u-devtools/plugin-my-feature`)
 - **Description**
+- **Template** - Choose your framework (Vue, React, Solid, Svelte, Vanilla, Astro)
 - **Features to include** (checkboxes):
   - Settings Schema
   - Command Palette Commands
@@ -39,20 +42,27 @@ The tool will ask you:
 
 ## What It Creates
 
-The generator creates a complete plugin structure:
+The generator creates a complete plugin structure tailored to your chosen framework:
 
 ```
 my-plugin/
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-├── tsconfig.node.json
+├── package.json          # Framework-specific dependencies
+├── vite.config.ts       # Vite config with framework plugin
+├── tsconfig.json         # TypeScript configuration
+├── svelte.config.js      # (Svelte only)
 └── src/
-    ├── index.ts      # Plugin entry point
-    ├── client.ts     # Client UI definition
-    ├── app.ts        # App context script
+    ├── index.ts          # Plugin entry point
+    ├── server.ts         # Server RPC handlers
+    ├── client.tsx/.ts    # Client UI definition
+    ├── app.ts            # App context script (optional)
     └── ui/
-        └── MyPanel.vue  # Example Vue component
+        └── [Component]   # Framework-specific component
+            - Vue: MyPanel.vue
+            - React: ReactPanel (in client.tsx)
+            - Solid: SolidPanel (in client.tsx)
+            - Svelte: SveltePanel.svelte
+            - Vanilla: vanilla-panel.ts
+            - Astro: astro-panel.ts (Lit Web Component)
 ```
 
 ## Next Steps
@@ -89,4 +99,22 @@ pnpm build
 ```
 
 The `_templates` directory is included in the npm package, so no copying is needed. Templates use EJS syntax (e.g., `<%= pluginName %>`, `<%= packageName %>`) which Hygen automatically replaces.
+
+## Available Templates
+
+The generator supports multiple framework templates:
+
+- **vue** - Vue 3 with Composition API (default)
+- **react** - React 18 with hooks
+- **solid** - SolidJS with signals
+- **svelte** - Svelte 5 with runes
+- **vanilla** - Vanilla JavaScript/TypeScript (no framework)
+- **astro** - Web Components with Lit (Astro-style)
+
+Each template includes:
+- Framework-specific configuration (Vite, TypeScript)
+- Example UI component demonstrating API usage
+- Server RPC handlers
+- App context script (optional)
+- Complete build setup
 

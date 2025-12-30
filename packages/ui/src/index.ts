@@ -1,6 +1,3 @@
-// Импортируем стили UI-кита (Tailwind + переменные темы)
-import './style.css';
-
 export { default as UButton } from './components/UButton.vue';
 export { default as UIcon } from './components/UIcon.vue';
 export { default as UInput } from './components/UInput.vue';

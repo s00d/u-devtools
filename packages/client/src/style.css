@@ -1,17 +1,54 @@
-@import "tailwindcss";
+@source "../../";
 
-/* Импортируем тему */
-@import "../../ui/src/style.css";
+@import "tailwindcss";
 
 /* Источники */
 @source "./**/*.{vue,ts}";
 @source "../../ui/src/components/**/*.vue";
 @source "../../../plugins/**/src/**/*.vue"; /* Сканируем плагины */
 
+
+@theme {
+    /* --- Primary Colors --- */
+    --color-udt-primary: #6366f1; /* Indigo 500 */
+    --color-udt-primary-hover: #4f46e5;
+
+    /* --- Backgrounds (Layering) --- */
+    --color-udt-bg-root: #09090b;       /* Zinc 950 (Main background) */
+    --color-udt-bg-surface: #121214;    /* Чуть светлее (Sidebar/Panels) */
+    --color-udt-bg-hover: #27272a;      /* Zinc 800 (Hover states) */
+
+    /* --- Borders & Dividers (Hairlines) --- */
+    --color-udt-border: #27272a;        /* Zinc 800 */
+    --color-udt-border-subtle: #18181b; /* Zinc 900 */
+
+    /* --- Text --- */
+    --color-udt-text: #ededef;          /* Zinc 100 */
+    --color-udt-text-dim: #a1a1aa;      /* Zinc 400 */
+}
+
 /* Глобальные настройки влияния на UI */
 :root {
-  --udt-scale: 1;
-  --udt-opacity: 1;
+    --udt-scale: 1;
+    --udt-opacity: 1;
+
+    color-scheme: dark;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    /* --- CSS Variables (для использования в inline styles) --- */
+    --udt-c-primary: #6366f1;
+    --udt-c-primary-hover: #4f46e5;
+    --udt-bg-root: #09090b;
+    --udt-bg-surface: #121214;
+    --udt-bg-hover: #27272a;
+    --udt-border: #27272a;
+    --udt-border-subtle: #18181b;
+    --udt-text: #ededef;
+    --udt-text-dim: #a1a1aa;
+    --udt-shadow-panel: 0 -1px 0 rgba(255, 255, 255, 0.1), 0 -4px 20px rgba(0, 0, 0, 0.4);
+    --udt-glass-bg: rgba(9, 9, 11, 0.7);
+    --udt-accent-glow: 0 0 20px -5px rgba(99, 102, 241, 0.4);
 }
 
 /* Применяем глобальный фон, используя переменные из UI */
@@ -19,6 +56,33 @@ body {
   background-color: var(--color-udt-bg-root);
   color: var(--color-udt-text);
   transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+
+.udt-reset * {
+    box-sizing: border-box;
+}
+
+/* --- CUSTOM SCROLLBARS (Pro Look) --- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+:hover::-webkit-scrollbar-thumb {
+    background-color: var(--udt-text-dim);
+    opacity: 0.3;
 }
 
 /* Класс для отключения анимаций */

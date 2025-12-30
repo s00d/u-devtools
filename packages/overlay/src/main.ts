@@ -1,8 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-// Импортируем стили как СТРОКУ (?inline)
-// Vite обработает PostCSS/Tailwind и вернет готовый CSS код
-import style from './style.css?inline';
+import style from './style.css?inline'; // Это должно вернуть строку CSS
 
 const MOUNT_ID = 'u-devtools-overlay-host';
 
@@ -19,29 +17,23 @@ declare global {
 function init() {
   if (document.getElementById(MOUNT_ID)) return;
 
-  // Читаем конфиг из window
-  const config = window.__UDEVTOOLS_CONFIG__ || {};
-  const base = config.base || '/__devtools';
-
   const host = document.createElement('div');
   host.id = MOUNT_ID;
-  host.style.cssText =
-    'position: fixed; top: 0; left: 0; width: 0; height: 0; z-index: 2147483647; pointer-events: none;';
+  host.style.cssText = 'position: fixed; z-index: 2147483647;';
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: 'open' });
 
+  // 1. Вставляем стили в Shadow DOM
   const styleEl = document.createElement('style');
   styleEl.textContent = style;
   shadow.appendChild(styleEl);
 
+  // 2. Контейнер приложения
   const appRoot = document.createElement('div');
-  // Важно: вернуть pointer-events auto контейнеру приложения,
-  // иначе клики будут проходить сквозь кнопку
-  appRoot.style.pointerEvents = 'auto';
   shadow.appendChild(appRoot);
 
-  const app = createApp(App, { base });
+  const app = createApp(App, { base: window.__UDEVTOOLS_CONFIG__?.base });
   app.mount(appRoot);
 }
 

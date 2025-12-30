@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/kit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "SDK for creating Universal DevTools plugins",
   "type": "module",
   "main": "./src/index.ts",

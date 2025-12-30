@@ -7,6 +7,10 @@
 
 > A comprehensive framework for building custom DevTools tailored to your specific needs.
 
+## 📹 Preview
+
+[![Universal DevTools Kit Preview](https://img.youtube.com/vi/e48xwfp9W-0/0.jpg)](https://www.youtube.com/watch?v=e48xwfp9W-0)
+
 ## What is Universal DevTools Kit?
 
 **Universal DevTools Kit is not a ready-made DevTools solution.** Instead, it's a **comprehensive framework and toolkit** for building your own custom DevTools tailored to your specific needs.
@@ -231,7 +235,7 @@ The generator will ask you:
   - ✅ File System Operations (default)
   - ✅ App Context Communication (default)
 
-The generator creates a complete plugin structure with examples for all selected features!
+The generator supports multiple framework templates (Vue, React, Solid, Svelte, Vanilla JS, Astro/Lit) and creates a complete plugin structure with framework-specific components and examples for all selected features!
 
 #### Option B: Manual Creation
 
@@ -1728,12 +1732,13 @@ yarn create u-devtools
 
 #### Generator Features
 
-The generator creates a plugin with:
+The generator supports multiple framework templates and creates a plugin with:
 
+- ✅ **Framework selection** - Choose from Vue, React, Solid, Svelte, Vanilla JS, or Astro (Lit)
 - ✅ **Complete file structure** - All necessary files (index.ts, client.ts, app.ts, etc.)
-- ✅ **TypeScript configuration** - Pre-configured tsconfig.json
-- ✅ **Vite build setup** - Ready-to-use vite.config.ts
-- ✅ **Example UI components** - Vue components demonstrating API usage
+- ✅ **TypeScript configuration** - Pre-configured tsconfig.json for your framework
+- ✅ **Vite build setup** - Ready-to-use vite.config.ts with framework plugin
+- ✅ **Example UI components** - Framework-specific components demonstrating API usage
 - ✅ **Feature selection** - Choose which features to include:
   - Settings schema with examples
   - Command Palette commands
@@ -1742,21 +1747,72 @@ The generator creates a plugin with:
   - File system operations (Server RPC)
   - App context communication (AppBridge)
 
+**Available Templates:**
+- **Vue** - Vue 3 with Composition API (default)
+- **React** - React 18 with hooks
+- **Solid** - SolidJS with signals
+- **Svelte** - Svelte 5 with runes
+- **Vanilla** - Vanilla JavaScript/TypeScript (no framework)
+- **Astro** - Web Components with Lit (Astro-style)
+
 #### Generated Structure
 
+The structure varies by framework template:
+
+**Vue Template:**
 ```
 my-plugin/
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
-├── tsconfig.node.json
 └── src/
-    ├── index.ts          # Plugin entry with RPC examples
-    ├── client.ts         # Client definition with settings/commands
-    ├── app.ts            # App context with overlay menu
+    ├── index.ts
+    ├── client.ts
+    ├── app.ts
     └── ui/
-        ├── MyPanel.vue   # Main panel with all API examples
-        └── SidebarPanel.vue  # Sidebar panel (if selected)
+        └── MyPanel.vue
+```
+
+**React/Solid Templates:**
+```
+my-plugin/
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── src/
+    ├── index.ts
+    ├── client.tsx        # Contains React/Solid component
+    ├── app.ts
+    └── server.ts
+```
+
+**Svelte Template:**
+```
+my-plugin/
+├── package.json
+├── vite.config.ts
+├── svelte.config.js
+├── tsconfig.json
+└── src/
+    ├── index.ts
+    ├── client.ts
+    ├── app.ts
+    └── ui/
+        └── SveltePanel.svelte
+```
+
+**Vanilla/Astro Templates:**
+```
+my-plugin/
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── src/
+    ├── index.ts
+    ├── client.ts
+    ├── app.ts
+    └── ui/
+        └── [panel].ts    # vanilla-panel.ts or astro-panel.ts
 ```
 
 #### After Generation

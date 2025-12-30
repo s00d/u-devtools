@@ -5,7 +5,7 @@ import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
   api: ClientApi;
-  renderer?: (el: HTMLElement, api: ClientApi) => UnmountFn | undefined;
+  renderer?: (el: HTMLElement, api: ClientApi) => UnmountFn | Promise<UnmountFn> | undefined;
 }>();
 
 const container = ref<HTMLElement | null>(null);
@@ -29,7 +29,37 @@ const mount = () => {
 
   if (props.renderer) {
     try {
-      cleanup = props.renderer(container.value, props.api);
+      const result = props.renderer(container.value, props.api);
+      
+      // Поддерживаем как синхронные, так и асинхронные renderMain
+      if (result instanceof Promise) {
+        result
+          .then((unmountFn) => {
+            cleanup = unmountFn;
+          })
+          .catch((e) => {
+            const err = e instanceof Error ? e : new Error(String(e));
+            error.value = err;
+            console.error('Plugin render error:', err);
+            if (container.value) {
+              container.value.innerHTML = `
+                <div class="p-4 border border-red-800 rounded bg-red-900/20">
+                  <div class="flex items-center gap-2 mb-2">
+                    <UIcon name="ExclamationTriangle" class="w-5 h-5 text-red-400" />
+                    <h3 class="font-semibold text-red-200">Plugin Error</h3>
+                  </div>
+                  <p class="text-sm text-red-300">${err.message}</p>
+                  <details class="mt-2">
+                    <summary class="text-xs text-red-400 cursor-pointer">Stack trace</summary>
+                    <pre class="mt-1 text-xs text-red-400 font-mono">${err.stack || 'No stack trace available'}</pre>
+                  </details>
+                </div>
+              `;
+            }
+          });
+      } else {
+        cleanup = result;
+      }
     } catch (e) {
       const err = e instanceof Error ? e : new Error(String(e));
       error.value = err;

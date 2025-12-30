@@ -1,7 +1,6 @@
 import { createViteConfig } from '../core/vite/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
-// Убираем cssInjectedByJsPlugin, так как мы делаем импорт ?inline
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -13,31 +12,20 @@ const baseConfig = createViteConfig({
   dir: __dirname,
   clearScreen: false,
   useVue: true,
-  formats: ['es'],
+  formats: ['es'], // Важно: ES модуль
   fileName: 'main',
+  // Убираем cssCodeSplit, чтобы Vite не генерировал отдельные CSS файлы
+  cssCodeSplit: false,
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/**/*.vue'],
   },
   additionalPlugins: [
     tailwindcss(),
-    // cssInjectedByJsPlugin удален - используем ?inline импорт
   ],
+  // ВАЖНО: 'virtual:u-devtools-plugins' должен быть внешним,
+  // но CSS мы хотим ЗАИНЛАЙНИТЬ
   external: ['virtual:u-devtools-plugins'],
 });
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    build: {
-      rollupOptions: {
-        external: (id: string) => {
-          // ВАЖНО: В external НЕ должно быть '@u-devtools/ui'
-          // Мы хотим, чтобы код UI и его CSS (Tailwind) вшились внутрь клиента
-          if (id === 'vue' || id === 'virtual:u-devtools-plugins') return true;
-          return false;
-        },
-      },
-    },
-  })
-);
+export default mergeConfig(baseConfig, defineConfig({}));

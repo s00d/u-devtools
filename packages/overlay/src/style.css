@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* 1. Импортируем тему (переменные) из UI пакета */
-@import "../../ui/src/style.css";
+@import "../../client/src/style.css";
 
 /* 2. Настраиваем источники сканирования (Sources) */
 /* Tailwind v4 смотрит сюда, чтобы понять, какие классы генерировать */
@@ -14,6 +14,7 @@
 
 /* 3. Стили хоста (Shadow DOM) */
 :host {
+  color-scheme: dark;
   @apply font-sans antialiased;
   color: var(--color-udt-text);
   line-height: 1.5;
