@@ -1,6 +1,5 @@
 import { createViteConfig } from '../core/vite/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
-import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -18,9 +17,6 @@ const baseConfig = createViteConfig({
     insertTypesEntry: true,
     exclude: ['src/**/*.vue'],
   },
-  additionalPlugins: [
-    tailwindcss(),
-  ],
   resolveAlias: {
     '@': './src',
   },

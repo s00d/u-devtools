@@ -140,7 +140,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="fixed bottom-8 right-0 z-[2147483646] font-sans flex items-center gap-1"
+    class="udt-launcher"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
@@ -151,21 +151,21 @@ onMounted(() => {
     <!-- Дополнительные кнопки из плагинов -->
     <div
       v-if="menuItems.length > 0"
-      class="transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center gap-1"
+      class="udt-menu-items"
       :class="[
         // Если открыт iframe - прячем кнопки полностью
-        isOpen ? 'translate-x-[120%] opacity-0 pointer-events-none' : '',
+        isOpen ? 'hidden' : '',
         // Если наведен - показываем полностью
         // Если нет - прячем полностью
-        !isOpen && isHovered ? 'translate-x-0 opacity-100' : '',
-        !isOpen && !isHovered ? 'translate-x-[120%] opacity-0 pointer-events-none' : ''
+        !isOpen && isHovered ? 'visible' : '',
+        !isOpen && !isHovered ? 'hidden' : ''
       ]"
     >
       <button
         v-for="item in menuItems"
         :key="item.id"
         :title="item.label"
-        class="bg-zinc-900 text-white h-10 w-10 flex items-center justify-center shadow-lg cursor-pointer hover:bg-black transition-colors border border-zinc-700 rounded-lg relative"
+        class="udt-menu-item"
         @click="handleItemClick(item, $event)"
         @dblclick="handleItemDoubleClick(item, $event)"
         @contextmenu="handleItemContextMenu(item, $event)"
@@ -182,43 +182,43 @@ onMounted(() => {
         <span
           v-if="item.iconSvg"
           v-html="item.iconSvg"
-          class="w-5 h-5 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5 [&>svg]:fill-current"
+          class="udt-menu-item-icon"
         />
         <!-- URL иконки -->
         <img
           v-else-if="item.iconUrl"
           :src="item.iconUrl"
           :alt="item.label"
-          class="w-5 h-5 object-contain"
+          class="udt-menu-item-icon"
         />
         <!-- Имя иконки Heroicons (обратная совместимость) -->
-        <UIcon v-else-if="item.icon" :name="item.icon" class="w-5 h-5" />
+        <UIcon v-else-if="item.icon" :name="item.icon" class="udt-menu-item-icon" />
       </button>
     </div>
 
     <!-- Основная кнопка DevTools -->
     <div
-      class="transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center"
+      class="udt-main-button-container"
       :class="[
         // Если открыт iframe - прячем кнопку полностью
-        isOpen ? 'translate-x-[120%]' : '',
+        isOpen ? 'hidden' : '',
         // Если наведен - показываем полностью
         // Если нет - прячем, оставляя 10px
-        !isOpen && isHovered ? 'translate-x-0 opacity-100' : '',
-        !isOpen && !isHovered ? 'translate-x-[calc(100%-10px)] opacity-60 grayscale' : ''
+        !isOpen && isHovered ? 'visible' : '',
+        !isOpen && !isHovered ? 'collapsed' : ''
       ]"
     >
       <button
         @click="toggleMain"
-        class="bg-zinc-900 text-white h-10 pl-3 pr-4 rounded-l-lg shadow-lg cursor-pointer flex items-center gap-2 hover:bg-black transition-colors border-y border-l border-zinc-700 relative"
+        class="udt-main-button"
       >
         <UIcon
           name="WrenchScrewdriver"
-          class="w-5 h-5"
+          class="udt-main-button-icon"
         />
         <span
-          class="font-bold text-sm whitespace-nowrap overflow-hidden transition-all duration-300"
-          :class="isHovered ? 'max-w-[100px] opacity-100 ml-1' : 'max-w-0 opacity-0 ml-0'"
+          class="udt-main-button-text"
+          :class="isHovered ? 'visible' : 'hidden'"
         >
           DevTools
         </span>

@@ -1,23 +1,249 @@
-@import "tailwindcss";
+/* Overlay Styles - Custom CSS (no Tailwind) */
 
-/* 1. Импортируем тему (переменные) из UI пакета */
-@import "../../client/src/style.css";
-
-/* 2. Настраиваем источники сканирования (Sources) */
-/* Tailwind v4 смотрит сюда, чтобы понять, какие классы генерировать */
-
-/* Сканируем сам оверлей */
-@source "./**/*.{vue,ts}";
-
-/* Сканируем UI кит (чтобы сгенерировать стили для кнопок, которые мы импортируем) */
-@source "../../ui/src/components/**/*.vue";
-
-/* 3. Стили хоста (Shadow DOM) */
+/* Theme Variables */
 :host {
   color-scheme: dark;
-  @apply font-sans antialiased;
-  color: var(--color-udt-text);
-  line-height: 1.5;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* CSS Variables for theme */
+  --udt-scale: 1;
+  --udt-opacity: 1;
+  --udt-c-primary: #6366f1;
+  --udt-c-primary-hover: #4f46e5;
+  --udt-bg-root: #09090b;
+  --udt-bg-surface: #121214;
+  --udt-bg-hover: #27272a;
+  --udt-border: #27272a;
+  --udt-border-subtle: #18181b;
+  --udt-text: #ededef;
+  --udt-text-dim: #a1a1aa;
+  --udt-shadow-panel: 0 -1px 0 rgba(255, 255, 255, 0.1), 0 -4px 20px rgba(0, 0, 0, 0.4);
+  --udt-glass-bg: rgba(9, 9, 11, 0.7);
+  --udt-accent-glow: 0 0 20px -5px rgba(99, 102, 241, 0.4);
   --udt-z-index: 2147483647;
+}
+
+/* Base styles */
+.udt-overlay {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--udt-text, #ededef);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Iframe Container */
+.udt-overlay-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #0f172a; /* slate-900 */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  transition: transform 300ms ease-in-out;
+  z-index: 2147483647;
+  isolation: isolate;
+}
+
+.udt-overlay-container.hidden {
+  transform: translateY(110%);
+  visibility: hidden;
+}
+
+.udt-overlay-container.visible {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+/* Resizer Handle */
+.udt-resizer-handle {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  cursor: row-resize;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.udt-resizer-line {
+  width: 100%;
+  height: 1px;
+  background-color: #374151; /* gray-700 */
+  transition: all 200ms ease;
+}
+
+.udt-resizer-handle:hover .udt-resizer-line {
+  background-color: #6366f1; /* indigo-500 */
+  height: 2px;
+}
+
+/* Overlay for mouse events during resize */
+.udt-resizer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+/* Iframe */
+.udt-overlay-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #0f172a; /* slate-900 */
+}
+
+/* Launcher Container */
+.udt-launcher {
+  position: fixed;
+  bottom: 32px;
+  right: 0;
+  z-index: 2147483646;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Menu Items Container */
+.udt-menu-items {
+  transition: all 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.udt-menu-items.hidden {
+  transform: translateX(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.udt-menu-items.visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Menu Item Button */
+.udt-menu-item {
+  background-color: #18181b; /* zinc-900 */
+  color: white;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 200ms ease;
+  border: 1px solid #3f3f46; /* zinc-700 */
+  border-radius: 8px;
+  position: relative;
+}
+
+.udt-menu-item:hover {
+  background-color: #000000;
+}
+
+.udt-menu-item-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.udt-menu-item-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.udt-menu-item-icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Main Button Container */
+.udt-main-button-container {
+  transition: all 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+}
+
+.udt-main-button-container.hidden {
+  transform: translateX(120%);
+}
+
+.udt-main-button-container.visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.udt-main-button-container.collapsed {
+  transform: translateX(calc(100% - 10px));
+  opacity: 0.6;
+  filter: grayscale(100%);
+}
+
+/* Main Button */
+.udt-main-button {
+  background-color: #18181b; /* zinc-900 */
+  color: white;
+  height: 40px;
+  padding-left: 12px;
+  padding-right: 16px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 200ms ease;
+  border-top: 1px solid #3f3f46; /* zinc-700 */
+  border-bottom: 1px solid #3f3f46;
+  border-left: 1px solid #3f3f46;
+  border-right: none;
+  position: relative;
+}
+
+.udt-main-button:hover {
+  background-color: #000000;
+}
+
+.udt-main-button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.udt-main-button-text {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: all 300ms ease;
+}
+
+.udt-main-button-text.visible {
+  max-width: 100px;
+  opacity: 1;
+  margin-left: 4px;
+}
+
+.udt-main-button-text.hidden {
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
 }
 

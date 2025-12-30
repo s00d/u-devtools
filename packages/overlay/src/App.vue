@@ -74,39 +74,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="udt-overlay font-sans text-gray-200">
+  <div class="udt-overlay">
 
     <!-- IFRAME CONTAINER -->
     <div
-      class="fixed bottom-0 left-0 w-full bg-slate-900 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] flex flex-col transition-transform duration-300 ease-in-out"
+      class="udt-overlay-container"
+      :class="isOpen ? 'visible' : 'hidden'"
       :style="{
         height: `${height}px`,
-        zIndex: 2147483647,
-        transform: isOpen ? 'translateY(0)' : 'translateY(110%)',
-        visibility: isOpen ? 'visible' : 'hidden',
-        isolation: 'isolate'
       }"
       @mouseenter="blockPageScroll"
       @mouseleave="unblockPageScroll"
     >
       <!-- Resizer Handle -->
       <div
-        class="absolute -top-1.5 left-0 w-full h-3 cursor-row-resize z-50 group flex items-center justify-center"
+        class="udt-resizer-handle"
         @pointerdown="onPointerDown"
       >
-        <div
-          class="w-full h-[1px] bg-gray-700 transition-all group-hover:bg-indigo-500 group-hover:h-[2px]"
-        />
+        <div class="udt-resizer-line" />
       </div>
 
       <!-- Overlay to catch mouse events during resize -->
-      <div
-        class="absolute inset-0 z-50 bg-transparent pointer-events-none"
-      />
+      <div class="udt-resizer-overlay" />
 
       <iframe
         :src="`${props.base}/index.html`"
-        class="w-full h-full border-none bg-slate-900"
+        class="udt-overlay-iframe"
       />
     </div>
 
