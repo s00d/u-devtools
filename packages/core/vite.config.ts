@@ -9,5 +9,7 @@ export default createViteConfig({
   entry: 'src/index.ts',
   dir: __dirname,
   clearScreen: false,
+  // node:path is used in utils/path.ts (safeResolve)
+  // It's only used in server-side code, but we need to externalize it for browser builds
   external: ['node:path'],
 });

@@ -25,7 +25,13 @@ const emit = defineEmits<{
     <BoxModel v-if="data.computed" :styles="data.computed" />
 
     <!-- 2. Tailwind Editor -->
-    <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+    <div 
+      class="rounded-lg p-3 border"
+      :style="{
+        backgroundColor: 'rgba(18, 18, 20, 0.4)',
+        borderColor: 'var(--udt-border-subtle)'
+      }"
+    >
       <div class="text-xs font-bold text-gray-400 uppercase mb-3">Quick Styles (Tailwind)</div>
       <TailwindEditor :classes="data.classes" @update="(classes) => emit('update-classes', classes)" />
     </div>

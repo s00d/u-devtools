@@ -1,4 +1,4 @@
-import { AppBridge } from '@u-devtools/core';
+import { AppBridge, registerMenuItem, devtools } from '@u-devtools/core';
 
 const bridge = new AppBridge('inspector');
 
@@ -71,6 +71,7 @@ shadow.append(marginBox, paddingBox, contentBox, tooltip);
 
 let isActive = false;
 let currentTarget: HTMLElement | null = null;
+const UDT_ID_ATTR = 'data-udt-id'; // Уникальный ID для надежной связи
 
 // --- COMPONENT RESOLVERS --- (removed - framework detection not needed)
 
@@ -163,15 +164,53 @@ function getA11yData(el: HTMLElement) {
 }
 
 
+// Проверяем и открываем DevTools если нужно (не блокируем выполнение)
+function ensureDevToolsOpen() {
+  devtools.isOpen().then((isOpen) => {
+    if (!isOpen) {
+      devtools.open();
+    }
+  });
+}
+
+// --- HELPERS ---
+
+// Генерируем ID для элемента, если его нет
+function ensureUdtId(el: HTMLElement): string {
+  if (!el.hasAttribute(UDT_ID_ATTR)) {
+    el.setAttribute(UDT_ID_ATTR, Math.random().toString(36).slice(2));
+  }
+  const id = el.getAttribute(UDT_ID_ATTR);
+  if (!id) {
+    // Fallback на случай, если что-то пошло не так
+    const fallbackId = Math.random().toString(36).slice(2);
+    el.setAttribute(UDT_ID_ATTR, fallbackId);
+    return fallbackId;
+  }
+  return id;
+}
+
+// Находим элемент по ID
+function getElementByUdtId(id: string): HTMLElement | null {
+  return document.querySelector(`[${UDT_ID_ATTR}="${id}"]`);
+}
+
 function sendElementData(el: HTMLElement) {
+  // Проверяем и открываем DevTools если нужно
+  ensureDevToolsOpen();
+  
+  const udtId = ensureUdtId(el);
   const rect = el.getBoundingClientRect();
   
   const attrs: Record<string, string> = {};
   Array.from(el.attributes).forEach(attr => {
-    attrs[attr.name] = attr.value;
+    if (attr.name !== UDT_ID_ATTR) { // Скрываем наш служебный атрибут
+      attrs[attr.name] = attr.value;
+    }
   });
 
   const data = {
+    udtId, // Важно: отправляем ID
     tagName: el.tagName.toLowerCase(),
     id: el.id,
     classes: Array.from(el.classList),
@@ -367,7 +406,7 @@ function isDevToolsElement(el: HTMLElement | null): boolean {
   if (!el) return false;
   // Проверяем, находится ли элемент внутри контейнера DevTools
   const devtoolsContainer = document.getElementById('udt-container');
-  if (devtoolsContainer && devtoolsContainer.contains(el)) {
+  if (devtoolsContainer?.contains(el)) {
     return true;
   }
   // Проверяем, является ли элемент самим контейнером или его дочерними элементами
@@ -472,6 +511,28 @@ bridge.on('toggle-inspector', (data: { state: boolean }) => toggleInspector(data
 
 // --- ACTIONS HANDLERS ---
 
+// Хелпер для выполнения действия и обновления UI
+function mutate(udtId: string | undefined, action: (el: HTMLElement) => void) {
+  // Если ID не передан, используем currentTarget (фолбэк)
+  const el = udtId ? getElementByUdtId(udtId) : currentTarget;
+  
+  if (!el) {
+    console.warn('[Inspector] Target element not found for mutation');
+    return;
+  }
+
+  try {
+    action(el);
+    // После изменения обновляем данные в UI и перерисовываем оверлей
+    sendElementData(el);
+    if (el === currentTarget) {
+      updateOverlay(el);
+    }
+  } catch (e) {
+    console.error('[Inspector] Mutation failed:', e);
+  }
+}
+
 bridge.on('highlight', () => {
   if (currentTarget) {
     // Включаем подсветку уже выбранного элемента (без режима выбора)
@@ -488,164 +549,138 @@ bridge.on('highlight', () => {
   }
 });
 
-bridge.on('update-attr', (payload: { name: string, value: string }) => {
-  if (!currentTarget) return;
-  try {
-    currentTarget.setAttribute(payload.name, payload.value);
-    sendElementData(currentTarget); // Шлем обновленные данные
-    updateOverlay(currentTarget); // Обновляем рамку (если размеры изменились)
-  } catch (e) {
-    console.error('[Inspector] Failed to update attr:', e);
-  }
+// 1. Атрибуты
+bridge.on('update-attr', ({ udtId, name, value }: { udtId?: string, name: string, value: string }) => {
+  mutate(udtId, (el) => el.setAttribute(name, value));
 });
 
-bridge.on('remove-attr', (payload: { name: string }) => {
-  if (!currentTarget) return;
-  currentTarget.removeAttribute(payload.name);
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('remove-attr', ({ udtId, name }: { udtId?: string, name: string }) => {
+  mutate(udtId, (el) => el.removeAttribute(name));
 });
 
-bridge.on('update-text', (text: string) => {
-  if (!currentTarget) return;
-  currentTarget.innerText = text;
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('update-text', ({ udtId, text }: { udtId?: string, text: string }) => {
+  mutate(udtId, (el) => {
+    el.innerText = text;
+  });
 });
 
-bridge.on('delete-node', () => {
-  if (!currentTarget) return;
-  const parent = currentTarget.parentElement;
-  currentTarget.remove();
-  currentTarget = parent; // Переключаемся на родителя
-  if (currentTarget) {
-    sendElementData(currentTarget);
-    updateOverlay(currentTarget);
+bridge.on('delete-node', ({ udtId }: { udtId?: string }) => {
+  const el = udtId ? getElementByUdtId(udtId) : currentTarget;
+  if (!el) return;
+  
+  const parent = el.parentElement;
+  el.remove();
+  
+  // Если удалили текущий, переключаемся на родителя
+  if (parent) {
+    currentTarget = parent;
+    sendElementData(parent);
+    updateOverlay(parent);
   } else {
     overlayHost.style.display = 'none';
   }
 });
 
-bridge.on('scroll-into-view', () => {
-  if (!currentTarget) return;
-  currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  // Мигание
-  const oldTransition = currentTarget.style.transition;
-  const oldOutline = currentTarget.style.outline;
-  currentTarget.style.transition = 'outline 0.2s';
-  currentTarget.style.outline = '4px solid #6366f1';
-  setTimeout(() => {
-    if (currentTarget) {
-      currentTarget.style.outline = oldOutline;
-      setTimeout(() => { 
-        if (currentTarget) {
-          currentTarget.style.transition = oldTransition;
-        }
-      }, 200);
-    }
-  }, 1000);
+bridge.on('scroll-into-view', ({ udtId }: { udtId?: string }) => {
+  mutate(udtId, (el) => {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Visual Flash
+    const originalOutline = el.style.outline;
+    el.style.outline = '2px solid #f43f5e';
+    setTimeout(() => { el.style.outline = originalOutline; }, 1500);
+  });
 });
 
-bridge.on('log-node', () => {
-  if (!currentTarget) return;
-  console.log('%c [U-DevTools] Selected Element:', 'color: #6366f1; font-weight: bold;', currentTarget);
+bridge.on('log-node', ({ udtId }: { udtId?: string }) => {
+  const el = udtId ? getElementByUdtId(udtId) : currentTarget;
+  if (!el) return;
+  console.log('%c [U-DevTools] Selected Element:', 'color: #6366f1; font-weight: bold;', el);
   // Делаем доступным как $0 (стандарт хрома, но мы эмулируем)
-  (window as any).$0 = currentTarget;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).$0 = el;
   console.log('Available as window.$0');
 });
 
 // --- CLASS MANAGEMENT ---
 
 // Добавить класс
-bridge.on('add-class', (cls: string) => {
-  if (!currentTarget || !cls) return;
-  try {
-    currentTarget.classList.add(...cls.split(' ')); // Поддержка нескольких классов
-    sendElementData(currentTarget);
-    updateOverlay(currentTarget);
-  } catch (e) {
-    console.error('[Inspector] Failed to add class:', e);
-  }
+bridge.on('add-class', ({ udtId, cls }: { udtId?: string, cls: string }) => {
+  mutate(udtId, (el) => el.classList.add(...cls.split(' ').filter(Boolean)));
 });
 
 // Удалить класс
-bridge.on('remove-class', (cls: string) => {
-  if (!currentTarget) return;
-  currentTarget.classList.remove(cls);
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('remove-class', ({ udtId, cls }: { udtId?: string, cls: string }) => {
+  mutate(udtId, (el) => el.classList.remove(cls));
 });
 
 // Тоггл класса (вкл/выкл)
-bridge.on('toggle-class', (payload: { cls: string, active: boolean }) => {
-  if (!currentTarget) return;
-  if (payload.active) {
-    currentTarget.classList.add(payload.cls);
-  } else {
-    currentTarget.classList.remove(payload.cls);
-  }
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('toggle-class', ({ udtId, cls, active }: { udtId?: string, cls: string, active: boolean }) => {
+  mutate(udtId, (el) => {
+    if (active) {
+      el.classList.add(cls);
+    } else {
+      el.classList.remove(cls);
+    }
+  });
+});
+
+// Обновление всего списка классов (для TailwindEditor)
+bridge.on('update-classes', ({ udtId, classes }: { udtId?: string, classes: string[] }) => {
+  mutate(udtId, (el) => {
+    el.className = classes.join(' ');
+  });
 });
 
 // Изменение стиля (для Box Model)
-bridge.on('update-style', (payload: { prop: string, value: string }) => {
-  if (!currentTarget) return;
-  // @ts-ignore
-  currentTarget.style[payload.prop] = payload.value;
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('update-style', ({ udtId, prop, value }: { udtId?: string, prop: string, value: string }) => {
+  mutate(udtId, (el) => {
+    // Используем type assertion для доступа к динамическим свойствам стиля
+    (el.style as unknown as Record<string, string>)[prop] = value;
+  });
 });
 
 // Новая команда: Скролл + Мигание (Focus)
-bridge.on('focus-node', () => {
-  if (!currentTarget) return;
-  currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+bridge.on('focus-node', ({ udtId }: { udtId?: string }) => {
+  const el = udtId ? getElementByUdtId(udtId) : currentTarget;
+  if (!el) return;
+  
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   
   // Пытаемся сфокусировать элемент, если он фокусируемый
-  if (currentTarget instanceof HTMLElement && 
-      (currentTarget instanceof HTMLInputElement || 
-       currentTarget instanceof HTMLButtonElement || 
-       currentTarget instanceof HTMLAnchorElement ||
-       currentTarget.tabIndex >= 0)) {
+  if (el instanceof HTMLElement && 
+      (el instanceof HTMLInputElement || 
+       el instanceof HTMLButtonElement || 
+       el instanceof HTMLAnchorElement ||
+       el.tabIndex >= 0)) {
     try {
-      currentTarget.focus();
-    } catch (e) {
+      el.focus();
+    } catch {
       // Игнорируем ошибки фокусировки
     }
   }
   
   // Визуальный эффект
-  const originalOutline = currentTarget.style.outline;
-  const originalOutlineOffset = currentTarget.style.outlineOffset;
-  currentTarget.style.outline = '2px solid #f43f5e';
-  currentTarget.style.outlineOffset = '2px';
+  const originalOutline = el.style.outline;
+  const originalOutlineOffset = el.style.outlineOffset;
+  el.style.outline = '2px solid #f43f5e';
+  el.style.outlineOffset = '2px';
   setTimeout(() => {
-    if (currentTarget) {
-      currentTarget.style.outline = originalOutline;
-      currentTarget.style.outlineOffset = originalOutlineOffset;
+    if (el) {
+      el.style.outline = originalOutline;
+      el.style.outlineOffset = originalOutlineOffset;
     }
   }, 1500);
 });
 
 // Новая команда: Toggle Visibility (Visibility hidden vs Display none)
-bridge.on('toggle-visibility', (mode: 'hide' | 'remove') => {
-  if (!currentTarget) return;
-  if (mode === 'hide') {
-    currentTarget.style.visibility = currentTarget.style.visibility === 'hidden' ? '' : 'hidden';
-  } else {
-    currentTarget.style.display = currentTarget.style.display === 'none' ? '' : 'none';
-  }
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
-});
-
-// Добавляем команду на жесткое обновление классов (для GUI редактора)
-bridge.on('update-classes', (classes: string[]) => {
-  if (!currentTarget) return;
-  currentTarget.className = classes.join(' ');
-  sendElementData(currentTarget);
-  updateOverlay(currentTarget);
+bridge.on('toggle-visibility', ({ udtId, mode }: { udtId?: string, mode: 'hide' | 'remove' }) => {
+  mutate(udtId, (el) => {
+    if (mode === 'hide') {
+      el.style.visibility = el.style.visibility === 'hidden' ? '' : 'hidden';
+    } else {
+      el.style.display = el.style.display === 'none' ? '' : 'none';
+    }
+  });
 });
 
 // Функция для поиска элемента по его характеристикам
@@ -683,7 +718,7 @@ function findElementBySelector(tagName: string, id: string, classesStr: string):
         }
       }
     }
-  } catch (e) {
+  } catch {
     // Игнорируем ошибки селектора
   }
   
@@ -741,6 +776,8 @@ bridge.on('select-node', (payload: {
 
   if (target && target instanceof HTMLElement && !isDevToolsElement(target)) {
     currentTarget = target;
+    // Проверяем и открываем DevTools если нужно
+    ensureDevToolsOpen();
     sendElementData(currentTarget);
     // Показываем overlay даже если режим инспектирования выключен
     overlayHost.style.display = 'block';
@@ -762,9 +799,11 @@ bridge.on('select-node', (payload: {
 });
 
 // Cleanup
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot;
-if (hot) {
+interface ImportMetaHot {
+  dispose?: (callback: () => void) => void;
+}
+const hot = (import.meta as unknown as { hot?: ImportMetaHot }).hot;
+if (hot?.dispose) {
   hot.dispose(() => {
     overlayHost.remove();
     guidesHost.remove();
@@ -779,3 +818,20 @@ if (hot) {
 
 // Add keyboard listener
 document.addEventListener('keydown', onKeyDown);
+
+// Регистрируем кнопку в меню лаунчера
+registerMenuItem({
+  id: 'inspector-pick',
+  label: 'Inspect Element',
+  icon: 'MagnifyingGlass',
+  order: 10,
+  onClick: (ctx) => {
+    // 1. Закрываем DevTools, чтобы видеть страницу
+    if (ctx.isOpen) {
+      ctx.close();
+    }
+    
+    // 2. Активируем логику инспектора
+    toggleInspector(true);
+  }
+});

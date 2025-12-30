@@ -2,7 +2,7 @@
  * AppBridge provides a standardized way for plugins to communicate
  * between the application runtime (window) and the DevTools iframe.
  */
-export class AppBridge<ToClientEvents = Record<string, any>, ToAppEvents = Record<string, any>> {
+export class AppBridge {
   private channel: BroadcastChannel;
   private listeners = new Map<string, Set<Function>>();
 

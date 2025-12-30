@@ -1,22 +1,22 @@
 import type { StorageApi } from '@u-devtools/core';
 import { reactive, watch } from 'vue';
+import { safeJsonParse, safeJsonStringify } from '@u-devtools/utils';
 
 const storageState = reactive<Record<string, unknown>>({});
 
-try {
-  const raw = localStorage.getItem('u-devtools-storage');
-  if (raw) {
-    Object.assign(storageState, JSON.parse(raw));
+const raw = localStorage.getItem('u-devtools-storage');
+if (raw) {
+  const parsed = safeJsonParse<Record<string, unknown>>(raw, {});
+  if (parsed) {
+    Object.assign(storageState, parsed);
   }
-} catch {
-  // Ignore
 }
 
 // Также читаем настройки из useSettings
-try {
-  const settingsRaw = localStorage.getItem('u-devtools-settings');
-  if (settingsRaw) {
-    const settings = JSON.parse(settingsRaw);
+const settingsRaw = localStorage.getItem('u-devtools-settings');
+if (settingsRaw) {
+  const settings = safeJsonParse<Record<string, unknown>>(settingsRaw, {});
+  if (settings) {
     // Копируем настройки в storageState с правильным префиксом
     for (const key in settings) {
       if (key.includes(':')) {
@@ -24,14 +24,12 @@ try {
       }
     }
   }
-} catch {
-  // Ignore
 }
 
 watch(
   storageState,
   () => {
-    localStorage.setItem('u-devtools-storage', JSON.stringify(storageState));
+    localStorage.setItem('u-devtools-storage', safeJsonStringify(storageState));
   },
   { deep: true }
 );
@@ -45,14 +43,12 @@ export function createPluginStorage(pluginName: string): StorageApi {
       let val = storageState[prefix + key];
       // Если не найдено, проверяем настройки (settings используют формат plugin:key)
       if (val === undefined) {
-        try {
-          const settingsRaw = localStorage.getItem('u-devtools-settings');
-          if (settingsRaw) {
-            const settings = JSON.parse(settingsRaw);
+        const settingsRaw = localStorage.getItem('u-devtools-settings');
+        if (settingsRaw) {
+          const settings = safeJsonParse<Record<string, unknown>>(settingsRaw, {});
+          if (settings) {
             val = settings[prefix + key];
           }
-        } catch {
-          // Ignore
         }
       }
       return val === undefined ? def : (val as T);

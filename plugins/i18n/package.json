@@ -23,15 +23,13 @@
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",
+    "@u-devtools/utils-node": "workspace:*",
     "@u-devtools/kit": "workspace:*",
     "json-to-ast": "^2.1.0",
     "vue": "^3.5.26"
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
-    "@vitejs/plugin-vue": "^6.0.3",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "^5.9.3"
   }
 }

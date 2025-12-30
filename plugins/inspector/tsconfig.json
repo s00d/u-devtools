@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@u-devtools/core": ["../../packages/core/src"],
-      "@u-devtools/ui": ["../../packages/ui/src"]
+      "@u-devtools/ui": ["../../packages/ui/src"],
+      "@u-devtools/kit": ["../../packages/kit/src"]
     }
   },
   "include": ["src/**/*"],

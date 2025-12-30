@@ -21,13 +21,6 @@ export interface PluginCommand {
   shortcut?: string[];
 }
 
-export interface LauncherMenuItem {
-  id: string;
-  label: string;
-  icon: string; // Heroicons icon name
-  action: () => void | Promise<void>;
-  separator?: boolean; // Добавить разделитель перед пунктом
-}
 
 export interface StorageApi {
   get<T>(key: string, def: T): T;
@@ -169,7 +162,6 @@ export interface PluginClientInstance {
 
   settings?: PluginSettingsSchema;
   commands?: PluginCommand[];
-  launcherMenuItems?: LauncherMenuItem[]; // Пункты меню для launcher button
 
   renderSidebar?: (el: HTMLElement, api: ClientApi) => UnmountFn;
   renderMain?: (el: HTMLElement, api: ClientApi) => UnmountFn;
@@ -217,5 +209,5 @@ export interface InspectorEvent {
   };
 }
 
-export { safeResolve } from './utils/path';
 export { AppBridge } from './bridge-app';
+export * from './control';

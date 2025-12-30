@@ -2,14 +2,27 @@
   "name": "@u-devtools/kit",
   "version": "0.1.0",
   "description": "SDK for creating Universal DevTools plugins",
-  "main": "./dist/kit/src/index.js",
-  "types": "./dist/kit/src/index.d.ts",
   "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
+      }
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "vite build",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -18,12 +31,10 @@
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/bridge": "workspace:*",
-    "tsup": "^8.0.0",
     "vue": "^3.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0"
+    "typescript": "^5.9.3"
   }
 }

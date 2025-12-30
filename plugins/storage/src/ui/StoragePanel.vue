@@ -288,7 +288,7 @@ onUnmounted(() => bridge.close());
           :rows="filteredList" 
           :columns="[
             {key:'key', label:'Key', width:'25%'}, 
-            {key:'value', label:'Value'}, 
+            {key:'value', label:'Value', width:'50%'}, 
             {key:'actions', label:'', width:'80px'}
           ]"
         >
@@ -305,10 +305,19 @@ onUnmounted(() => bridge.close());
               </UBadge>
             </div>
           </template>
-          <template #cell-value="{ val }">
-            <div class="max-h-16 overflow-hidden text-xs font-mono text-gray-300 break-all">
-              <span v-if="typeof val === 'object'">{{ JSON.stringify(val) }}</span>
-              <span v-else>{{ val }}</span>
+          <template #cell-value="{ val, row }">
+            <div 
+              @dblclick.stop="openEdit(row as StorageItem)"
+              class="text-xs font-mono text-gray-300 cursor-pointer hover:text-indigo-400 transition-colors group relative w-full"
+              :title="typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)"
+            >
+              <div class="max-h-20 overflow-hidden break-words">
+                <span v-if="typeof val === 'object'" class="whitespace-pre-wrap break-all">{{ JSON.stringify(val, null, 2) }}</span>
+                <span v-else class="break-all">{{ String(val) }}</span>
+              </div>
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-gray-800/90 rounded text-[10px] text-indigo-400 pointer-events-none z-10">
+                Double-click to edit
+              </div>
             </div>
           </template>
           <template #cell-actions="{ row }">

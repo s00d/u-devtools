@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue';
-import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
-  value: string;
-  prop: string;
-  position?: 'top' | 'bottom' | 'left' | 'right' | 'center';
+  value: string | number; // Значение из computed styles (обычно "10px" или "0px")
+  prop: string;           // Имя свойства (marginTop)
 }>();
 
 const emit = defineEmits<{
@@ -16,15 +14,18 @@ const isEditing = ref(false);
 const inputRef = ref<HTMLInputElement | null>(null);
 const tempValue = ref('');
 
-// Форматирование для отображения (убираем px, если это 0 или -)
+// Форматируем для отображения: "0px" -> "-" для чистоты
 const displayValue = computed(() => {
-  const v = props.value;
+  const v = String(props.value);
   if (!v || v === '0px' || v === '0') return '-';
-  return parseFloat(v);
+  // Округляем дробные пиксели для красоты (20.454px -> 20.45)
+  return v.replace(/(\d+\.\d{2})\d+px/, '$1');
 });
 
 const startEdit = async () => {
-  tempValue.value = props.value === '0px' ? '0' : props.value;
+  // При редактировании показываем реальное значение, либо пустую строку если 0
+  const val = String(props.value);
+  tempValue.value = val === '0px' || val === '-' || val === '0' ? '' : val;
   isEditing.value = true;
   await nextTick();
   inputRef.value?.focus();
@@ -36,12 +37,24 @@ const save = () => {
   
   let val = tempValue.value.trim();
   
-  // Если ввели число без единиц измерения, добавляем px
-  if (val && !isNaN(Number(val))) {
-    val += 'px';
+  // Умная обработка единиц измерения
+  if (val !== '') {
+    // Если ввели просто число (не 0), добавляем px
+    if (!Number.isNaN(Number(val)) && val !== '0') {
+      val += 'px';
+    }
+    // Если ввели 0, тоже добавляем px
+    if (val === '0') {
+      val = '0px';
+    }
+    // Если ввели auto, 50%, inherit и т.д. - оставляем как есть
+  } else {
+    // Если стерли всё, ставим 0px
+    val = '0px'; 
   }
 
-  if (val !== props.value) {
+  // Эмитим только если значение изменилось
+  if (val !== String(props.value)) {
     emit('update', { prop: props.prop, value: val });
   }
   
@@ -51,114 +64,33 @@ const save = () => {
 const cancel = () => {
   isEditing.value = false;
 };
-
-// Функции для изменения значения через кнопки
-const adjustValue = (delta: number) => {
-  const current = parseFloat(props.value) || 0;
-  const unit = props.value.includes('px') ? 'px' : (props.value.includes('em') ? 'em' : (props.value.includes('rem') ? 'rem' : 'px'));
-  const newValue = Math.max(0, current + delta);
-  emit('update', { prop: props.prop, value: `${newValue}${unit}` });
-};
-
-const increment = () => adjustValue(1);
-const decrement = () => adjustValue(-1);
 </script>
 
 <template>
   <div 
-    class="boxvalue-container relative min-w-[24px] h-[14px] flex items-center justify-center"
-    title="Double click to edit"
+    @dblclick.stop="startEdit" 
+    class="relative flex items-center justify-center min-w-[20px] h-4 cursor-text group"
+    :title="`Change ${prop}`"
   >
-    <!-- Кнопки для вертикальных позиций (left, right) - кнопки по вертикали (сверху и снизу) -->
-    <template v-if="position === 'left' || position === 'right'">
-      <button
-        @click.stop="increment"
-        class="boxvalue-btn absolute left-1/2 -translate-x-1/2 -top-2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Increase"
-      >
-        <UIcon name="Plus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-      <button
-        @click.stop="decrement"
-        class="boxvalue-btn absolute left-1/2 -translate-x-1/2 -bottom-2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Decrease"
-      >
-        <UIcon name="Minus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-    </template>
-    
-    <!-- Кнопки для горизонтальных позиций (top, bottom) - кнопки по горизонтали (слева и справа) -->
-    <template v-else-if="position === 'top' || position === 'bottom'">
-      <button
-        @click.stop="decrement"
-        class="boxvalue-btn absolute -left-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Decrease"
-      >
-        <UIcon name="Minus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-      <button
-        @click.stop="increment"
-        class="boxvalue-btn absolute -right-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Increase"
-      >
-        <UIcon name="Plus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-    </template>
-    
-    <!-- Кнопки для центральной позиции (width, height) - обе кнопки по горизонтали -->
-    <template v-else>
-      <button
-        @click.stop="decrement"
-        class="boxvalue-btn absolute -left-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Decrease"
-      >
-        <UIcon name="Minus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-      <button
-        @click.stop="increment"
-        class="boxvalue-btn absolute -right-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 flex items-center justify-center hover:bg-gray-800/50 rounded transition-opacity z-20"
-        title="Increase"
-      >
-        <UIcon name="Plus" class="w-1.5 h-1.5 text-gray-400" />
-      </button>
-    </template>
-    
-    <!-- Значение -->
-    <div 
-      @dblclick.stop="startEdit" 
-      class="cursor-text truncate max-w-[40px] z-10 relative"
-    >
-      <span v-if="!isEditing">{{ displayValue }}</span>
-      <input
-        v-else
-        ref="inputRef"
-        v-model="tempValue"
-        @blur="save"
-        @keydown.enter="save"
-        @keydown.esc="cancel"
-        class="absolute inset-0 w-full h-full text-center bg-white dark:bg-gray-800 text-black dark:text-white border border-indigo-500 rounded text-[10px] outline-none z-30"
-      />
-    </div>
+    <!-- View Mode -->
+    <span v-if="!isEditing" class="truncate max-w-[50px] hover:text-black dark:hover:text-white transition-colors duration-200">
+      {{ displayValue }}
+    </span>
+
+    <!-- Edit Mode -->
+    <input
+      v-else
+      ref="inputRef"
+      v-model="tempValue"
+      @blur="save"
+      @keydown.enter="save"
+      @keydown.esc="cancel"
+      class="absolute inset-0 w-full h-full text-center bg-white dark:bg-gray-800 text-black dark:text-white border border-indigo-500 rounded text-[10px] p-0 m-0 outline-none z-50 shadow-lg"
+    />
   </div>
 </template>
 
 <style scoped>
 @reference "tailwindcss";
-
-.boxvalue-container .boxvalue-btn {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-
-.boxvalue-container:hover .boxvalue-btn {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.boxvalue-container:not(:hover) .boxvalue-btn {
-  opacity: 0;
-  pointer-events: none;
-}
 </style>
 

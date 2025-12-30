@@ -156,10 +156,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-[#111827] min-w-0 min-h-0 overflow-hidden">
+  <div class="h-full flex flex-col bg-[#09090b] min-w-0 min-h-0 overflow-hidden">
     <!-- Header -->
     <div
-      class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50"
+      class="p-6 border-b border-white/5 flex justify-between items-center bg-[#18181b]/50 backdrop-blur-sm"
     >
       <div class="flex items-center gap-4">
         <h2 class="text-xl font-bold text-white flex items-center gap-2">
@@ -186,7 +186,7 @@ onMounted(() => {
             @keydown.enter="searchMarket"
           >
             <template #suffix>
-              <button @click="searchMarket" class="p-1 hover:bg-gray-700 rounded">
+              <button @click="searchMarket" class="p-1 hover:bg-white/5 rounded-lg transition-colors">
                 <UIcon name="MagnifyingGlass" class="w-4 h-4" />
               </button>
             </template>
@@ -209,11 +209,11 @@ onMounted(() => {
       <!-- Loading overlay -->
       <div
         v-if="loading"
-        class="absolute inset-0 bg-gray-900/80 flex items-center justify-center z-10"
+        class="absolute inset-0 bg-[#09090b]/80 backdrop-blur-sm flex items-center justify-center z-10"
       >
         <div class="text-center">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-400 mb-2"></div>
-          <p class="text-sm text-gray-400">Loading...</p>
+          <p class="text-sm text-zinc-400">Loading...</p>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ onMounted(() => {
         <div
           v-for="plugin in installedPlugins"
           :key="plugin.name"
-          class="border border-gray-700 rounded-xl p-5 bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex flex-col"
+          class="border border-white/10 rounded-xl p-5 bg-[#18181b] shadow-sm hover:shadow-md hover:border-white/20 transition-all flex flex-col"
         >
           <div class="flex justify-between items-start mb-3">
             <div class="flex items-center gap-3">
@@ -236,7 +236,7 @@ onMounted(() => {
                 <div class="flex items-center gap-2 mt-1">
                   <UBadge v-if="plugin.isCore" color="blue" size="xs">CORE</UBadge>
                   <UBadge v-else color="gray" size="xs">USER</UBadge>
-                  <span class="text-xs text-gray-400 font-mono">v{{ plugin.meta.version }}</span>
+                  <span class="text-xs text-zinc-400 font-mono">v{{ plugin.meta.version }}</span>
                 </div>
               </div>
             </div>
@@ -249,21 +249,21 @@ onMounted(() => {
             </div>
           </div>
 
-          <p class="text-gray-400 text-sm mb-4 flex-1">
+          <p class="text-zinc-400 text-sm mb-4 flex-1">
             {{ plugin.meta.description || 'No description provided.' }}
           </p>
 
           <div
-            class="flex items-center justify-between pt-4 border-t border-gray-700 mt-auto"
+            class="flex items-center justify-between pt-4 border-t border-white/5 mt-auto"
           >
-            <div class="flex gap-4 text-xs text-gray-400">
+            <div class="flex gap-4 text-xs text-zinc-400">
               <span v-if="plugin.meta.author" class="flex items-center gap-1">
                 <UIcon name="User" class="w-3 h-3" />
                 {{ plugin.meta.author }}
               </span>
               <span
                 v-if="plugin.meta.name && plugin.meta.name !== 'unknown'"
-                class="font-mono text-gray-500"
+                class="font-mono text-zinc-500"
               >
                 {{ plugin.meta.name }}
               </span>
@@ -275,7 +275,7 @@ onMounted(() => {
                 :href="plugin.meta.homepage"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-gray-500 hover:text-indigo-400 transition"
+                class="text-zinc-500 hover:text-indigo-400 transition-colors"
                 title="Website"
               >
                 <UIcon name="GlobeAlt" class="w-5 h-5" />
@@ -285,7 +285,7 @@ onMounted(() => {
                 :href="`https://www.npmjs.com/package/${plugin.meta.name}`"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-gray-500 hover:text-red-400 transition"
+                class="text-zinc-500 hover:text-red-400 transition-colors"
                 title="NPM"
               >
                 <UIcon name="ArchiveBox" class="w-5 h-5" />
@@ -316,7 +316,7 @@ onMounted(() => {
         <div
           v-for="p in marketPlugins"
           :key="p.name"
-          class="border border-gray-700 rounded-xl p-5 bg-gray-800 shadow-sm hover:shadow-md transition-shadow flex justify-between items-center"
+          class="border border-white/10 rounded-xl p-5 bg-[#18181b] shadow-sm hover:shadow-md hover:border-white/20 transition-all flex justify-between items-center"
         >
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
@@ -329,7 +329,7 @@ onMounted(() => {
                 <div class="flex items-center gap-2">
                   <span class="font-bold text-lg text-white">{{ p.name }}</span>
                   <span
-                    class="text-xs bg-gray-700 px-2 py-0.5 rounded text-gray-400"
+                    class="text-xs bg-black/30 px-2 py-0.5 rounded text-zinc-400"
                   >
                     v{{ p.version }}
                   </span>
@@ -345,8 +345,8 @@ onMounted(() => {
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-400 mb-3">{{ p.description }}</p>
-            <div class="flex gap-3 text-xs text-gray-400">
+            <p class="text-sm text-zinc-400 mb-3">{{ p.description }}</p>
+            <div class="flex gap-3 text-xs text-zinc-400">
               <span class="flex items-center gap-1">
                 <UIcon name="User" class="w-3 h-3" />
                 {{ p.author }}

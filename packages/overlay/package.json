@@ -1,0 +1,34 @@
+{
+  "name": "@u-devtools/overlay",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/main.ts",
+  "publishConfig": {
+    "main": "./dist/index.js",
+    "style": "./dist/style.css",
+    "exports": {
+      ".": "./dist/index.js",
+      "./style.css": "./dist/style.css"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "@vueuse/core": "^10.7.0",
+    "vue": "^3.5.26"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^2.0.0"
+  }
+}
+

@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { UTable, UBadge, UButton, UInput, UEmpty, USplitter } from '@u-devtools/ui';
 import { AppBridge } from '@u-devtools/core';
 import type { ClientApi } from '@u-devtools/core';
+import { getStatusColor } from '@u-devtools/utils';
 import NetworkDetails from './NetworkDetails.vue';
 
 const props = defineProps<{
@@ -55,13 +56,6 @@ const selectedRequest = computed(() =>
   requests.value.find(r => r.id === selectedId.value)
 );
 
-const getStatusColor = (status?: number) => {
-  if (!status) return 'gray';
-  if (status >= 200 && status < 300) return 'green';
-  if (status >= 300 && status < 400) return 'blue';
-  if (status >= 400 && status < 500) return 'yellow';
-  return 'red';
-};
 
 const selectRequest = (row: NetRequest) => {
   selectedId.value = row.id;

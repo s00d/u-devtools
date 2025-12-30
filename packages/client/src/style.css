@@ -1,18 +1,12 @@
 @import "tailwindcss";
 
-/* Определяем вариант dark и здесь тоже (у каждого свой контекст сборки) */
-@variant dark (&:where(.dark, .dark *));
-
-/* Импортируем стили UI-кита через относительный путь */
+/* Импортируем тему */
 @import "../../ui/src/style.css";
 
-/* 
-  Сканируем компоненты клиента.
-  И плагины (так как они часть приложения в данном контексте),
-  но НЕ сканируем UI кит (он приедет готовым).
-*/
+/* Источники */
 @source "./**/*.{vue,ts}";
-@source "../../../plugins/**/src/**/*.vue";
+@source "../../ui/src/components/**/*.vue";
+@source "../../../plugins/**/src/**/*.vue"; /* Сканируем плагины */
 
 /* Глобальные настройки влияния на UI */
 :root {
@@ -22,8 +16,8 @@
 
 /* Применяем глобальный фон, используя переменные из UI */
 body {
-  background-color: var(--udt-bg);
-  color: var(--udt-text);
+  background-color: var(--color-udt-bg-root);
+  color: var(--color-udt-text);
   transition: background-color 0.1s ease, color 0.1s ease;
 }
 

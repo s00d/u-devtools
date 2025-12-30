@@ -29,6 +29,7 @@
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",
+    "@u-devtools/utils": "workspace:*",
     "@u-devtools/kit": "workspace:*",
     "@vue/devtools-core": "^8.0.5",
     "@vue/devtools-kit": "^8.0.5",
@@ -37,9 +38,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.27",
-    "@vitejs/plugin-vue": "^6.0.3",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "^5.9.3"
   }
 }

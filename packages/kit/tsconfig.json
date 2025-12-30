@@ -12,13 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
-    "jsx": "preserve",
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@u-devtools/core": ["../core/src"],
-      "@u-devtools/bridge": ["../bridge/src"]
-    }
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -1,18 +1,18 @@
 import { reactive, watch } from 'vue';
 import type { PluginClientInstance, SettingsApi } from '@u-devtools/core';
+import { safeJsonParse, safeJsonStringify } from '@u-devtools/utils';
 
 // Глобальное состояние настроек
 const globalState = reactive<Record<string, unknown>>({});
 const STORAGE_KEY = 'u-devtools-global-settings';
 
 // 1. Инициализация (Загрузка из LS)
-try {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    Object.assign(globalState, JSON.parse(saved));
+const saved = localStorage.getItem(STORAGE_KEY);
+if (saved) {
+  const parsed = safeJsonParse<Record<string, unknown>>(saved, {});
+  if (parsed) {
+    Object.assign(globalState, parsed);
   }
-} catch (e) {
-  console.error('Failed to load settings', e);
 }
 
 // 2. Автосохранение при любом изменении
@@ -20,7 +20,7 @@ watch(
   globalState,
   () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(globalState));
+      localStorage.setItem(STORAGE_KEY, safeJsonStringify(globalState));
     } catch (e) {
       // ignore quota errors
     }

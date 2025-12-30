@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import type { ClientApi } from '@u-devtools/core';
 import { AppBridge } from '@u-devtools/core';
 import { UButton, UInput, UBadge, UJsonTree, UEmpty } from '@u-devtools/ui';
+import { getLevelColor } from '@u-devtools/utils';
 
 const props = defineProps<{
   api: ClientApi;
@@ -41,20 +42,6 @@ const filteredLogs = computed(() => {
   return result;
 });
 
-const getLevelColor = (level: string) => {
-  switch (level) {
-    case 'error':
-      return 'red';
-    case 'warn':
-      return 'yellow';
-    case 'info':
-      return 'blue';
-    case 'debug':
-      return 'gray';
-    default:
-      return 'gray';
-  }
-};
 
 let unsubscribe: (() => void) | undefined;
 

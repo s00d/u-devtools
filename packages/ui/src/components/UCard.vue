@@ -9,16 +9,22 @@ defineProps<{
 
 <template>
   <div
-    :class="[
-      'border border-udt-c-border rounded-lg bg-udt-c-bg overflow-hidden',
-      hover ? 'hover:border-indigo-700 transition-colors' : '',
-    ]"
+    class="rounded-xl overflow-hidden shadow-sm transition-colors duration-300"
+    :style="{
+      border: '1px solid var(--udt-border)',
+      backgroundColor: 'var(--udt-bg-surface)'
+    }"
+    :class="hover ? 'hover:border-indigo-500/30' : ''"
   >
-    <div v-if="title || subtitle" class="border-b border-udt-c-border bg-gray-800 px-4 py-3">
-      <h3 v-if="title" class="font-semibold text-gray-100">{{ title }}</h3>
-      <p v-if="subtitle" class="text-sm text-gray-400 mt-1">{{ subtitle }}</p>
+    <div 
+      v-if="title || subtitle" 
+      class="px-5 py-4 border-b"
+      :style="{ borderColor: 'var(--udt-border)' }"
+    >
+      <h3 v-if="title" class="font-semibold text-base tracking-tight" :style="{ color: 'var(--udt-text)' }">{{ title }}</h3>
+      <p v-if="subtitle" class="text-xs mt-0.5" :style="{ color: 'var(--udt-text-dim)' }">{{ subtitle }}</p>
     </div>
-    <div :class="padding !== false ? 'p-4' : ''">
+    <div :class="padding !== false ? 'p-5' : ''">
       <slot />
     </div>
   </div>

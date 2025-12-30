@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* 1. Импортируем тему (переменные) из UI пакета */
+@import "../../ui/src/style.css";
+
+/* 2. Настраиваем источники сканирования (Sources) */
+/* Tailwind v4 смотрит сюда, чтобы понять, какие классы генерировать */
+
+/* Сканируем сам оверлей */
+@source "./**/*.{vue,ts}";
+
+/* Сканируем UI кит (чтобы сгенерировать стили для кнопок, которые мы импортируем) */
+@source "../../ui/src/components/**/*.vue";
+
+/* 3. Стили хоста (Shadow DOM) */
+:host {
+  @apply font-sans antialiased;
+  color: var(--color-udt-text);
+  line-height: 1.5;
+  --udt-z-index: 2147483647;
+}
+

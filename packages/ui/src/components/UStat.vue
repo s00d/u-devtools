@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <div
     :class="[
-      'p-4 border border-udt-c-border rounded',
+      'p-4 border border-udt-border rounded',
       color === 'indigo'
         ? 'bg-indigo-900/20 border-indigo-800'
         : color === 'green'

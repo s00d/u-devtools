@@ -12,7 +12,7 @@ const links = [
 </script>
 
 <template>
-  <div class="h-full overflow-auto bg-[#111827] text-gray-200 min-w-0 min-h-0">
+  <div class="h-full overflow-auto bg-[#09090b] text-[#f4f4f5] min-w-0 min-h-0">
     <div class="max-w-2xl mx-auto p-8 space-y-12">
       
       <!-- Header -->
@@ -23,7 +23,7 @@ const links = [
         
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">Universal DevTools</h1>
-          <p class="text-lg text-gray-400">
+          <p class="text-lg text-zinc-400">
             The framework-agnostic debugging suite for Vite applications.
           </p>
         </div>
@@ -42,18 +42,18 @@ const links = [
           :href="link.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-3 p-6 rounded-xl border border-gray-700 hover:border-indigo-500 hover:bg-gray-800/50 transition-all group"
+          class="flex flex-col items-center justify-center gap-3 p-6 rounded-xl border border-white/10 hover:border-indigo-500/50 hover:bg-white/5 transition-all group"
         >
-          <div class="p-3 bg-gray-800 rounded-full group-hover:bg-indigo-900/30 transition-colors">
-            <UIcon :name="link.icon" class="w-6 h-6 text-gray-400 group-hover:text-indigo-400" />
+          <div class="p-3 bg-black/30 rounded-full group-hover:bg-indigo-500/20 transition-colors">
+            <UIcon :name="link.icon" class="w-6 h-6 text-zinc-400 group-hover:text-indigo-400" />
           </div>
-          <span class="font-medium text-gray-200">{{ link.label }}</span>
+          <span class="font-medium text-zinc-200">{{ link.label }}</span>
         </a>
       </div>
 
       <!-- Footer -->
-      <div class="pt-8 border-t border-gray-800 text-center">
-        <p class="text-sm text-gray-500">
+      <div class="pt-8 border-t border-white/5 text-center">
+        <p class="text-sm text-zinc-500">
           Open Source (MIT) &copy; {{ new Date().getFullYear() }} Universal DevTools Team.
         </p>
       </div>

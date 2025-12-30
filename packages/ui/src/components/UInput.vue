@@ -102,6 +102,38 @@ const inputBorderRadiusClasses = computed(() => {
   
   return classes.join(' ');
 });
+
+const handleFocus = (e: FocusEvent) => {
+  const target = e.currentTarget as HTMLInputElement | null;
+  if (target) {
+    target.style.borderColor = 'rgba(99, 102, 241, 0.5)';
+    target.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+  }
+  emit('focus', e);
+};
+
+const handleBlur = (e: FocusEvent) => {
+  const target = e.currentTarget as HTMLInputElement | null;
+  if (target) {
+    target.style.borderColor = 'transparent';
+    target.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+  }
+  emit('blur', e);
+};
+
+const handleMouseEnter = (e: MouseEvent) => {
+  const target = e.currentTarget as HTMLInputElement | null;
+  if (target && window.document.activeElement !== target) {
+    target.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+  }
+};
+
+const handleMouseLeave = (e: MouseEvent) => {
+  const target = e.currentTarget as HTMLInputElement | null;
+  if (target && window.document.activeElement !== target) {
+    target.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+  }
+};
 </script>
 
 <template>
@@ -109,7 +141,12 @@ const inputBorderRadiusClasses = computed(() => {
     <!-- Prepend (внешний текст слева) -->
     <div
       v-if="hasPrepend"
-      class="udt-input-prepend flex items-center px-3 border border-r-0 border-gray-600 rounded-l bg-gray-700 text-gray-300"
+      class="udt-input-prepend flex items-center px-3 border border-r-0 rounded-l"
+      :style="{
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        color: 'var(--udt-text)'
+      }"
       :class="prependSizeClasses"
     >
       <slot name="prepend">
@@ -142,16 +179,25 @@ const inputBorderRadiusClasses = computed(() => {
         :disabled="disabled"
         :readonly="readonly"
         :class="[
-          'udt-input w-full border border-gray-600 rounded focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 bg-gray-800 text-gray-200 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed',
+          'udt-input w-full border border-transparent rounded-lg transition-all duration-200',
+          'focus:outline-none focus:ring-4 focus:ring-indigo-500/20',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
           sizeClasses,
           inputPaddingClasses,
           inputBorderRadiusClasses,
           hasPrefix ? (!hasPrepend ? 'pl-8' : 'pl-10') : '',
           hasSuffix ? (!hasAppend ? 'pr-8' : 'pr-10') : '',
         ]"
+        :style="{
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          color: 'var(--udt-text)',
+          borderColor: 'transparent'
+        }"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-        @focus="emit('focus', $event)"
-        @blur="emit('blur', $event)"
         @keydown="handleKeydown"
         @keyup="emit('keyup', $event)"
       />
@@ -166,8 +212,8 @@ const inputBorderRadiusClasses = computed(() => {
         }"
       >
         <slot name="suffix">
-          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="(size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5') + ' text-gray-400'" />
-          <span v-else-if="suffix" class="text-xs text-gray-400">{{ suffix }}</span>
+          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5'" :style="{ color: 'var(--udt-text-dim)' }" />
+          <span v-else-if="suffix" class="text-xs" :style="{ color: 'var(--udt-text-dim)' }">{{ suffix }}</span>
         </slot>
       </div>
     </div>
@@ -175,7 +221,12 @@ const inputBorderRadiusClasses = computed(() => {
     <!-- Append (внешний текст справа) -->
     <div
       v-if="hasAppend"
-      class="udt-input-append flex items-center px-3 border border-l-0 border-gray-600 rounded-r bg-gray-700 text-gray-300"
+      class="udt-input-append flex items-center px-3 border border-l-0 rounded-r"
+      :style="{
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        color: 'var(--udt-text)'
+      }"
       :class="appendSizeClasses"
     >
       <slot name="append">

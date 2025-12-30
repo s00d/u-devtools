@@ -13,40 +13,40 @@ const onUpdate = (payload: { prop: string; value: string }) => {
 </script>
 
 <template>
-  <div class="box-model-container select-none font-mono text-[10px] leading-none">
+  <div class="flex justify-center py-4 select-none font-mono text-[10px] leading-none">
     
-    <!-- MARGIN -->
-    <div class="layer margin group">
-      <div class="label text-[#b45309] dark:text-[#fde68a]">margin</div>
+    <!-- MARGIN (Orange) -->
+    <div class="box-layer margin">
+      <div class="label top-left text-[#b45309] dark:text-[#fde68a]">margin</div>
       
-      <div class="pos top"><BoxValue :value="styles.marginTop" prop="marginTop" position="top" @update="onUpdate" /></div>
-      <div class="pos bottom"><BoxValue :value="styles.marginBottom" prop="marginBottom" position="bottom" @update="onUpdate" /></div>
-      <div class="pos left"><BoxValue :value="styles.marginLeft" prop="marginLeft" position="left" @update="onUpdate" /></div>
-      <div class="pos right"><BoxValue :value="styles.marginRight" prop="marginRight" position="right" @update="onUpdate" /></div>
+      <div class="val top"><BoxValue :value="styles.marginTop" prop="marginTop" @update="onUpdate" /></div>
+      <div class="val bottom"><BoxValue :value="styles.marginBottom" prop="marginBottom" @update="onUpdate" /></div>
+      <div class="val left"><BoxValue :value="styles.marginLeft" prop="marginLeft" @update="onUpdate" /></div>
+      <div class="val right"><BoxValue :value="styles.marginRight" prop="marginRight" @update="onUpdate" /></div>
 
-      <!-- BORDER -->
-      <div class="layer border-layer">
-        <div class="label text-[#854d0e] dark:text-[#fef3c7]">border</div>
+      <!-- BORDER (Yellow) -->
+      <div class="box-layer border-layer">
+        <div class="label top-left text-[#854d0e] dark:text-[#fef3c7]">border</div>
         
-        <div class="pos top"><BoxValue :value="styles.borderTopWidth" prop="borderTopWidth" position="top" @update="onUpdate" /></div>
-        <div class="pos bottom"><BoxValue :value="styles.borderBottomWidth" prop="borderBottomWidth" position="bottom" @update="onUpdate" /></div>
-        <div class="pos left"><BoxValue :value="styles.borderLeftWidth" prop="borderLeftWidth" position="left" @update="onUpdate" /></div>
-        <div class="pos right"><BoxValue :value="styles.borderRightWidth" prop="borderRightWidth" position="right" @update="onUpdate" /></div>
+        <div class="val top"><BoxValue :value="styles.borderTopWidth" prop="borderTopWidth" @update="onUpdate" /></div>
+        <div class="val bottom"><BoxValue :value="styles.borderBottomWidth" prop="borderBottomWidth" @update="onUpdate" /></div>
+        <div class="val left"><BoxValue :value="styles.borderLeftWidth" prop="borderLeftWidth" @update="onUpdate" /></div>
+        <div class="val right"><BoxValue :value="styles.borderRightWidth" prop="borderRightWidth" @update="onUpdate" /></div>
 
-        <!-- PADDING -->
-        <div class="layer padding">
-          <div class="label text-[#166534] dark:text-[#86efac]">padding</div>
+        <!-- PADDING (Green) -->
+        <div class="box-layer padding">
+          <div class="label top-left text-[#166534] dark:text-[#86efac]">padding</div>
           
-          <div class="pos top"><BoxValue :value="styles.paddingTop" prop="paddingTop" position="top" @update="onUpdate" /></div>
-          <div class="pos bottom"><BoxValue :value="styles.paddingBottom" prop="paddingBottom" position="bottom" @update="onUpdate" /></div>
-          <div class="pos left"><BoxValue :value="styles.paddingLeft" prop="paddingLeft" position="left" @update="onUpdate" /></div>
-          <div class="pos right"><BoxValue :value="styles.paddingRight" prop="paddingRight" position="right" @update="onUpdate" /></div>
+          <div class="val top"><BoxValue :value="styles.paddingTop" prop="paddingTop" @update="onUpdate" /></div>
+          <div class="val bottom"><BoxValue :value="styles.paddingBottom" prop="paddingBottom" @update="onUpdate" /></div>
+          <div class="val left"><BoxValue :value="styles.paddingLeft" prop="paddingLeft" @update="onUpdate" /></div>
+          <div class="val right"><BoxValue :value="styles.paddingRight" prop="paddingRight" @update="onUpdate" /></div>
 
-          <!-- CONTENT -->
-          <div class="layer content">
-            <BoxValue :value="styles.width" prop="width" position="center" @update="onUpdate" />
+          <!-- CONTENT (Blue) -->
+          <div class="box-layer content">
+            <BoxValue :value="styles.width" prop="width" @update="onUpdate" />
             <span class="mx-1 opacity-50">×</span>
-            <BoxValue :value="styles.height" prop="height" position="center" @update="onUpdate" />
+            <BoxValue :value="styles.height" prop="height" @update="onUpdate" />
           </div>
         </div>
       </div>
@@ -55,48 +55,89 @@ const onUpdate = (payload: { prop: string; value: string }) => {
 </template>
 
 <style scoped>
-.box-model-container {
-  display: flex;
-  justify-content: center;
-  padding: 10px 0;
-}
+@reference "tailwindcss";
 
-.layer {
+/* Общие стили слоев */
+.box-layer {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 2px;
+  transition: background-color 0.2s;
 }
 
-/* Labels (margin, border...) */
+/* Лейблы (margin, border...) */
 .label {
   position: absolute;
-  top: 2px;
-  left: 3px;
   font-size: 8px;
   opacity: 0.7;
   pointer-events: none;
   text-transform: uppercase;
 }
+.label.top-left { top: 2px; left: 3px; }
 
-/* Positioning helpers */
-.pos { position: absolute; display: flex; justify-content: center; align-items: center; }
-.pos.top { top: 2px; left: 0; width: 100%; }
-.pos.bottom { bottom: 2px; left: 0; width: 100%; }
-.pos.left { left: 4px; top: 0; height: 100%; }
-.pos.right { right: 4px; top: 0; height: 100%; }
+/* Позиционирование значений */
+.val { position: absolute; display: flex; justify-content: center; align-items: center; }
+.val.top { top: 2px; left: 0; width: 100%; }
+.val.bottom { bottom: 2px; left: 0; width: 100%; }
+.val.left { left: 2px; top: 0; height: 100%; display: flex; align-items: center; }
+.val.right { right: 2px; top: 0; height: 100%; display: flex; align-items: center; }
 
-/* Colors (Light) */
-.margin { background-color: #f9cc9d; color: #333; padding: 24px; }
-.border-layer { background-color: #fceea7; color: #333; padding: 24px; width: 100%; height: 100%; }
-.padding { background-color: #c3e5b3; color: #333; padding: 24px; width: 100%; height: 100%; }
-.content { background-color: #9ccbf7; color: #333; width: 90px; height: 30px; display: flex; align-items: center; justify-content: center; }
+/* 
+  ЦВЕТА (Chrome DevTools Style) 
+  Используем фиксированные цвета для узнаваемости, но адаптируем под темную тему 
+*/
 
-/* Colors (Dark) */
-:global(.dark) .margin { background-color: #573b22; color: #eebb8a; border-color: transparent; }
-:global(.dark) .border-layer { background-color: #594f26; color: #eadc8e; border-color: transparent; }
-:global(.dark) .padding { background-color: #2e4526; color: #acd49b; border-color: transparent; }
-:global(.dark) .content { background-color: #233e56; color: #94c1e8; border-color: transparent; }
+/* Margin */
+.margin { 
+  background-color: #f9cc9d; 
+  color: #333; 
+  padding: 24px; 
+}
+:global(.dark) .margin { 
+  background-color: #3f2e1e; /* Темно-оранжевый */
+  color: #eebb8a; 
+  border-color: #553e2a; 
+}
+
+/* Border */
+.border-layer { 
+  background-color: #fceea7; 
+  color: #333; 
+  padding: 24px; 
+  width: 100%; height: 100%; 
+}
+:global(.dark) .border-layer { 
+  background-color: #3f3a1e; /* Темно-желтый */
+  color: #eadc8e; 
+  border-color: #56502a;
+}
+
+/* Padding */
+.padding { 
+  background-color: #c3e5b3; 
+  color: #333; 
+  padding: 24px; 
+  width: 100%; height: 100%; 
+}
+:global(.dark) .padding { 
+  background-color: #21351e; /* Темно-зеленый */
+  color: #acd49b; 
+  border-color: #2e4a2a;
+}
+
+/* Content */
+.content { 
+  background-color: #9ccbf7; 
+  color: #333; 
+  min-width: 80px; height: 26px; 
+  display: flex; align-items: center; justify-content: center; 
+}
+:global(.dark) .content { 
+  background-color: #1e2b3f; /* Темно-синий */
+  color: #94c1e8; 
+  border-color: #2a3c56;
+}
 </style>

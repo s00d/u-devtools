@@ -77,15 +77,15 @@ onMounted(() => {
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
     <div
-      class="relative w-[500px] bg-gray-800 rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[60vh] animate-fade-in"
+      class="relative w-[500px] bg-[#18181b]/95 backdrop-blur-md rounded-xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[60vh] animate-fade-in"
     >
-      <div class="p-3 border-b border-gray-700">
+      <div class="p-3 border-b border-white/5">
         <div class="relative">
-          <UIcon name="MagnifyingGlass" class="absolute left-3 top-2.5 text-gray-500 w-5 h-5" />
+          <UIcon name="MagnifyingGlass" class="absolute left-3 top-2.5 text-zinc-500 w-5 h-5" />
           <input
             ref="inputRef"
             v-model="search"
-            class="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-gray-200 placeholder-gray-500"
+            class="w-full pl-10 pr-4 py-2.5 bg-black/20 border border-transparent rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500/50 text-zinc-200 placeholder-zinc-600 transition-all duration-200 hover:bg-black/40"
             placeholder="Type a command..."
             @keydown="onKeydown"
           />
@@ -96,11 +96,11 @@ onMounted(() => {
         <div
           v-for="(cmd, idx) in filteredCommands"
           :key="cmd.id"
-          class="flex items-center gap-3 px-3 py-2.5 rounded cursor-pointer transition-colors"
+          class="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200"
           :class="
             idx === selectedIndex
-              ? 'bg-indigo-500 text-white'
-              : 'hover:bg-gray-700 text-gray-200'
+              ? 'bg-indigo-500/20 text-white border border-indigo-500/30'
+              : 'hover:bg-white/5 text-zinc-200'
           "
           @click="execute(cmd)"
           @mousemove="selectedIndex = idx"
@@ -114,19 +114,19 @@ onMounted(() => {
             <span
               v-for="k in cmd.shortcut"
               :key="k"
-              class="bg-gray-600/50 px-1.5 rounded text-xs font-mono"
+              class="bg-white/10 px-1.5 rounded text-xs font-mono"
             >
               {{ k }}
             </span>
           </div>
         </div>
 
-        <div v-if="filteredCommands.length === 0" class="p-8 text-center text-gray-500">
+        <div v-if="filteredCommands.length === 0" class="p-8 text-center text-zinc-500">
           No commands found
         </div>
       </div>
 
-      <div class="bg-gray-700 border-t border-gray-600 px-3 py-1.5 text-xs text-gray-500 flex justify-between">
+      <div class="bg-black/20 border-t border-white/5 px-3 py-1.5 text-xs text-zinc-500 flex justify-between">
         <span>Arguments are not supported yet</span>
         <div class="flex gap-2">
           <span>⇅ Navigate</span>

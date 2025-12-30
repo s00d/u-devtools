@@ -4,7 +4,7 @@ import { UButton, UEmpty, UIcon, UTabs, USplitter } from '@u-devtools/ui';
 import type { ClientApi } from '@u-devtools/core';
 import { useInspector } from '../composables/useInspector';
 import { useElementData, type ElementInfo } from '../composables/useElementData';
-import DomTree from './components/DomTree.vue';
+import DomTreeAdapter from './components/DomTreeAdapter.vue';
 import ComputedTab from './tabs/ComputedTab.vue';
 import StylesTab from './tabs/StylesTab.vue';
 import A11yTab from './tabs/A11yTab.vue';
@@ -74,7 +74,7 @@ onUnmounted(() => {
         
         <!-- LEFT: DOM TREE -->
         <template #left>
-          <DomTree :domContext="data.domContext" @select-node="handleSelectNode" />
+          <DomTreeAdapter :domContext="data.domContext" @select-node="handleSelectNode" />
         </template>
 
         <!-- RIGHT: DETAILS PANELS -->

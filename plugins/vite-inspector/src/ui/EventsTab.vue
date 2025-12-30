@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { UButton, UInput, USelect, UBadge, ULoading, UJsonTree, UIcon } from '@u-devtools/ui';
 import type { ClientApi } from '@u-devtools/core';
+import { formatTime } from '@u-devtools/utils';
 
 const props = defineProps<{ api: ClientApi }>();
 
@@ -49,16 +50,6 @@ const clearEvents = async () => {
   }
 };
 
-const formatTime = (timestamp: number) => {
-  const date = new Date(timestamp);
-  const time = date.toLocaleTimeString('ru-RU', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-  const ms = date.getMilliseconds().toString().padStart(3, '0');
-  return `${time}.${ms}`;
-};
 
 const getEventColor = (type: ViteEvent['type']): 'gray' | 'red' | 'green' | 'yellow' | 'blue' => {
   const colors: Record<ViteEvent['type'], 'gray' | 'red' | 'green' | 'yellow' | 'blue'> = {

@@ -159,16 +159,16 @@ watch(showSettings, (val) => {
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" 
     @click.self="showSettings = false"
   >
-    <div class="bg-[#111827] rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-gray-700">
+    <div class="bg-[#18181b]/95 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-white/10">
       
       <!-- Sidebar -->
-      <div class="w-64 bg-[#1f2937] border-r border-gray-700 flex flex-col shrink-0">
-        <div class="p-4 font-bold text-lg text-white border-b border-gray-700">Settings</div>
+      <div class="w-64 bg-[#18181b] border-r border-white/5 flex flex-col shrink-0">
+        <div class="p-4 font-bold text-lg text-white border-b border-white/5">Settings</div>
         <div class="flex-1 overflow-y-auto p-2 space-y-1">
           <button 
             @click="activeSettingsTab = 'General'" 
-            class="w-full text-left px-3 py-2 rounded-md text-sm flex items-center gap-2 transition-colors" 
-            :class="activeSettingsTab === 'General' ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-400 hover:bg-gray-700'"
+            class="w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-all duration-200" 
+            :class="activeSettingsTab === 'General' ? 'bg-white/10 text-white font-medium shadow-sm' : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'"
           >
             <UIcon name="Cog6Tooth" class="w-4 h-4" /> 
             General
@@ -177,8 +177,8 @@ watch(showSettings, (val) => {
             v-for="plugin in plugins.filter(p => p.settings)" 
             :key="plugin.name" 
             @click="activeSettingsTab = plugin.name" 
-            class="w-full text-left px-3 py-2 rounded-md text-sm flex items-center gap-2 transition-colors" 
-            :class="activeSettingsTab === plugin.name ? 'bg-indigo-900/30 text-indigo-300 font-medium' : 'text-gray-400 hover:bg-gray-700'"
+            class="w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-all duration-200" 
+            :class="activeSettingsTab === plugin.name ? 'bg-white/10 text-white font-medium shadow-sm' : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'"
           >
             <UIcon :name="plugin.icon" class="w-4 h-4" /> 
             {{ plugin.name }}
@@ -187,10 +187,10 @@ watch(showSettings, (val) => {
       </div>
 
       <!-- Content -->
-      <div class="flex-1 flex flex-col min-w-0">
-        <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-[#111827]">
+      <div class="flex-1 flex flex-col min-w-0 bg-[#09090b]">
+        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-[#18181b]/50 backdrop-blur-sm">
           <h2 class="font-bold text-white">{{ activeSettingsTab }}</h2>
-          <button @click="showSettings = false" class="text-gray-400 hover:text-gray-200">
+          <button @click="showSettings = false" class="text-zinc-400 hover:text-zinc-200 transition-colors">
             <UIcon name="XMark" class="w-6 h-6" />
           </button>
         </div>
@@ -203,10 +203,10 @@ watch(showSettings, (val) => {
             />
             
             <!-- Danger Zone: Factory Reset -->
-            <div class="mt-8 pt-6 border-t border-gray-700">
+            <div class="mt-8 pt-6 border-t border-white/5">
               <h3 class="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
               <div class="flex items-center justify-between">
-                <p class="text-xs text-gray-400">Reset all settings (general and plugins) to default.</p>
+                <p class="text-xs text-zinc-400">Reset all settings (general and plugins) to default.</p>
                 <UButton variant="danger" size="sm" @click="resetAllSettings">
                   Factory Reset
                 </UButton>

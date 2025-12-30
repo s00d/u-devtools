@@ -5,7 +5,7 @@ import { USplitter, UButton, UIcon, UInput, UModal, ULoading, UEmpty } from '@u-
 import { flattenTranslations, unflattenTranslations } from '../util/i18nUtils';
 import type { TranslationContent, LocaleData, TreeNode, ModuleOptions } from '../types';
 import { Translator, type DriverType } from '../util/Translator';
-import TreeItem from './TreeItem.vue';
+import FileTreeView from './FileTreeView.vue';
 
 const props = defineProps<{
   api: ClientApi;
@@ -409,18 +409,11 @@ watch(selectedFileContent, (newContent) => {
     <USplitter v-else :default-size="280" :min="150">
       <template #left>
         <!-- Locales List -->
-        <div class="h-full overflow-y-auto p-2 bg-gray-800">
-          <div class="space-y-1">
-            <TreeItem
-              v-for="node in tree"
-              :key="node.fullPath"
-              :node="node"
-              :selected-file="selectedFile"
-              :depth="0"
-              @file-selected="handleFileSelected"
-            />
-          </div>
-        </div>
+        <FileTreeView
+          :tree="tree"
+          :selected-file="selectedFile"
+          @file-selected="handleFileSelected"
+        />
       </template>
 
       <template #right>

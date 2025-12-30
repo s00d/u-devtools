@@ -1,5 +1,5 @@
 import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
-import { safeResolve } from '@u-devtools/core';
+import { safeResolve } from '@u-devtools/utils-node';
 import fs from 'node:fs/promises';
 import * as path from 'node:path';
 import jsonToAst from 'json-to-ast';

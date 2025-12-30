@@ -27,11 +27,19 @@ export function createViteConfig({ entry, name, dir, external = [], clearScreen 
       lib: {
         entry: resolve(dir, entry),
         name,
-        fileName: (format) => `index.${format === 'es' ? 'es' : 'cjs'}.js`,
+        fileName: (format: string) => `index.${format === 'es' ? 'es' : 'cjs'}.js`,
         formats: ['es', 'cjs'],
       },
       rollupOptions: {
-        external: ['vue', 'vite', '@u-devtools/core', ...external],
+        external: (id: string) => {
+          // Always externalize vue, vite, and @u-devtools/core
+          if (id === 'vue' || id === 'vite' || id === '@u-devtools/core') return true;
+          // Externalize all node: modules
+          if (id.startsWith('node:')) return true;
+          // Externalize custom externals
+          if (external.includes(id)) return true;
+          return false;
+        },
         output: {
           globals: {
             vue: 'Vue',
