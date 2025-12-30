@@ -7,7 +7,8 @@
   "types": "./src/index.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
@@ -40,6 +41,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "packages/ui"
+  },
   "devDependencies": {
     "typescript": "^5.9.3",
     "vue": "^3.5.26",

@@ -1,41 +1,28 @@
 # @u-devtools/plugin-inspector
 
-DOM element inspector plugin for Universal DevTools.
+Element inspector plugin for Universal DevTools. Inspect and edit DOM elements, attributes, styles, and classes.
 
-## Features
+## Installation
 
-- Visual element selection (overlay)
-- Element attributes table
-- Text content preview
-- Cross-frame communication via BroadcastChannel
+```bash
+npm install -D @u-devtools/plugin-inspector
+```
 
 ## Usage
 
 ```ts
-// vite.config.ts
-import { defineConfig } from 'vite';
-import { createDevTools } from '@u-devtools/vite';
 import { inspectorPlugin } from '@u-devtools/plugin-inspector';
+import { createDevTools } from '@u-devtools/vite';
 
 export default defineConfig({
   plugins: [
     createDevTools({
-      plugins: [
-        inspectorPlugin()
-      ]
+      plugins: [inspectorPlugin()]
     })
   ]
 });
 ```
 
-## How it works
+## Repository
 
-1. Click "Select Element" button in DevTools
-2. Hover over elements on the page (they will be highlighted)
-3. Click an element to inspect its properties
-4. View attributes and content in the DevTools panel
-
-## License
-
-MIT
-
+[GitHub](https://github.com/s00d/u-devtools/tree/main/plugins/inspector)

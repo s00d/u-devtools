@@ -9,7 +9,8 @@
   },
   "files": [
     "dist",
-    "_templates"
+    "_templates",
+    "README.md"
   ],
   "publishConfig": {
     "main": "./dist/index.js",
@@ -35,6 +36,11 @@
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "packages/create"
+  },
   "dependencies": {
     "hygen": "^6.2.11"
   },

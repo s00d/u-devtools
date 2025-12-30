@@ -13,8 +13,18 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "README.md"
   ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "plugins/package-inspector"
+  },
   "publishConfig": {
     "access": "public",
     "main": "./dist/index.js",

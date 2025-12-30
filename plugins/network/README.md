@@ -1,40 +1,28 @@
 # @u-devtools/plugin-network
 
-Network request logger plugin for Universal DevTools.
+Network logger plugin for Universal DevTools. Intercepts and logs all fetch/XHR requests with detailed information.
 
-## Features
+## Installation
 
-- Intercepts `fetch` requests
-- Real-time request monitoring
-- Status code badges (color-coded)
-- Request duration tracking
-- URL filtering
-- Request history (up to 100 requests)
+```bash
+npm install -D @u-devtools/plugin-network
+```
 
 ## Usage
 
 ```ts
-// vite.config.ts
-import { defineConfig } from 'vite';
-import { createDevTools } from '@u-devtools/vite';
 import { networkPlugin } from '@u-devtools/plugin-network';
+import { createDevTools } from '@u-devtools/vite';
 
 export default defineConfig({
   plugins: [
     createDevTools({
-      plugins: [
-        networkPlugin()
-      ]
+      plugins: [networkPlugin()]
     })
   ]
 });
 ```
 
-## Commands
+## Repository
 
-- `net.clear` - Clear request history
-
-## License
-
-MIT
-
+[GitHub](https://github.com/s00d/u-devtools/tree/main/plugins/network)

@@ -7,7 +7,9 @@
   "module": "./src/index.ts",
   "types": "./src/index.ts",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
@@ -30,6 +32,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "packages/kit"
+  },
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/bridge": "workspace:*",

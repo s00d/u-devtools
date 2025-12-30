@@ -7,7 +7,8 @@
   "type": "module",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
@@ -33,6 +34,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "plugins/i18n"
+  },
   "dependencies": {
     "@u-devtools/core": "workspace:*",
     "@u-devtools/ui": "workspace:*",

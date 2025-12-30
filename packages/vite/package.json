@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/username/u-devtools.git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
     "directory": "packages/vite"
   },
   "main": "./src/index.ts",

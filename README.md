@@ -1,8 +1,11 @@
 # 🛠️ Universal DevTools Kit
 
-![npm version](https://img.shields.io/npm/v/@u-devtools/vite?color=indigo&style=flat-square)
-![license](https://img.shields.io/npm/l/@u-devtools/vite?style=flat-square)
-![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
+[![npm version](https://img.shields.io/npm/v/@u-devtools/vite?color=indigo&style=flat-square)](https://www.npmjs.com/package/@u-devtools/vite)
+[![license](https://img.shields.io/npm/l/@u-devtools/vite?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![GitHub](https://img.shields.io/github/stars/s00d/u-devtools?style=flat-square)](https://github.com/s00d/u-devtools)
+
+> A comprehensive framework for building custom DevTools tailored to your specific needs.
 
 ## What is Universal DevTools Kit?
 
@@ -3511,7 +3514,11 @@ Components automatically support dark mode. Use Tailwind CSS classes for additio
 
 This project is a monorepo managed by pnpm.
 
-1. Clone the repository.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/s00d/u-devtools.git
+   cd u-devtools
+   ```
 2. Install dependencies: `pnpm install`.
 3. Build packages: `pnpm build`.
 4. Run the playground: `cd playground && pnpm dev`.

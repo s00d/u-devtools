@@ -20,8 +20,17 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "packages/overlay"
+  },
   "scripts": {
     "build": "vite build",
     "typecheck": "vue-tsc --noEmit",

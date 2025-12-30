@@ -1,29 +1,24 @@
 # @u-devtools/plugin-i18n
 
-Translation management plugin for Universal DevTools.
+Translation management plugin for Universal DevTools. Visual JSON editor for i18n files with auto-save.
 
-## Features
+## Installation
 
-- Visual JSON editor
-- Auto-save to disk
-- "Open in Editor" support (jump to key location in VS Code)
-- Persistent file selection (remembers last opened file)
+```bash
+npm install -D @u-devtools/plugin-i18n
+```
 
 ## Usage
 
 ```ts
-// vite.config.ts
-import { defineConfig } from 'vite';
-import { createDevTools } from '@u-devtools/vite';
 import { i18nPlugin } from '@u-devtools/plugin-i18n';
+import { createDevTools } from '@u-devtools/vite';
 
 export default defineConfig({
   plugins: [
     createDevTools({
       plugins: [
-        i18nPlugin({
-          dir: 'src/locales' // Path to your JSON files
-        })
+        i18nPlugin({ dir: 'src/locales' })
       ]
     })
   ]
@@ -32,13 +27,8 @@ export default defineConfig({
 
 ## Options
 
-- `dir` (string, required): Path to directory containing JSON translation files.
+- `dir` (string, required): Path to directory containing JSON translation files
 
-## Commands
+## Repository
 
-- `i18n.refresh` - Refresh translations from disk
-
-## License
-
-MIT
-
+[GitHub](https://github.com/s00d/u-devtools/tree/main/plugins/i18n)

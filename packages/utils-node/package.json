@@ -17,8 +17,18 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "README.md"
   ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "packages/utils-node"
+  },
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit",
