@@ -11,12 +11,6 @@
 
 [![Universal DevTools Kit Preview](https://img.youtube.com/vi/e48xwfp9W-0/0.jpg)](https://www.youtube.com/watch?v=e48xwfp9W-0 "Universal DevTools Kit Preview")
 
-<iframe width="560" height="315"
-src="https://www.youtube.com/watch?v=e48xwfp9W-0" 
-frameborder="0" 
-allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-allowfullscreen></iframe>
-
 *Click the image above to watch the demo video*
 
 ## What is Universal DevTools Kit?
