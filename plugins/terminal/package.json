@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-terminal",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Terminal plugin for running npm scripts from DevTools",
   "type": "module",
   "main": "./dist/index.js",

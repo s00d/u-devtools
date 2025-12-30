@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-network",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Network logger plugin for Universal DevTools",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

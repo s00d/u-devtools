@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-package-inspector",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Package Inspector plugin for viewing dependencies from package.json",
   "type": "module",
   "main": "./dist/index.js",

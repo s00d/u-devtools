@@ -1,6 +1,6 @@
 {
   "name": "create-u-devtools",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "CLI tool to scaffold Universal DevTools plugins",
   "type": "module",
   "bin": {
