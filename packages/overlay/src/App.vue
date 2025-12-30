@@ -74,11 +74,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="udt-overlay font-sans text-gray-800">
+  <div class="udt-overlay font-sans text-gray-200">
 
     <!-- IFRAME CONTAINER -->
     <div
-      class="fixed bottom-0 left-0 w-full bg-white dark:bg-[#0f172a] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] flex flex-col transition-transform duration-300 ease-in-out"
+      class="fixed bottom-0 left-0 w-full bg-slate-900 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] flex flex-col transition-transform duration-300 ease-in-out"
       :style="{
         height: `${height}px`,
         zIndex: 2147483647,
@@ -95,7 +95,7 @@ onMounted(() => {
         @pointerdown="onPointerDown"
       >
         <div
-          class="w-full h-[1px] bg-gray-200 dark:bg-gray-700 transition-all group-hover:bg-indigo-500 group-hover:h-[2px]"
+          class="w-full h-[1px] bg-gray-700 transition-all group-hover:bg-indigo-500 group-hover:h-[2px]"
         />
       </div>
 
@@ -106,7 +106,7 @@ onMounted(() => {
 
       <iframe
         :src="`${props.base}/index.html`"
-        class="w-full h-full border-none bg-white dark:bg-[#0f172a]"
+        class="w-full h-full border-none bg-slate-900"
       />
     </div>
 

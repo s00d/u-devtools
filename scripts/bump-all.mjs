@@ -29,8 +29,8 @@ function getPackages() {
   const packagesDir = join(rootDir, 'packages');
   if (existsSync(packagesDir)) {
     const dirs = readdirSync(packagesDir, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .map(d => d.name);
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
 
     for (const dir of dirs) {
       const pkgPath = join(packagesDir, dir, 'package.json');
@@ -51,8 +51,8 @@ function getPackages() {
   const pluginsDir = join(rootDir, 'plugins');
   if (existsSync(pluginsDir)) {
     const dirs = readdirSync(pluginsDir, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .map(d => d.name);
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
 
     for (const dir of dirs) {
       const pkgPath = join(pluginsDir, dir, 'package.json');
@@ -111,4 +111,3 @@ function main() {
 }
 
 main();
-

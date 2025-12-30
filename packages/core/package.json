@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Core types and interfaces for Universal DevTools",
   "keywords": [
     "devtools",

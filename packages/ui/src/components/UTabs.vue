@@ -7,7 +7,6 @@ defineProps<{
 defineEmits<{
   'update:modelValue': [value: string];
 }>();
-
 </script>
 
 <template>

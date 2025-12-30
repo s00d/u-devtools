@@ -40,7 +40,7 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
         :class="isSidebarExpanded ? 'px-4' : 'justify-center'"
       >
         <!-- Логотип с градиентом -->
-        <div v-if="!isSidebarExpanded" class="w-8 h-8 rounded bg-gradient-to-br from-[#18181b] to-[#27272a] border border-white/10 flex items-center justify-center shadow-sm">
+        <div v-if="!isSidebarExpanded" class="w-8 h-8 rounded bg-gradient-to-br from-zinc-900 to-zinc-800 border border-white/10 flex items-center justify-center shadow-sm">
           <UIcon name="WrenchScrewdriver" class="w-4 h-4 text-indigo-400" />
         </div>
 

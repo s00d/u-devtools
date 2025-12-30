@@ -66,7 +66,10 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
       // Если src/main.ts существует, используем его, иначе fallback на dist/main.js
       const clientSrcPath = path.resolve(clientRoot, 'src/main.ts');
-      const clientDistPath = path.resolve(clientRoot, clientPkg.publishConfig?.main || 'dist/main.js');
+      const clientDistPath = path.resolve(
+        clientRoot,
+        clientPkg.publishConfig?.main || 'dist/main.js'
+      );
       clientEntryPath = fs.existsSync(clientSrcPath) ? clientSrcPath : clientDistPath;
 
       // 2. Overlay
@@ -75,7 +78,10 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const overlayPkg = require(overlayPkgPath);
       // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
       const overlaySrcPath = path.resolve(overlayRoot, 'src/main.ts');
-      const overlayDistPath = path.resolve(overlayRoot, overlayPkg.publishConfig?.main || 'dist/index.js');
+      const overlayDistPath = path.resolve(
+        overlayRoot,
+        overlayPkg.publishConfig?.main || 'dist/index.js'
+      );
       overlayEntryPath = fs.existsSync(overlaySrcPath) ? overlaySrcPath : overlayDistPath;
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : String(e);
@@ -238,7 +244,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       // 1. Поиск плагинов в NPM (через npm search)
       rpcServer.handle('sys:plugins:search', async (payload: unknown) => {
         const query = payload as string;
-        const text = query || 'keywords:u-devtools';
+        const text = query || 'keywords:u-devtools-plugin';
 
         try {
           // Используем 'npm search' с флагом --json.
@@ -262,10 +268,8 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
                   name: pkg.name,
                   version: pkg.version,
                   description: pkg.description || 'No description',
-                  author:
-                    pkg.maintainers?.[0]?.username || pkg.author?.name || 'Unknown',
-                  homepage:
-                    pkg.links?.npm || `https://www.npmjs.com/package/${pkg.name}`,
+                  author: pkg.maintainers?.[0]?.username || pkg.author?.name || 'Unknown',
+                  homepage: pkg.links?.npm || `https://www.npmjs.com/package/${pkg.name}`,
                 })
               )
             : [];

@@ -16,7 +16,7 @@ const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
       class="h-12 border-b flex items-center px-4 font-semibold text-xs uppercase tracking-wider border-zinc-800 bg-zinc-950/70 backdrop-blur-xl text-gray-400"
     >
       <!-- Logo Icon -->
-      <div class="w-6 h-6 rounded bg-gradient-to-br from-[#18181b] to-[#27272a] border border-white/10 flex items-center justify-center shadow-sm mr-2">
+      <div class="w-6 h-6 rounded bg-gradient-to-br from-zinc-900 to-zinc-800 border border-white/10 flex items-center justify-center shadow-sm mr-2">
         <UIcon :name="currentPlugin.icon" class="w-3.5 h-3.5 text-indigo-400" />
       </div>
       <!-- Plugin Name -->

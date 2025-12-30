@@ -71,7 +71,7 @@ const cancel = () => {
     :title="`Change ${prop}`"
   >
     <!-- View Mode -->
-    <span v-if="!isEditing" class="truncate max-w-[50px] hover:text-black dark:hover:text-white transition-colors duration-200">
+    <span v-if="!isEditing" class="truncate max-w-[50px] hover:text-white transition-colors duration-200">
       {{ displayValue }}
     </span>
 
@@ -83,7 +83,7 @@ const cancel = () => {
         @blur="save"
         @keydown.enter="save"
         @keydown.esc="cancel"
-      class="absolute inset-0 w-full h-full text-center bg-white dark:bg-gray-800 text-black dark:text-white border border-indigo-500 rounded text-[10px] p-0 m-0 outline-none z-50 shadow-lg"
+      class="absolute inset-0 w-full h-full text-center bg-gray-800 text-white border border-indigo-500 rounded text-[10px] p-0 m-0 outline-none z-50 shadow-lg"
       />
   </div>
 </template>

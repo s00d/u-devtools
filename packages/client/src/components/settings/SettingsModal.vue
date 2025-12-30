@@ -169,10 +169,10 @@ watch(showSettings, (val) => {
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" 
     @click.self="showSettings = false"
   >
-    <div class="bg-[#18181b]/95 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-white/10">
+    <div class="bg-zinc-900/95 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-[800px] max-h-[calc(100vh-2rem)] flex overflow-hidden border border-white/10">
       
       <!-- Sidebar -->
-      <div class="w-64 bg-[#18181b] border-r border-white/5 flex flex-col shrink-0">
+      <div class="w-64 bg-zinc-900 border-r border-white/5 flex flex-col shrink-0">
         <div class="p-4 font-bold text-lg text-white border-b border-white/5">Settings</div>
         <div class="flex-1 overflow-y-auto p-2 space-y-1">
           <button 
@@ -197,8 +197,8 @@ watch(showSettings, (val) => {
       </div>
 
       <!-- Content -->
-      <div class="flex-1 flex flex-col min-w-0 bg-[#09090b]">
-        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-[#18181b]/50 backdrop-blur-sm">
+      <div class="flex-1 flex flex-col min-w-0 bg-zinc-950">
+        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/50 backdrop-blur-sm">
           <h2 class="font-bold text-white">{{ activeSettingsTab }}</h2>
           <button @click="showSettings = false" class="text-zinc-400 hover:text-zinc-200 transition-colors">
             <UIcon name="XMark" class="w-6 h-6" />

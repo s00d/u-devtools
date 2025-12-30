@@ -10,3 +10,9 @@ declare module '*.vue' {
   const component: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>;
   export default component;
 }
+
+// Добавляем поддержку ?inline импортов
+declare module '*?inline' {
+  const content: string;
+  export default content;
+}

@@ -64,14 +64,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-udt-c-bg text-udt-c-text">
+  <div class="h-full flex flex-col bg-zinc-950 text-gray-200">
     <!-- Toolbar -->
-    <div class="p-2 border-b border-udt-c-border bg-gray-800 flex gap-2 items-center">
+      <div class="p-2 border-b border-zinc-800 bg-gray-800 flex gap-2 items-center">
       <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
       <UInput v-model="filter" placeholder="Filter logs..." class="w-64" />
       <select
         v-model="levelFilter"
-        class="border border-udt-c-border rounded px-2 py-1 text-sm bg-udt-c-bg text-udt-c-text"
+        class="border border-zinc-800 rounded px-2 py-1 text-sm bg-zinc-950 text-gray-200"
       >
         <option value="all">All Levels</option>
         <option value="log">Log</option>
@@ -88,7 +88,7 @@ onUnmounted(() => {
       <div
         v-for="log in filteredLogs"
         :key="log.id"
-        class="p-2 rounded border border-udt-c-border hover:bg-gray-800 transition-colors"
+        class="p-2 rounded border border-zinc-800 hover:bg-gray-800 transition-colors"
         :class="{
           'bg-red-900/20 border-red-800': log.level === 'error',
           'bg-yellow-900/20 border-yellow-800': log.level === 'warn',

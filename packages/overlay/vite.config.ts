@@ -1,7 +1,7 @@
 import { createViteConfig } from '../core/vite/vite.config.base';
 import { defineConfig, mergeConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+// Убираем cssInjectedByJsPlugin, так как мы делаем импорт ?inline
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -20,10 +20,7 @@ const baseConfig = createViteConfig({
   },
   additionalPlugins: [
     tailwindcss(),
-    cssInjectedByJsPlugin({
-      styleId: 'u-devtools-overlay-styles',
-      topExecutionPriority: true,
-    }),
+    // cssInjectedByJsPlugin удален - используем ?inline импорт
   ],
   resolveAlias: {
     '@': './src',

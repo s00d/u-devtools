@@ -25,7 +25,7 @@ const copy = async (text: string) => {
 </script>
 
 <template>
-  <div class="flex items-start gap-4 py-2 border-b border-udt-border last:border-0 hover:bg-gray-800/50 transition-colors">
+  <div class="flex items-start gap-4 py-2 border-b border-zinc-800 last:border-0 hover:bg-gray-800/50 transition-colors">
     <div class="font-medium text-gray-400 w-32 flex-shrink-0">{{ label }}</div>
     <div class="flex-1 flex items-center gap-2 min-w-0">
       <span

@@ -73,3 +73,9 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Custom color classes */
+/* Note: Colors that match Tailwind standard are replaced with standard classes */
+/* Only keep truly custom colors that don't match Tailwind palette */
+
+/* Box Model colors removed - using standard Tailwind classes directly in components */

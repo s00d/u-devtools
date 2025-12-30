@@ -165,7 +165,7 @@ onMounted(() => {
         v-for="item in menuItems"
         :key="item.id"
         :title="item.label"
-        class="bg-[#18181b] text-white h-10 w-10 flex items-center justify-center shadow-lg cursor-pointer hover:bg-black transition-colors border border-[#333] rounded-lg relative"
+        class="bg-zinc-900 text-white h-10 w-10 flex items-center justify-center shadow-lg cursor-pointer hover:bg-black transition-colors border border-zinc-700 rounded-lg relative"
         @click="handleItemClick(item, $event)"
         @dblclick="handleItemDoubleClick(item, $event)"
         @contextmenu="handleItemContextMenu(item, $event)"
@@ -210,7 +210,7 @@ onMounted(() => {
     >
       <button
         @click="toggleMain"
-        class="bg-[#18181b] text-white h-10 pl-3 pr-4 rounded-l-lg shadow-lg cursor-pointer flex items-center gap-2 hover:bg-black transition-colors border-y border-l border-[#333] relative"
+        class="bg-zinc-900 text-white h-10 pl-3 pr-4 rounded-l-lg shadow-lg cursor-pointer flex items-center gap-2 hover:bg-black transition-colors border-y border-l border-zinc-700 relative"
       >
         <UIcon
           name="WrenchScrewdriver"

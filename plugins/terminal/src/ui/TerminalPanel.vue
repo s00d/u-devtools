@@ -110,7 +110,7 @@ onUnmounted(() => {
 
 <template>
   <div 
-    class="h-full flex flex-col bg-[#111827] text-gray-300 font-mono text-sm overflow-hidden"
+    class="h-full flex flex-col bg-gray-900 text-gray-300 font-mono text-sm overflow-hidden"
     @click="inputRef?.focus()"
   >
     <!-- Quick Actions Toolbar -->
@@ -144,7 +144,7 @@ onUnmounted(() => {
     <!-- Output Area -->
     <div
       ref="containerRef"
-      class="flex-1 overflow-y-auto p-4 whitespace-pre-wrap break-all leading-snug [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-[#111827] [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb:hover]:bg-indigo-600"
+      class="flex-1 overflow-y-auto p-4 whitespace-pre-wrap break-all leading-snug [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb:hover]:bg-indigo-600"
       :style="{ fontSize: `${fontSize}px` }"
     >
       {{ output }}

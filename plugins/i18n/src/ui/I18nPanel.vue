@@ -411,7 +411,7 @@ watch(selectedFileContent, (newContent) => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-[#111827] text-gray-200 overflow-hidden">
+  <div class="h-full flex flex-col bg-gray-900 text-gray-200 overflow-hidden">
     <ULoading v-if="isLoading" fullscreen />
 
     <USplitter v-else :default-size="280" :min="150">
@@ -425,7 +425,7 @@ watch(selectedFileContent, (newContent) => {
       </template>
 
       <template #right>
-        <div v-if="selectedFile" class="h-full flex flex-col bg-[#111827]">
+        <div v-if="selectedFile" class="h-full flex flex-col bg-gray-900">
           <!-- Header -->
           <div class="flex-none border-b border-gray-700 bg-gray-800 p-3">
             <div class="flex items-center justify-between">

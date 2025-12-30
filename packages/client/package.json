@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Client-side UI shell for Universal DevTools",
   "type": "module",
   "main": "./src/main.ts",
@@ -51,7 +51,6 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vue-tsc": "^3.2.1"
   }
 }

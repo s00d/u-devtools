@@ -158,10 +158,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-[#09090b] min-w-0 min-h-0 overflow-hidden">
+  <div class="h-full flex flex-col bg-zinc-950 min-w-0 min-h-0 overflow-hidden">
     <!-- Header -->
     <div
-      class="p-6 border-b border-white/5 flex justify-between items-center bg-[#18181b]/50 backdrop-blur-sm"
+      class="p-6 border-b border-white/5 flex justify-between items-center bg-zinc-900/50 backdrop-blur-sm"
     >
       <div class="flex items-center gap-4">
         <h2 class="text-xl font-bold text-white flex items-center gap-2">
@@ -211,7 +211,7 @@ onMounted(() => {
       <!-- Loading overlay -->
       <div
         v-if="loading"
-        class="absolute inset-0 bg-[#09090b]/80 backdrop-blur-sm flex items-center justify-center z-10"
+        class="absolute inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center z-10"
       >
         <div class="text-center">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-400 mb-2"></div>
@@ -224,7 +224,7 @@ onMounted(() => {
         <div
           v-for="plugin in installedPlugins"
           :key="plugin.name"
-          class="border border-white/10 rounded-xl p-5 bg-[#18181b] shadow-sm hover:shadow-md hover:border-white/20 transition-all flex flex-col"
+          class="border border-white/10 rounded-xl p-5 bg-zinc-900 shadow-sm hover:shadow-md hover:border-white/20 transition-all flex flex-col"
         >
           <div class="flex justify-between items-start mb-3">
             <div class="flex items-center gap-3">
@@ -318,7 +318,7 @@ onMounted(() => {
         <div
           v-for="p in marketPlugins"
           :key="p.name"
-          class="border border-white/10 rounded-xl p-5 bg-[#18181b] shadow-sm hover:shadow-md hover:border-white/20 transition-all flex justify-between items-center"
+          class="border border-white/10 rounded-xl p-5 bg-zinc-900 shadow-sm hover:shadow-md hover:border-white/20 transition-all flex justify-between items-center"
         >
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">

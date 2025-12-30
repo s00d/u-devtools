@@ -12,7 +12,7 @@ const links = [
 </script>
 
 <template>
-  <div class="h-full overflow-auto bg-[#09090b] text-[#f4f4f5] min-w-0 min-h-0">
+  <div class="h-full overflow-auto bg-zinc-950 text-zinc-100 min-w-0 min-h-0">
     <div class="max-w-2xl mx-auto p-8 space-y-12">
       
       <!-- Header -->

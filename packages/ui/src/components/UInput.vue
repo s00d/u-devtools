@@ -105,7 +105,6 @@ const inputBorderRadiusClasses = computed(() => {
 
   return classes.join(' ');
 });
-
 </script>
 
 <template>
