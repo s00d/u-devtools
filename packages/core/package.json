@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Core types and interfaces for Universal DevTools",
   "keywords": [
     "devtools",
@@ -43,7 +43,8 @@
   "files": [
     "dist",
     "src",
-    "vite"
+    "vite",
+    "README.md"
   ],
   "scripts": {
     "build": "vite build",
