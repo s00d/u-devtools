@@ -58,6 +58,7 @@
     "directory": "packages/ui"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vue": "catalog:",
