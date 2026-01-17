@@ -6,7 +6,7 @@
 
 # Class: WebSocketTransport
 
-Defined in: [transports/websocket-transport.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L9)
+Defined in: [transports/websocket-transport.ts:9](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L9)
 
 Transport based on WebSocket
 Used for communication between client and server when HMR is unavailable
@@ -22,7 +22,7 @@ Used for communication between client and server when HMR is unavailable
 
 > **new WebSocketTransport**(`url`): `WebSocketTransport`
 
-Defined in: [transports/websocket-transport.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L22)
+Defined in: [transports/websocket-transport.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L22)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [transports/websocket-transport.ts:22](https://github.com/s00d/u-dev
 
 > `protected` **disposed**: `boolean` = `false`
 
-Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L20)
+Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L20)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **eventListeners**: `Map`\<`string`, `Set`\<(`data`) => `void`\>\>
 
-Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L19)
+Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L19)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **handlers**: `Map`\<`string`, \{ `reject`: (`error`) => `void`; `resolve`: (`value`) => `void`; \}\>
 
-Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L15)
+Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L15)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **timeout**: `number` = `5000`
 
-Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L21)
+Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L21)
 
 #### Inherited from
 
@@ -92,7 +92,7 @@ Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **call**\<`T`\>(`method`, `payload?`): `Promise`\<`T`\>
 
-Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L41)
+Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L41)
 
 RPC method call
 
@@ -123,7 +123,7 @@ RPC method call
 
 > **dispose**(): `void`
 
-Defined in: [transports/websocket-transport.ts:134](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L134)
+Defined in: [transports/websocket-transport.ts:134](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L134)
 
 Clean up all handlers and subscriptions
 
@@ -141,7 +141,7 @@ Clean up all handlers and subscriptions
 
 > `protected` **handleMessage**(`data`): `void`
 
-Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L115)
+Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L115)
 
 Handle incoming messages (called by transport)
 
@@ -165,7 +165,7 @@ Handle incoming messages (called by transport)
 
 > **isConnected**(): `boolean`
 
-Defined in: [transports/websocket-transport.ts:155](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L155)
+Defined in: [transports/websocket-transport.ts:155](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L155)
 
 Check connection status
 
@@ -179,7 +179,7 @@ Check connection status
 
 > **off**(`event`, `fn`): `void`
 
-Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L105)
+Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L105)
 
 Unsubscribe from events
 
@@ -204,7 +204,7 @@ Unsubscribe from events
 
 > **on**(`event`, `fn`): () => `void`
 
-Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L77)
+Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L77)
 
 Subscribe to events
 
@@ -233,7 +233,7 @@ Subscribe to events
 
 > `protected` **sendMessage**(`type`, `data`): `void`
 
-Defined in: [transports/websocket-transport.ts:87](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L87)
+Defined in: [transports/websocket-transport.ts:87](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L87)
 
 Send a message through the transport
 
@@ -258,7 +258,7 @@ Send a message through the transport
 
 > `protected` **subscribe**(`_type`, `_handler`): () => `void`
 
-Defined in: [transports/websocket-transport.ts:126](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L126)
+Defined in: [transports/websocket-transport.ts:126](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L126)
 
 Subscribe to messages from the transport
 
@@ -287,7 +287,7 @@ Subscribe to messages from the transport
 
 > `protected` **unsubscribe**(`_type`, `_handler`): `void`
 
-Defined in: [transports/websocket-transport.ts:130](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/websocket-transport.ts#L130)
+Defined in: [transports/websocket-transport.ts:130](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/websocket-transport.ts#L130)
 
 Unsubscribe from transport messages
 

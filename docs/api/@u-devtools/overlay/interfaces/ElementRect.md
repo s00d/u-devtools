@@ -2,11 +2,11 @@
 
 ***
 
-[Universal DevTools Kit SDK](../../../packages.md) / [@u-devtools/overlay](../README.md) / [](../README.md) / ElementRect
+[Universal DevTools Kit SDK](../../../packages.md) / [@u-devtools/overlay](../README.md) / ElementRect
 
 # Interface: ElementRect
 
-Defined in: [composables/useElementRect.ts:4](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L4)
+Defined in: [composables/useElementRect.ts:4](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L4)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [composables/useElementRect.ts:4](https://github.com/s00d/u-devtools
 
 > **borderBottom**: `number`
 
-Defined in: [composables/useElementRect.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L20)
+Defined in: [composables/useElementRect.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L20)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [composables/useElementRect.ts:20](https://github.com/s00d/u-devtool
 
 > **borderLeft**: `number`
 
-Defined in: [composables/useElementRect.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L21)
+Defined in: [composables/useElementRect.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L21)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [composables/useElementRect.ts:21](https://github.com/s00d/u-devtool
 
 > **borderRight**: `number`
 
-Defined in: [composables/useElementRect.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L19)
+Defined in: [composables/useElementRect.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L19)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [composables/useElementRect.ts:19](https://github.com/s00d/u-devtool
 
 > **borderTop**: `number`
 
-Defined in: [composables/useElementRect.ts:18](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L18)
+Defined in: [composables/useElementRect.ts:18](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L18)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [composables/useElementRect.ts:18](https://github.com/s00d/u-devtool
 
 > **height**: `number`
 
-Defined in: [composables/useElementRect.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L8)
+Defined in: [composables/useElementRect.ts:8](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L8)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [composables/useElementRect.ts:8](https://github.com/s00d/u-devtools
 
 > **left**: `number`
 
-Defined in: [composables/useElementRect.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L6)
+Defined in: [composables/useElementRect.ts:6](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L6)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [composables/useElementRect.ts:6](https://github.com/s00d/u-devtools
 
 > **marginBottom**: `number`
 
-Defined in: [composables/useElementRect.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L12)
+Defined in: [composables/useElementRect.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L12)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [composables/useElementRect.ts:12](https://github.com/s00d/u-devtool
 
 > **marginLeft**: `number`
 
-Defined in: [composables/useElementRect.ts:13](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L13)
+Defined in: [composables/useElementRect.ts:13](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L13)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [composables/useElementRect.ts:13](https://github.com/s00d/u-devtool
 
 > **marginRight**: `number`
 
-Defined in: [composables/useElementRect.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L11)
+Defined in: [composables/useElementRect.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L11)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [composables/useElementRect.ts:11](https://github.com/s00d/u-devtool
 
 > **marginTop**: `number`
 
-Defined in: [composables/useElementRect.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L10)
+Defined in: [composables/useElementRect.ts:10](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L10)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [composables/useElementRect.ts:10](https://github.com/s00d/u-devtool
 
 > **paddingBottom**: `number`
 
-Defined in: [composables/useElementRect.ts:16](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L16)
+Defined in: [composables/useElementRect.ts:16](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L16)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [composables/useElementRect.ts:16](https://github.com/s00d/u-devtool
 
 > **paddingLeft**: `number`
 
-Defined in: [composables/useElementRect.ts:17](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L17)
+Defined in: [composables/useElementRect.ts:17](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L17)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [composables/useElementRect.ts:17](https://github.com/s00d/u-devtool
 
 > **paddingRight**: `number`
 
-Defined in: [composables/useElementRect.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L15)
+Defined in: [composables/useElementRect.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L15)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [composables/useElementRect.ts:15](https://github.com/s00d/u-devtool
 
 > **paddingTop**: `number`
 
-Defined in: [composables/useElementRect.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L14)
+Defined in: [composables/useElementRect.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L14)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: [composables/useElementRect.ts:14](https://github.com/s00d/u-devtool
 
 > **top**: `number`
 
-Defined in: [composables/useElementRect.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L5)
+Defined in: [composables/useElementRect.ts:5](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L5)
 
 ***
 
@@ -134,4 +134,4 @@ Defined in: [composables/useElementRect.ts:5](https://github.com/s00d/u-devtools
 
 > **width**: `number`
 
-Defined in: [composables/useElementRect.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/composables/useElementRect.ts#L7)
+Defined in: [composables/useElementRect.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/composables/useElementRect.ts#L7)

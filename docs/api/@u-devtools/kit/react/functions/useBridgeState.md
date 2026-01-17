@@ -8,7 +8,7 @@
 
 > **useBridgeState**\<`T`\>(`syncedState`): \[`T`, (`value`) => `void`\]
 
-Defined in: [react.ts:30](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/react.ts#L30)
+Defined in: [react.ts:30](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/react.ts#L30)
 
 React adapter for SyncedState.
 Converts SyncedState to React state with two-way synchronization.

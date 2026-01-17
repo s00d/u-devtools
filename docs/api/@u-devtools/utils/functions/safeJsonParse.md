@@ -8,7 +8,7 @@
 
 > **safeJsonParse**\<`T`\>(`text`, `defaultValue`): `T` \| `null`
 
-Defined in: [json.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils/src/json.ts#L8)
+Defined in: [json.ts:8](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils/src/json.ts#L8)
 
 Safely parses a JSON string with error handling.
 

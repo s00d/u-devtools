@@ -6,7 +6,7 @@
 
 # Interface: OverlayContext
 
-Defined in: [control.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L3)
+Defined in: [control.ts:3](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [control.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **close**: () => `void`
 
-Defined in: [control.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L12)
+Defined in: [control.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L12)
 
 Close the main DevTools window
 
@@ -28,7 +28,7 @@ Close the main DevTools window
 
 > **createBridge**: (`namespace`) => [`AppBridge`](../classes/AppBridge.md)
 
-Defined in: [control.ts:38](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L38)
+Defined in: [control.ts:38](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L38)
 
 Create a temporary bridge for sending messages.
 Useful if you don't have access to the plugin's global bridge in this scope.
@@ -49,7 +49,7 @@ Useful if you don't have access to the plugin's global bridge in this scope.
 
 > **isOpen**: `boolean`
 
-Defined in: [control.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L22)
+Defined in: [control.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L22)
 
 Current state
 
@@ -59,7 +59,7 @@ Current state
 
 > **open**: () => `void`
 
-Defined in: [control.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L7)
+Defined in: [control.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L7)
 
 Open the main DevTools window
 
@@ -73,7 +73,7 @@ Open the main DevTools window
 
 > **switchPlugin**: (`pluginName`) => `void`
 
-Defined in: [control.ts:27](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L27)
+Defined in: [control.ts:27](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L27)
 
 Switch to plugin by name
 
@@ -93,7 +93,7 @@ Switch to plugin by name
 
 > **switchTab**: (`pluginName`, `tabName`) => `void`
 
-Defined in: [control.ts:32](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L32)
+Defined in: [control.ts:32](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L32)
 
 Switch tab within plugin by tab name
 
@@ -114,7 +114,7 @@ Switch tab within plugin by tab name
 
 > **toggle**: () => `void`
 
-Defined in: [control.ts:17](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L17)
+Defined in: [control.ts:17](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L17)
 
 Toggle window state
 

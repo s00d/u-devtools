@@ -6,7 +6,7 @@
 
 # Interface: PackageManagerInfo
 
-Defined in: [package-manager.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L10)
+Defined in: [package-manager.ts:10](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L10)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [package-manager.ts:10](https://github.com/s00d/u-devtools/blob/4fad
 
 > **lockfile**: `string`
 
-Defined in: [package-manager.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L12)
+Defined in: [package-manager.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [package-manager.ts:12](https://github.com/s00d/u-devtools/blob/4fad
 
 > **name**: [`PackageManager`](../type-aliases/PackageManager.md)
 
-Defined in: [package-manager.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L11)
+Defined in: [package-manager.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L11)

@@ -6,7 +6,7 @@
 
 # Class: BroadcastTransport
 
-Defined in: [transports/broadcast-transport.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L8)
+Defined in: [transports/broadcast-transport.ts:8](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L8)
 
 Transport based on BroadcastChannel
 Used for communication between App (window) and Client (iframe)
@@ -22,7 +22,7 @@ Does not support RPC (call), only events (send/on)
 
 > **new BroadcastTransport**(`namespace`): `BroadcastTransport`
 
-Defined in: [transports/broadcast-transport.ts:13](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L13)
+Defined in: [transports/broadcast-transport.ts:13](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L13)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [transports/broadcast-transport.ts:13](https://github.com/s00d/u-dev
 
 > `protected` **disposed**: `boolean` = `false`
 
-Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L20)
+Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L20)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **eventListeners**: `Map`\<`string`, `Set`\<(`data`) => `void`\>\>
 
-Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L19)
+Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L19)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **handlers**: `Map`\<`string`, \{ `reject`: (`error`) => `void`; `resolve`: (`value`) => `void`; \}\>
 
-Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L15)
+Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L15)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **timeout**: `number` = `5000`
 
-Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L21)
+Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L21)
 
 #### Inherited from
 
@@ -92,7 +92,7 @@ Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **call**\<`T`\>(`_method`, `_payload?`): `Promise`\<`T`\>
 
-Defined in: [transports/broadcast-transport.ts:127](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L127)
+Defined in: [transports/broadcast-transport.ts:127](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L127)
 
 RPC calls are not supported in BroadcastChannel
 
@@ -123,7 +123,7 @@ RPC calls are not supported in BroadcastChannel
 
 > **close**(): `void`
 
-Defined in: [transports/broadcast-transport.ts:171](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L171)
+Defined in: [transports/broadcast-transport.ts:171](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L171)
 
 Close channel (alias for dispose)
 
@@ -137,7 +137,7 @@ Close channel (alias for dispose)
 
 > **dispose**(): `void`
 
-Defined in: [transports/broadcast-transport.ts:163](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L163)
+Defined in: [transports/broadcast-transport.ts:163](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L163)
 
 Clean up all handlers and subscriptions
 
@@ -155,7 +155,7 @@ Clean up all handlers and subscriptions
 
 > `protected` **handleMessage**(`data`): `void`
 
-Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L115)
+Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L115)
 
 Handle incoming messages (called by transport)
 
@@ -179,7 +179,7 @@ Handle incoming messages (called by transport)
 
 > **off**(`event`, `fn`): `void`
 
-Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L105)
+Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L105)
 
 Unsubscribe from events
 
@@ -204,7 +204,7 @@ Unsubscribe from events
 
 > **on**(`event`, `fn`): () => `void`
 
-Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L77)
+Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L77)
 
 Subscribe to events
 
@@ -233,7 +233,7 @@ Subscribe to events
 
 > **send**(`event`, `data?`): `void`
 
-Defined in: [transports/broadcast-transport.ts:75](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L75)
+Defined in: [transports/broadcast-transport.ts:75](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L75)
 
 Send event (not RPC)
 
@@ -254,7 +254,7 @@ Send event (not RPC)
 
 > `protected` **sendMessage**(`_type`, `_data`): `void`
 
-Defined in: [transports/broadcast-transport.ts:133](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L133)
+Defined in: [transports/broadcast-transport.ts:133](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L133)
 
 Send a message through the transport
 
@@ -279,7 +279,7 @@ Send a message through the transport
 
 > `protected` **subscribe**(`event`, `handler`): () => `void`
 
-Defined in: [transports/broadcast-transport.ts:138](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L138)
+Defined in: [transports/broadcast-transport.ts:138](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L138)
 
 Subscribe to messages from the transport
 
@@ -308,7 +308,7 @@ Subscribe to messages from the transport
 
 > `protected` **unsubscribe**(`event`, `handler`): `void`
 
-Defined in: [transports/broadcast-transport.ts:156](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/broadcast-transport.ts#L156)
+Defined in: [transports/broadcast-transport.ts:156](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/broadcast-transport.ts#L156)
 
 Unsubscribe from transport messages
 

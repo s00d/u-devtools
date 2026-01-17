@@ -6,7 +6,7 @@
 
 # Class: DevToolsControl
 
-Defined in: [control.ts:70](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L70)
+Defined in: [control.ts:70](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L70)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [control.ts:70](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **new DevToolsControl**(): `DevToolsControl`
 
-Defined in: [control.ts:73](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L73)
+Defined in: [control.ts:73](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L73)
 
 #### Returns
 
@@ -26,7 +26,7 @@ Defined in: [control.ts:73](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **close**(): `void`
 
-Defined in: [control.ts:88](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L88)
+Defined in: [control.ts:88](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L88)
 
 Close DevTools
 
@@ -40,7 +40,7 @@ Close DevTools
 
 > **destroy**(): `void`
 
-Defined in: [control.ts:150](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L150)
+Defined in: [control.ts:150](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L150)
 
 #### Returns
 
@@ -52,7 +52,7 @@ Defined in: [control.ts:150](https://github.com/s00d/u-devtools/blob/4fad699ef96
 
 > **isOpen**(): `Promise`\<`boolean`\>
 
-Defined in: [control.ts:102](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L102)
+Defined in: [control.ts:102](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L102)
 
 Get current state (asynchronously)
 
@@ -66,7 +66,7 @@ Get current state (asynchronously)
 
 > **onStateChange**(`cb`): () => `void`
 
-Defined in: [control.ts:126](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L126)
+Defined in: [control.ts:126](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L126)
 
 Subscribe to state changes
 
@@ -90,7 +90,7 @@ Subscribe to state changes
 
 > **open**(): `void`
 
-Defined in: [control.ts:81](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L81)
+Defined in: [control.ts:81](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L81)
 
 Open DevTools
 
@@ -104,7 +104,7 @@ Open DevTools
 
 > **switchPlugin**(`pluginName`): `void`
 
-Defined in: [control.ts:139](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L139)
+Defined in: [control.ts:139](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L139)
 
 Switch to plugin by name
 
@@ -124,7 +124,7 @@ Switch to plugin by name
 
 > **switchTab**(`pluginName`, `tabName`): `void`
 
-Defined in: [control.ts:146](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L146)
+Defined in: [control.ts:146](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L146)
 
 Switch tab within plugin by tab name
 
@@ -145,7 +145,7 @@ Switch tab within plugin by tab name
 
 > **toggle**(): `void`
 
-Defined in: [control.ts:95](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L95)
+Defined in: [control.ts:95](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L95)
 
 Toggle state
 

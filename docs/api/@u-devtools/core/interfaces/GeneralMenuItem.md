@@ -6,7 +6,7 @@
 
 # Interface: GeneralMenuItem
 
-Defined in: [index.ts:444](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L444)
+Defined in: [index.ts:444](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L444)
 
 Menu item for the "General" section in ActivityBar.
 
@@ -38,7 +38,7 @@ const plugin: PluginClientInstance = {
 
 > **action**: (`api`) => `void`
 
-Defined in: [index.ts:453](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L453)
+Defined in: [index.ts:453](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L453)
 
 Action callback when menu item is clicked.
 
@@ -58,7 +58,7 @@ Action callback when menu item is clicked.
 
 > **icon**: `string`
 
-Defined in: [index.ts:448](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L448)
+Defined in: [index.ts:448](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L448)
 
 Heroicons icon name (e.g., 'Cube', 'MagnifyingGlass')
 
@@ -68,6 +68,6 @@ Heroicons icon name (e.g., 'Cube', 'MagnifyingGlass')
 
 > **label**: `string`
 
-Defined in: [index.ts:446](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L446)
+Defined in: [index.ts:446](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L446)
 
 Menu item label text

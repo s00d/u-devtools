@@ -6,7 +6,7 @@
 
 # Interface: PluginCommand
 
-Defined in: [index.ts:61](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L61)
+Defined in: [index.ts:61](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L61)
 
 Command definition for Command Palette (accessible via Cmd+K / Ctrl+K).
 Commands allow users to quickly access plugin functionality.
@@ -17,7 +17,7 @@ Commands allow users to quickly access plugin functionality.
 
 > **action**: () => `void` \| `Promise`\<`void`\>
 
-Defined in: [index.ts:69](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L69)
+Defined in: [index.ts:69](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L69)
 
 Action to execute when command is triggered
 
@@ -31,7 +31,7 @@ Action to execute when command is triggered
 
 > `optional` **icon**: `string`
 
-Defined in: [index.ts:67](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L67)
+Defined in: [index.ts:67](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L67)
 
 Heroicons icon name (optional)
 
@@ -41,7 +41,7 @@ Heroicons icon name (optional)
 
 > **id**: `string`
 
-Defined in: [index.ts:63](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L63)
+Defined in: [index.ts:63](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L63)
 
 Unique command identifier (e.g., 'my-plugin:clear')
 
@@ -51,7 +51,7 @@ Unique command identifier (e.g., 'my-plugin:clear')
 
 > **label**: `string`
 
-Defined in: [index.ts:65](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L65)
+Defined in: [index.ts:65](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L65)
 
 Display label in command palette
 
@@ -61,6 +61,6 @@ Display label in command palette
 
 > `optional` **shortcut**: `string`[]
 
-Defined in: [index.ts:71](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L71)
+Defined in: [index.ts:71](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L71)
 
 Keyboard shortcut keys (e.g., ['Meta', 'K', 'C'])

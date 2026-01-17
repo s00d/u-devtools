@@ -8,7 +8,7 @@
 
 > **safeResolve**(`root`, `targetPath`): `string`
 
-Defined in: [path.ts:27](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/path.ts#L27)
+Defined in: [path.ts:27](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/path.ts#L27)
 
 Safely resolves a file path relative to a root directory.
 Throws an error if the resolved path is outside the root directory.

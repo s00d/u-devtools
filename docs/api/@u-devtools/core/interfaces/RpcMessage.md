@@ -6,7 +6,7 @@
 
 # Interface: RpcMessage\<T\>
 
-Defined in: [index.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L12)
+Defined in: [index.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L12)
 
 RPC message structure for communication between Server and Client contexts.
 Used for typed RPC over WebSocket (Server ↔ Client).
@@ -23,7 +23,7 @@ Used for typed RPC over WebSocket (Server ↔ Client).
 
 > `optional` **error**: `unknown`
 
-Defined in: [index.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L22)
+Defined in: [index.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L22)
 
 Error information (for error responses)
 
@@ -33,7 +33,7 @@ Error information (for error responses)
 
 > **id**: `string`
 
-Defined in: [index.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L14)
+Defined in: [index.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L14)
 
 Unique message identifier
 
@@ -43,7 +43,7 @@ Unique message identifier
 
 > `optional` **method**: `string`
 
-Defined in: [index.ts:18](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L18)
+Defined in: [index.ts:18](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L18)
 
 RPC method name (for requests)
 
@@ -53,7 +53,7 @@ RPC method name (for requests)
 
 > `optional` **payload**: `T`
 
-Defined in: [index.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L20)
+Defined in: [index.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L20)
 
 Message payload data
 
@@ -63,6 +63,6 @@ Message payload data
 
 > **type**: `"request"` \| `"response"` \| `"event"`
 
-Defined in: [index.ts:16](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L16)
+Defined in: [index.ts:16](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L16)
 
 Message type: 'request' for RPC calls, 'response' for replies, 'event' for broadcasts

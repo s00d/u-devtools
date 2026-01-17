@@ -2,10 +2,10 @@
 
 ***
 
-[Universal DevTools Kit SDK](../../../packages.md) / [@u-devtools/overlay](../README.md) / [](../README.md) / OverlayLayer
+[Universal DevTools Kit SDK](../../../packages.md) / [@u-devtools/overlay](../README.md) / OverlayLayer
 
 # Type Alias: OverlayLayer
 
 > **OverlayLayer** = `"plugins"` \| `"shell"` \| `"toast"`
 
-Defined in: [overlay-utils.ts:17](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/overlay/src/overlay-utils.ts#L17)
+Defined in: [overlay-utils.ts:17](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/overlay/src/overlay-utils.ts#L17)

@@ -6,7 +6,7 @@
 
 # Interface: RpcClientInterface
 
-Defined in: [index.ts:31](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L31)
+Defined in: [index.ts:31](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L31)
 
 RPC Client Interface for making remote procedure calls.
 Provides methods to call server methods and subscribe to events.
@@ -19,7 +19,7 @@ Communication: Server ↔ Client via WebSocket (Vite HMR or custom WebSocket)
 
 > **call**\<`T`\>(`method`, `payload?`): `Promise`\<`T`\>
 
-Defined in: [index.ts:39](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L39)
+Defined in: [index.ts:39](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L39)
 
 Call a remote method on the server.
 
@@ -48,7 +48,7 @@ Promise that resolves with the method result
 
 > `optional` **off**(`event`, `callback`): `void`
 
-Defined in: [index.ts:54](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L54)
+Defined in: [index.ts:54](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L54)
 
 Unsubscribe from events (optional, some transports may not support it).
 
@@ -69,7 +69,7 @@ Unsubscribe from events (optional, some transports may not support it).
 
 > **on**(`event`, `callback`): () => `void`
 
-Defined in: [index.ts:47](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L47)
+Defined in: [index.ts:47](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L47)
 
 Subscribe to events from the server.
 

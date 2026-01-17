@@ -6,7 +6,7 @@
 
 # Class: ViteRpcServer
 
-Defined in: [index.ts:123](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L123)
+Defined in: [index.ts:127](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L127)
 
 Server-side RPC implementation (Node.js)
 Works through server.ws
@@ -17,7 +17,7 @@ Works through server.ws
 
 > **new ViteRpcServer**(`ws`): `ViteRpcServer`
 
-Defined in: [index.ts:126](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L126)
+Defined in: [index.ts:130](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L130)
 
 #### Parameters
 
@@ -37,7 +37,7 @@ Defined in: [index.ts:126](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **broadcast**(`event`, `payload?`): `void`
 
-Defined in: [index.ts:194](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L194)
+Defined in: [index.ts:198](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L198)
 
 Broadcast an event to all connected clients
 
@@ -58,7 +58,7 @@ Broadcast an event to all connected clients
 
 > **getMethods**(): `string`[]
 
-Defined in: [index.ts:214](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L214)
+Defined in: [index.ts:219](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L219)
 
 Get list of all registered method names
 
@@ -74,7 +74,7 @@ Array of method names
 
 > **getMethodsCount**(): `number`
 
-Defined in: [index.ts:206](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L206)
+Defined in: [index.ts:211](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L211)
 
 Get the number of registered methods
 
@@ -90,7 +90,7 @@ Number of registered methods
 
 > **handle**(`method`, `fn`): `void`
 
-Defined in: [index.ts:185](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L185)
+Defined in: [index.ts:189](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L189)
 
 Register a method handler
 

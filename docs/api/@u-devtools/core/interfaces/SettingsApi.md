@@ -6,7 +6,7 @@
 
 # Interface: SettingsApi
 
-Defined in: [index.ts:148](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L148)
+Defined in: [index.ts:148](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L148)
 
 Settings API for user-configurable plugin settings.
 Settings are displayed in DevTools settings panel and persist across sessions.
@@ -38,7 +38,7 @@ function useSettings(api: SettingsApi) {
 
 > **all**: `Record`\<`string`, `unknown`\>
 
-Defined in: [index.ts:166](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L166)
+Defined in: [index.ts:166](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L166)
 
 Reactive object of all settings (for UI bindings)
 
@@ -48,7 +48,7 @@ Reactive object of all settings (for UI bindings)
 
 > **get**\<`T`\>(`key`, `defaultValue?`): `T`
 
-Defined in: [index.ts:154](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L154)
+Defined in: [index.ts:154](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L154)
 
 Get a setting value.
 
@@ -75,7 +75,7 @@ Get a setting value.
 
 > **set**(`key`, `value`): `void`
 
-Defined in: [index.ts:161](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L161)
+Defined in: [index.ts:161](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L161)
 
 Set a setting value.
 

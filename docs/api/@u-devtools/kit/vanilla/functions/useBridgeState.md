@@ -8,7 +8,7 @@
 
 > **useBridgeState**\<`T`\>(`syncedState`, `onChange?`): [`VanillaRef`](../interfaces/VanillaRef.md)\<`T`\>
 
-Defined in: [vanilla.ts:200](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/vanilla.ts#L200)
+Defined in: [vanilla.ts:200](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/vanilla.ts#L200)
 
 Vanilla JS equivalent of useBridgeState.
 Creates a reactive variable with automatic synchronization.

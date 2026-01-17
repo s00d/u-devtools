@@ -8,7 +8,7 @@
 
 > **defineVueElement**(`tagName`, `VueComponent`, `options`): `void`
 
-Defined in: [web-components.ts:184](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/web-components.ts#L184)
+Defined in: [web-components.ts:184](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/web-components.ts#L184)
 
 Registers a Vue component as a standard Web Component (Custom Element).
 This allows the component to be used in React, Angular, CMSs, or plain HTML.

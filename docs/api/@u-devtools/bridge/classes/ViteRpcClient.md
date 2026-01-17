@@ -6,7 +6,7 @@
 
 # Class: ViteRpcClient
 
-Defined in: [index.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L9)
+Defined in: [index.ts:9](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L9)
 
 Client-side RPC implementation (Browser)
 Works through import.meta.hot with fallback to WebSocket
@@ -18,7 +18,7 @@ Uses Transport abstraction for communication
 
 > **new ViteRpcClient**(`hot?`, `wsUrl?`): `ViteRpcClient`
 
-Defined in: [index.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L14)
+Defined in: [index.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L14)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [index.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **call**\<`T`\>(`method`, `payload?`): `Promise`\<`T`\>
 
-Defined in: [index.ts:65](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L65)
+Defined in: [index.ts:69](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L69)
 
 Call a method on the server
 
@@ -69,7 +69,7 @@ Promise with the method result
 
 > **dispose**(): `void`
 
-Defined in: [index.ts:112](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L112)
+Defined in: [index.ts:116](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L116)
 
 Clean up all handlers and subscriptions.
 Should be called on HMR dispose to prevent memory leaks.
@@ -84,7 +84,7 @@ Should be called on HMR dispose to prevent memory leaks.
 
 > **off**(`event`, `fn`): `void`
 
-Defined in: [index.ts:101](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L101)
+Defined in: [index.ts:105](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L105)
 
 Unsubscribe from events
 
@@ -105,7 +105,7 @@ Unsubscribe from events
 
 > **on**(`event`, `fn`): () => `void`
 
-Defined in: [index.ts:89](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/bridge/src/index.ts#L89)
+Defined in: [index.ts:93](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/bridge/src/index.ts#L93)
 
 Subscribe to events (returns unsubscribe function)
 

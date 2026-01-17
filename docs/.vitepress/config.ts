@@ -33,11 +33,14 @@ export default defineConfig({
           { text: 'Architecture', link: '/guide/architecture' },
           { text: 'Plugin Development', link: '/guide/plugin-development' },
           { text: 'UI Components', link: '/guide/components' },
+          { text: 'Plugins', link: '/guide/plugins' },
+          { text: 'Packages', link: '/guide/packages' },
         ],
       },
       {
         text: 'API',
         items: [
+          { text: 'Overview', link: '/api/README' },
           { text: 'Packages', link: '/api/packages' },
           { text: '@u-devtools/core', link: '/api/@u-devtools/core/README' },
           { text: '@u-devtools/kit', link: '/api/@u-devtools/kit/README' },
@@ -96,6 +99,8 @@ export default defineConfig({
             { text: 'Architecture', link: '/guide/architecture' },
             { text: 'Plugin Development', link: '/guide/plugin-development' },
             { text: 'UI Components', link: '/guide/components' },
+            { text: 'Plugins', link: '/guide/plugins' },
+            { text: 'Packages', link: '/guide/packages' },
           ],
         },
       ],
@@ -104,6 +109,7 @@ export default defineConfig({
         {
           text: 'API',
           items: [
+            { text: 'Overview', link: '/api/README' },
             { text: 'Packages', link: '/api/packages' },
             { text: '@u-devtools/core', link: '/api/@u-devtools/core/README' },
             { text: '@u-devtools/kit', link: '/api/@u-devtools/kit/README' },

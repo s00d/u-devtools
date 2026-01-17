@@ -6,7 +6,7 @@
 
 # Interface: TreeNode
 
-Defined in: [types.ts:1](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L1)
+Defined in: [types.ts:1](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L1)
 
 ## Indexable
 
@@ -18,7 +18,7 @@ Defined in: [types.ts:1](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **children**: `TreeNode`[]
 
-Defined in: [types.ts:4](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L4)
+Defined in: [types.ts:4](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L4)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [types.ts:4](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **data**: `Record`\<`string`, `unknown`\>
 
-Defined in: [types.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L5)
+Defined in: [types.ts:5](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L5)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [types.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **icon**: `string`
 
-Defined in: [types.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L9)
+Defined in: [types.ts:9](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L9)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [types.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > **id**: `string` \| `number`
 
-Defined in: [types.ts:2](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L2)
+Defined in: [types.ts:2](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L2)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [types.ts:2](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **isCurrent**: `boolean`
 
-Defined in: [types.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L8)
+Defined in: [types.ts:8](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L8)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [types.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **isExpanded**: `boolean`
 
-Defined in: [types.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L6)
+Defined in: [types.ts:6](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L6)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [types.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > `optional` **isSelected**: `boolean`
 
-Defined in: [types.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L7)
+Defined in: [types.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L7)
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: [types.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28
 
 > **label**: `string`
 
-Defined in: [types.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L3)
+Defined in: [types.ts:3](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L3)

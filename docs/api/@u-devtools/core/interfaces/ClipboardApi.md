@@ -6,7 +6,7 @@
 
 # Interface: ClipboardApi
 
-Defined in: [index.ts:179](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L179)
+Defined in: [index.ts:179](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L179)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:179](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **copy**(`text`, `successMessage?`): `Promise`\<`void`\>
 
-Defined in: [index.ts:185](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L185)
+Defined in: [index.ts:185](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L185)
 
 Copy text to clipboard.
 
@@ -35,7 +35,7 @@ Copy text to clipboard.
 
 > **read**(): `Promise`\<`string`\>
 
-Defined in: [index.ts:191](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L191)
+Defined in: [index.ts:191](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L191)
 
 Read text from clipboard.
 

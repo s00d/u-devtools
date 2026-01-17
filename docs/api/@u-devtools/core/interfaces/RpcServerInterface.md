@@ -6,7 +6,7 @@
 
 # Interface: RpcServerInterface
 
-Defined in: [index.ts:559](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L559)
+Defined in: [index.ts:559](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L559)
 
 RPC Server Interface - Interface for handling RPC requests from clients.
 Used in server-side plugin setup to register method handlers.
@@ -30,7 +30,7 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
 
 > **broadcast**(`event`, `payload?`): `void`
 
-Defined in: [index.ts:572](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L572)
+Defined in: [index.ts:572](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L572)
 
 Broadcast an event to all connected clients.
 
@@ -51,7 +51,7 @@ Broadcast an event to all connected clients.
 
 > **handle**(`method`, `fn`): `void`
 
-Defined in: [index.ts:565](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L565)
+Defined in: [index.ts:565](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L565)
 
 Register a handler for an RPC method.
 

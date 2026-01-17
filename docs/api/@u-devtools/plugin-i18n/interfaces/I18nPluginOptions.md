@@ -6,7 +6,7 @@
 
 # Interface: I18nPluginOptions
 
-Defined in: [index.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/plugins/i18n/src/index.ts#L10)
+Defined in: [index.ts:10](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/plugins/i18n/src/index.ts#L10)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > `optional` **defaultLocale**: `string`
 
-Defined in: [index.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/plugins/i18n/src/index.ts#L12)
+Defined in: [index.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/plugins/i18n/src/index.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [index.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **dir**: `string`
 
-Defined in: [index.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/plugins/i18n/src/index.ts#L11)
+Defined in: [index.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/plugins/i18n/src/index.ts#L11)

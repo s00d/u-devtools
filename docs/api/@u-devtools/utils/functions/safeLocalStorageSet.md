@@ -8,7 +8,7 @@
 
 > **safeLocalStorageSet**(`key`, `value`): `boolean`
 
-Defined in: [json.ts:55](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils/src/json.ts#L55)
+Defined in: [json.ts:55](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils/src/json.ts#L55)
 
 Safely sets a value in localStorage as JSON.
 

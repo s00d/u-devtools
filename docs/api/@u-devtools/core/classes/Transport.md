@@ -6,7 +6,7 @@
 
 # Abstract Class: Transport
 
-Defined in: [transport.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L14)
+Defined in: [transport.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L14)
 
 Abstract class for message transport.
 Provides common logic for RPC calls and event subscriptions.
@@ -33,7 +33,7 @@ Provides common logic for RPC calls and event subscriptions.
 
 > `protected` **disposed**: `boolean` = `false`
 
-Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L20)
+Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L20)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **eventListeners**: `Map`\<`string`, `Set`\<(`data`) => `void`\>\>
 
-Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L19)
+Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L19)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **handlers**: `Map`\<`string`, \{ `reject`: (`error`) => `void`; `resolve`: (`value`) => `void`; \}\>
 
-Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L15)
+Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L15)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **timeout**: `number` = `5000`
 
-Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L21)
+Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L21)
 
 ## Methods
 
@@ -65,7 +65,7 @@ Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **call**\<`T`\>(`method`, `payload?`): `Promise`\<`T`\>
 
-Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L41)
+Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L41)
 
 RPC method call
 
@@ -92,7 +92,7 @@ RPC method call
 
 > **dispose**(): `void`
 
-Defined in: [transport.ts:160](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L160)
+Defined in: [transport.ts:160](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L160)
 
 Clean up all handlers and subscriptions
 
@@ -106,7 +106,7 @@ Clean up all handlers and subscriptions
 
 > `protected` **handleMessage**(`data`): `void`
 
-Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L115)
+Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L115)
 
 Handle incoming messages (called by transport)
 
@@ -126,7 +126,7 @@ Handle incoming messages (called by transport)
 
 > **off**(`event`, `fn`): `void`
 
-Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L105)
+Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L105)
 
 Unsubscribe from events
 
@@ -147,7 +147,7 @@ Unsubscribe from events
 
 > **on**(`event`, `fn`): () => `void`
 
-Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L77)
+Defined in: [transport.ts:77](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L77)
 
 Subscribe to events
 
@@ -172,7 +172,7 @@ Subscribe to events
 
 > `abstract` `protected` **sendMessage**(`type`, `data`): `void`
 
-Defined in: [transport.ts:26](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L26)
+Defined in: [transport.ts:26](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L26)
 
 Send a message through the transport
 
@@ -193,7 +193,7 @@ Send a message through the transport
 
 > `abstract` `protected` **subscribe**(`type`, `handler`): () => `void`
 
-Defined in: [transport.ts:31](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L31)
+Defined in: [transport.ts:31](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L31)
 
 Subscribe to messages from the transport
 
@@ -218,7 +218,7 @@ Subscribe to messages from the transport
 
 > `abstract` `protected` `optional` **unsubscribe**(`type`, `handler`): `void`
 
-Defined in: [transport.ts:36](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L36)
+Defined in: [transport.ts:36](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L36)
 
 Unsubscribe from transport messages
 

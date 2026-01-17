@@ -8,7 +8,7 @@
 
 > **useBridgeState**\<`T`\>(`syncedState`): [`SvelteStore`](../interfaces/SvelteStore.md)\<`T`\>
 
-Defined in: [svelte.ts:39](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/svelte.ts#L39)
+Defined in: [svelte.ts:39](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/svelte.ts#L39)
 
 Svelte adapter for SyncedState.
 Converts SyncedState to Svelte Writable Store.

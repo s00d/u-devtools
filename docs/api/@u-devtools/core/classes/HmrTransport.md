@@ -6,7 +6,7 @@
 
 # Class: HmrTransport
 
-Defined in: [transports/hmr-transport.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L7)
+Defined in: [transports/hmr-transport.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L7)
 
 Transport based on Vite HMR (Hot Module Replacement)
 Used for communication between client (iframe) and server (Node.js)
@@ -21,7 +21,7 @@ Used for communication between client (iframe) and server (Node.js)
 
 > **new HmrTransport**(`hot`): `HmrTransport`
 
-Defined in: [transports/hmr-transport.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L11)
+Defined in: [transports/hmr-transport.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L11)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [transports/hmr-transport.ts:11](https://github.com/s00d/u-devtools/
 
 > `protected` **disposed**: `boolean` = `false`
 
-Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L20)
+Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L20)
 
 #### Inherited from
 
@@ -58,7 +58,7 @@ Defined in: [transport.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **eventListeners**: `Map`\<`string`, `Set`\<(`data`) => `void`\>\>
 
-Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L19)
+Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L19)
 
 #### Inherited from
 
@@ -70,7 +70,7 @@ Defined in: [transport.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **handlers**: `Map`\<`string`, \{ `reject`: (`error`) => `void`; `resolve`: (`value`) => `void`; \}\>
 
-Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L15)
+Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L15)
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ Defined in: [transport.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > `protected` **timeout**: `number` = `5000`
 
-Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L21)
+Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L21)
 
 #### Inherited from
 
@@ -94,7 +94,7 @@ Defined in: [transport.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **call**\<`T`\>(`method`, `payload?`): `Promise`\<`T`\>
 
-Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L41)
+Defined in: [transport.ts:41](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L41)
 
 RPC method call
 
@@ -125,7 +125,7 @@ RPC method call
 
 > **dispose**(): `void`
 
-Defined in: [transports/hmr-transport.ts:71](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L71)
+Defined in: [transports/hmr-transport.ts:71](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L71)
 
 Clean up all handlers and subscriptions
 
@@ -143,7 +143,7 @@ Clean up all handlers and subscriptions
 
 > `protected` **handleMessage**(`data`): `void`
 
-Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L115)
+Defined in: [transport.ts:115](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L115)
 
 Handle incoming messages (called by transport)
 
@@ -167,7 +167,7 @@ Handle incoming messages (called by transport)
 
 > **off**(`event`, `fn`): `void`
 
-Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transport.ts#L105)
+Defined in: [transport.ts:105](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transport.ts#L105)
 
 Unsubscribe from events
 
@@ -192,7 +192,7 @@ Unsubscribe from events
 
 > **on**(`event`, `fn`): () => `void`
 
-Defined in: [transports/hmr-transport.ts:37](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L37)
+Defined in: [transports/hmr-transport.ts:37](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L37)
 
 Override on() for HMR, as subscription is already set up in constructor
 
@@ -221,7 +221,7 @@ Override on() for HMR, as subscription is already set up in constructor
 
 > `protected` **sendMessage**(`type`, `data`): `void`
 
-Defined in: [transports/hmr-transport.ts:52](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L52)
+Defined in: [transports/hmr-transport.ts:52](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L52)
 
 Send a message through the transport
 
@@ -246,7 +246,7 @@ Send a message through the transport
 
 > `protected` **subscribe**(`_type`, `_handler`): () => `void`
 
-Defined in: [transports/hmr-transport.ts:58](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L58)
+Defined in: [transports/hmr-transport.ts:58](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L58)
 
 Subscribe to messages from the transport
 
@@ -275,7 +275,7 @@ Subscribe to messages from the transport
 
 > `protected` **unsubscribe**(`_type`, `_handler`): `void`
 
-Defined in: [transports/hmr-transport.ts:66](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/transports/hmr-transport.ts#L66)
+Defined in: [transports/hmr-transport.ts:66](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/transports/hmr-transport.ts#L66)
 
 Unsubscribe from transport messages
 

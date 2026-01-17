@@ -6,7 +6,7 @@
 
 # Interface: SvelteStore\<T\>
 
-Defined in: [svelte.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/svelte.ts#L6)
+Defined in: [svelte.ts:6](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/svelte.ts#L6)
 
 Svelte Store interface (compatible with Svelte's store contract)
 
@@ -22,7 +22,7 @@ Svelte Store interface (compatible with Svelte's store contract)
 
 > **set**: (`value`) => `void`
 
-Defined in: [svelte.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/svelte.ts#L8)
+Defined in: [svelte.ts:8](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/svelte.ts#L8)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [svelte.ts:8](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **subscribe**: (`run`) => () => `void`
 
-Defined in: [svelte.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/svelte.ts#L7)
+Defined in: [svelte.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/svelte.ts#L7)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [svelte.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **update**: (`fn`) => `void`
 
-Defined in: [svelte.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/svelte.ts#L9)
+Defined in: [svelte.ts:9](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/svelte.ts#L9)
 
 #### Parameters
 

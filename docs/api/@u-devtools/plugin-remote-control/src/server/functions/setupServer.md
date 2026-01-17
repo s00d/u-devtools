@@ -8,7 +8,7 @@
 
 > **setupServer**(`rpc`, `ctx`): `void`
 
-Defined in: [server.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/plugins/remote-control/src/server.ts#L3)
+Defined in: [server.ts:3](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/plugins/remote-control/src/server.ts#L3)
 
 ## Parameters
 

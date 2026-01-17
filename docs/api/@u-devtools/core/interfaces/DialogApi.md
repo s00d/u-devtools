@@ -6,7 +6,7 @@
 
 # Interface: DialogApi
 
-Defined in: [index.ts:218](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L218)
+Defined in: [index.ts:218](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L218)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:218](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **confirm**(`options`): `Promise`\<`boolean`\>
 
-Defined in: [index.ts:224](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L224)
+Defined in: [index.ts:224](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L224)
 
 Show a confirmation dialog.
 
@@ -40,7 +40,7 @@ Promise with result (true if confirmed)
 
 > **prompt**(`options`): `Promise`\<`string` \| `null`\>
 
-Defined in: [index.ts:236](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L236)
+Defined in: [index.ts:236](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L236)
 
 Show an input dialog.
 

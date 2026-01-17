@@ -6,7 +6,7 @@
 
 # Interface: ColorOption
 
-Defined in: [types.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L20)
+Defined in: [types.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L20)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > `optional` **hex**: `string`
 
-Defined in: [types.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L23)
+Defined in: [types.ts:23](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L23)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **name**: `string`
 
-Defined in: [types.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L21)
+Defined in: [types.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L21)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [types.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **value**: `string`
 
-Defined in: [types.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L22)
+Defined in: [types.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L22)

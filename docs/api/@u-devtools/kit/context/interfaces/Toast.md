@@ -6,7 +6,7 @@
 
 # Interface: Toast
 
-Defined in: [context.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L3)
+Defined in: [context.ts:3](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [context.ts:3](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **error**: (`msg`) => `void`
 
-Defined in: [context.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L5)
+Defined in: [context.ts:5](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L5)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [context.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **info**: (`msg`) => `void`
 
-Defined in: [context.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L6)
+Defined in: [context.ts:6](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L6)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [context.ts:6](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **success**: (`msg`) => `void`
 
-Defined in: [context.ts:4](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L4)
+Defined in: [context.ts:4](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L4)
 
 #### Parameters
 

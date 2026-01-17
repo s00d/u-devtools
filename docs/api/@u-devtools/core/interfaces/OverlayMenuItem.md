@@ -6,7 +6,7 @@
 
 # Interface: OverlayMenuItem
 
-Defined in: [control.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L41)
+Defined in: [control.ts:41](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L41)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [control.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **icon**: `string`
 
-Defined in: [control.ts:44](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L44)
+Defined in: [control.ts:44](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L44)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [control.ts:44](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **iconSvg**: `string`
 
-Defined in: [control.ts:45](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L45)
+Defined in: [control.ts:45](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L45)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [control.ts:45](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **iconUrl**: `string`
 
-Defined in: [control.ts:46](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L46)
+Defined in: [control.ts:46](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L46)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [control.ts:46](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **id**: `string`
 
-Defined in: [control.ts:42](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L42)
+Defined in: [control.ts:42](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L42)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [control.ts:42](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **label**: `string`
 
-Defined in: [control.ts:43](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L43)
+Defined in: [control.ts:43](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L43)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [control.ts:43](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onBlur**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:61](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L61)
+Defined in: [control.ts:61](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L61)
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Defined in: [control.ts:61](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onClick**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:51](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L51)
+Defined in: [control.ts:51](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L51)
 
 Event handlers (receive context)
 
@@ -94,7 +94,7 @@ Event handlers (receive context)
 
 > `optional` **onContextMenu**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:53](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L53)
+Defined in: [control.ts:53](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L53)
 
 #### Parameters
 
@@ -113,7 +113,7 @@ Defined in: [control.ts:53](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onDoubleClick**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:52](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L52)
+Defined in: [control.ts:52](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L52)
 
 #### Parameters
 
@@ -132,7 +132,7 @@ Defined in: [control.ts:52](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onFocus**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:60](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L60)
+Defined in: [control.ts:60](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L60)
 
 #### Parameters
 
@@ -151,7 +151,7 @@ Defined in: [control.ts:60](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onKeyDown**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:58](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L58)
+Defined in: [control.ts:58](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L58)
 
 #### Parameters
 
@@ -170,7 +170,7 @@ Defined in: [control.ts:58](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onKeyUp**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:59](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L59)
+Defined in: [control.ts:59](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L59)
 
 #### Parameters
 
@@ -189,7 +189,7 @@ Defined in: [control.ts:59](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onMouseDown**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:56](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L56)
+Defined in: [control.ts:56](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L56)
 
 #### Parameters
 
@@ -208,7 +208,7 @@ Defined in: [control.ts:56](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onMouseEnter**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:54](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L54)
+Defined in: [control.ts:54](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L54)
 
 #### Parameters
 
@@ -227,7 +227,7 @@ Defined in: [control.ts:54](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onMouseLeave**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:55](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L55)
+Defined in: [control.ts:55](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L55)
 
 #### Parameters
 
@@ -246,7 +246,7 @@ Defined in: [control.ts:55](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **onMouseUp**: (`ctx`, `event`) => `void`
 
-Defined in: [control.ts:57](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L57)
+Defined in: [control.ts:57](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L57)
 
 #### Parameters
 
@@ -265,4 +265,4 @@ Defined in: [control.ts:57](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > `optional` **order**: `number`
 
-Defined in: [control.ts:47](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/control.ts#L47)
+Defined in: [control.ts:47](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/control.ts#L47)

@@ -6,7 +6,7 @@
 
 # Interface: BusEvents
 
-Defined in: [event-bus.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L19)
+Defined in: [event-bus.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L19)
 
 EventBus events interface.
 Plugins can extend this interface through module augmentation.
@@ -32,7 +32,7 @@ declare module '@u-devtools/core' {
 
 > **navigate**: `object`
 
-Defined in: [event-bus.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L22)
+Defined in: [event-bus.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L22)
 
 #### path
 
@@ -44,7 +44,7 @@ Defined in: [event-bus.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **plugin:mounted**: `object`
 
-Defined in: [event-bus.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L20)
+Defined in: [event-bus.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L20)
 
 #### name
 
@@ -56,7 +56,7 @@ Defined in: [event-bus.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **plugin:unmounted**: `object`
 
-Defined in: [event-bus.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L21)
+Defined in: [event-bus.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L21)
 
 #### name
 
@@ -68,7 +68,7 @@ Defined in: [event-bus.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **settings:changed**: `object`
 
-Defined in: [event-bus.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L23)
+Defined in: [event-bus.ts:23](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L23)
 
 #### key
 
@@ -84,7 +84,7 @@ Defined in: [event-bus.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef9
 
 > **storage:changed**: `object`
 
-Defined in: [event-bus.ts:24](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L24)
+Defined in: [event-bus.ts:24](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L24)
 
 #### key
 

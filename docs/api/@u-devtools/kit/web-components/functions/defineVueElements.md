@@ -8,7 +8,7 @@
 
 > **defineVueElements**(`definitions`): `void`
 
-Defined in: [web-components.ts:365](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/web-components.ts#L365)
+Defined in: [web-components.ts:365](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/web-components.ts#L365)
 
 Helper to register multiple Vue components as Web Components
 

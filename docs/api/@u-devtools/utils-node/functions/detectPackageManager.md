@@ -8,7 +8,7 @@
 
 > **detectPackageManager**(`root`): [`PackageManagerInfo`](../interfaces/PackageManagerInfo.md)
 
-Defined in: [package-manager.ts:31](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L31)
+Defined in: [package-manager.ts:31](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L31)
 
 Detect package manager by checking lockfiles first, then falling back to npm_config_user_agent
 

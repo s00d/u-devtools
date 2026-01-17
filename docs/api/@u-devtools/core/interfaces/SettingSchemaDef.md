@@ -6,7 +6,7 @@
 
 # Interface: SettingSchemaDef
 
-Defined in: [index.ts:373](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L373)
+Defined in: [index.ts:373](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L373)
 
 Setting schema definition for a single setting.
 Used to define user-configurable settings that appear in the DevTools settings panel.
@@ -52,7 +52,7 @@ const pluginWithSettings: PluginClientInstance = {
 
 > `optional` **default**: `unknown`
 
-Defined in: [index.ts:381](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L381)
+Defined in: [index.ts:381](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L381)
 
 Default value
 
@@ -62,7 +62,7 @@ Default value
 
 > `optional` **description**: `string`
 
-Defined in: [index.ts:377](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L377)
+Defined in: [index.ts:377](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L377)
 
 Optional description/tooltip text
 
@@ -72,7 +72,7 @@ Optional description/tooltip text
 
 > `optional` **items**: `Record`\<`string`, `SettingSchemaDef`\>
 
-Defined in: [index.ts:385](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L385)
+Defined in: [index.ts:385](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L385)
 
 Schema for array items (for 'array' type with object items)
 
@@ -82,7 +82,7 @@ Schema for array items (for 'array' type with object items)
 
 > `optional` **itemType**: `"string"` \| `"number"`
 
-Defined in: [index.ts:387](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L387)
+Defined in: [index.ts:387](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L387)
 
 Item type for 'array' type with primitive items ('string' or 'number')
 
@@ -92,7 +92,7 @@ Item type for 'array' type with primitive items ('string' or 'number')
 
 > **label**: `string`
 
-Defined in: [index.ts:375](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L375)
+Defined in: [index.ts:375](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L375)
 
 Display label for the setting
 
@@ -102,7 +102,7 @@ Display label for the setting
 
 > `optional` **options**: `object`[]
 
-Defined in: [index.ts:383](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L383)
+Defined in: [index.ts:383](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L383)
 
 Options for 'select' type settings
 
@@ -120,6 +120,6 @@ Options for 'select' type settings
 
 > **type**: [`SettingType`](../type-aliases/SettingType.md)
 
-Defined in: [index.ts:379](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L379)
+Defined in: [index.ts:379](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L379)
 
 Setting type (determines input component)

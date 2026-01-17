@@ -6,7 +6,7 @@
 
 # Class: FileSystemService
 
-Defined in: [file-system.ts:35](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L35)
+Defined in: [file-system.ts:35](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L35)
 
 File system service for safe file operations within a project root.
 
@@ -42,7 +42,7 @@ await fs.mkdir('path/to/dir', true); // true = recursive
 
 > **new FileSystemService**(`root`): `FileSystemService`
 
-Defined in: [file-system.ts:36](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L36)
+Defined in: [file-system.ts:36](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L36)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Defined in: [file-system.ts:36](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **access**(`filePath`): `Promise`\<`void`\>
 
-Defined in: [file-system.ts:116](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L116)
+Defined in: [file-system.ts:116](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L116)
 
 Проверка доступа к файлу (аналог fs.access).
 Выбрасывает ошибку, если файл недоступен.
@@ -81,7 +81,7 @@ Defined in: [file-system.ts:116](https://github.com/s00d/u-devtools/blob/4fad699
 
 > **exists**(`filePath`): `boolean`
 
-Defined in: [file-system.ts:103](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L103)
+Defined in: [file-system.ts:103](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L103)
 
 Проверка существования файла/директории.
 
@@ -101,7 +101,7 @@ Defined in: [file-system.ts:103](https://github.com/s00d/u-devtools/blob/4fad699
 
 > **mkdir**(`dirPath`, `recursive`): `Promise`\<`void`\>
 
-Defined in: [file-system.ts:129](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L129)
+Defined in: [file-system.ts:129](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L129)
 
 Создание директории (рекурсивно).
 
@@ -128,7 +128,7 @@ await fs.mkdir('path/to/dir', true); // true = recursive
 
 > **read**(`filePath`): `Promise`\<`string`\>
 
-Defined in: [file-system.ts:46](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L46)
+Defined in: [file-system.ts:46](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L46)
 
 Безопасное чтение файла. Выбрасывает ошибку, если путь выходит за пределы root.
 
@@ -154,7 +154,7 @@ const content = await fs.read('path/to/file.txt');
 
 > **readdir**(`dirPath`, `options?`): `Promise`\<`string`[] \| `Dirent`\<`string`\>[]\>
 
-Defined in: [file-system.ts:142](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L142)
+Defined in: [file-system.ts:142](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L142)
 
 Чтение директории.
 
@@ -182,7 +182,7 @@ const entries = await fs.readdir('path/to/dir', { withFileTypes: true });
 
 > **readJson**\<`T`\>(`filePath`): `Promise`\<`T` \| `null`\>
 
-Defined in: [file-system.ts:59](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L59)
+Defined in: [file-system.ts:59](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L59)
 
 Безопасное чтение JSON.
 
@@ -214,7 +214,7 @@ const data = await fs.readJson('path/to/data.json');
 
 > **remove**(`filePath`): `Promise`\<`void`\>
 
-Defined in: [file-system.ts:153](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L153)
+Defined in: [file-system.ts:153](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L153)
 
 Удаление файла или директории.
 
@@ -234,7 +234,7 @@ Defined in: [file-system.ts:153](https://github.com/s00d/u-devtools/blob/4fad699
 
 > **stat**(`filePath`): `Promise`\<`Stats`\>
 
-Defined in: [file-system.ts:167](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L167)
+Defined in: [file-system.ts:167](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L167)
 
 Получение информации о файле/директории.
 
@@ -254,7 +254,7 @@ Defined in: [file-system.ts:167](https://github.com/s00d/u-devtools/blob/4fad699
 
 > **write**(`filePath`, `content`): `Promise`\<`void`\>
 
-Defined in: [file-system.ts:76](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L76)
+Defined in: [file-system.ts:76](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L76)
 
 Безопасная запись файла. Автоматически создает директории.
 
@@ -281,7 +281,7 @@ await fs.write('path/to/file.txt', content);
 
 > **writeJson**(`filePath`, `data`, `indent`): `Promise`\<`void`\>
 
-Defined in: [file-system.ts:95](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/file-system.ts#L95)
+Defined in: [file-system.ts:95](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/file-system.ts#L95)
 
 Безопасная запись JSON файла. Автоматически создает директории.
 

@@ -6,7 +6,7 @@
 
 # Interface: UseResizableOptions
 
-Defined in: [composables/useResizable.ts:5](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L5)
+Defined in: [composables/useResizable.ts:5](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L5)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [composables/useResizable.ts:5](https://github.com/s00d/u-devtools/b
 
 > `optional` **direction**: [`ResizeDirection`](../type-aliases/ResizeDirection.md)
 
-Defined in: [composables/useResizable.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L10)
+Defined in: [composables/useResizable.ts:10](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L10)
 
 Направление ресайза
 
@@ -30,7 +30,7 @@ Defined in: [composables/useResizable.ts:10](https://github.com/s00d/u-devtools/
 
 > `optional` **max**: `number` \| () => `number`
 
-Defined in: [composables/useResizable.ts:26](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L26)
+Defined in: [composables/useResizable.ts:26](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L26)
 
 Максимальное значение (может быть функцией для динамического вычисления)
 
@@ -40,7 +40,7 @@ Defined in: [composables/useResizable.ts:26](https://github.com/s00d/u-devtools/
 
 > `optional` **min**: `number` \| () => `number`
 
-Defined in: [composables/useResizable.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L22)
+Defined in: [composables/useResizable.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L22)
 
 Минимальное значение (может быть функцией для динамического вычисления)
 
@@ -50,7 +50,7 @@ Defined in: [composables/useResizable.ts:22](https://github.com/s00d/u-devtools/
 
 > `optional` **onResizeEnd**: () => `void`
 
-Defined in: [composables/useResizable.ts:18](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L18)
+Defined in: [composables/useResizable.ts:18](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L18)
 
 Callback при окончании ресайза
 
@@ -64,7 +64,7 @@ Callback при окончании ресайза
 
 > `optional` **onResizeStart**: () => `void`
 
-Defined in: [composables/useResizable.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/composables/useResizable.ts#L14)
+Defined in: [composables/useResizable.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/composables/useResizable.ts#L14)
 
 Callback при начале ресайза
 

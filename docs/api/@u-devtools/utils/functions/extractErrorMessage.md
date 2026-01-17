@@ -8,7 +8,7 @@
 
 > **extractErrorMessage**(`error`): `string`
 
-Defined in: [error-handler.ts:29](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils/src/error-handler.ts#L29)
+Defined in: [error-handler.ts:29](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils/src/error-handler.ts#L29)
 
 Extracts error message from unknown error value.
 Handles Error instances, error-like objects, and primitive values.

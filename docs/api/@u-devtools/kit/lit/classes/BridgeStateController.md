@@ -6,7 +6,7 @@
 
 # Class: BridgeStateController\<T\>
 
-Defined in: [lit.ts:30](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L30)
+Defined in: [lit.ts:30](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L30)
 
 Lit adapter for SyncedState.
 Works as a Reactive Controller.
@@ -48,7 +48,7 @@ class MyElement extends LitElement {
 
 > **new BridgeStateController**\<`T`\>(`host`, `syncedState`): `BridgeStateController`\<`T`\>
 
-Defined in: [lit.ts:33](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L33)
+Defined in: [lit.ts:33](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L33)
 
 #### Parameters
 
@@ -67,7 +67,7 @@ Defined in: [lit.ts:33](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a
 
 > `protected` **host**: `ReactiveControllerHost`
 
-Defined in: [lit.ts:34](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L34)
+Defined in: [lit.ts:34](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L34)
 
 ***
 
@@ -75,7 +75,7 @@ Defined in: [lit.ts:34](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a
 
 > `protected` **syncedState**: [`SyncedState`](../../../core/classes/SyncedState.md)\<`T`\>
 
-Defined in: [lit.ts:35](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L35)
+Defined in: [lit.ts:35](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L35)
 
 ## Accessors
 
@@ -85,7 +85,7 @@ Defined in: [lit.ts:35](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a
 
 > **get** **value**(): `T`
 
-Defined in: [lit.ts:53](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L53)
+Defined in: [lit.ts:53](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L53)
 
 ##### Returns
 
@@ -95,7 +95,7 @@ Defined in: [lit.ts:53](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a
 
 > **set** **value**(`v`): `void`
 
-Defined in: [lit.ts:57](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L57)
+Defined in: [lit.ts:57](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L57)
 
 ##### Parameters
 
@@ -113,7 +113,7 @@ Defined in: [lit.ts:57](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a
 
 > **hostConnected**(): `void`
 
-Defined in: [lit.ts:40](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L40)
+Defined in: [lit.ts:40](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L40)
 
 Called when the host is connected to the component tree. For custom
 element hosts, this corresponds to the `connectedCallback()` lifecycle,
@@ -133,7 +133,7 @@ which is only called when the component is connected to the document.
 
 > **hostDisconnected**(): `void`
 
-Defined in: [lit.ts:46](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/lit.ts#L46)
+Defined in: [lit.ts:46](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/lit.ts#L46)
 
 Called when the host is disconnected from the component tree. For custom
 element hosts, this corresponds to the `disconnectedCallback()` lifecycle,

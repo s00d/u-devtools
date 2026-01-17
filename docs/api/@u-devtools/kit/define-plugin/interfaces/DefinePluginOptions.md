@@ -6,7 +6,7 @@
 
 # Interface: DefinePluginOptions
 
-Defined in: [define-plugin.ts:30](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L30)
+Defined in: [define-plugin.ts:31](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L31)
 
 Options for defining a DevTools plugin using the `definePlugin` helper.
 
@@ -39,7 +39,7 @@ export default definePlugin({
 
 > `optional` **app**: `string` \| `null`
 
-Defined in: [define-plugin.ts:57](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L57)
+Defined in: [define-plugin.ts:58](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L58)
 
 Relative path to app file (with or without extension).
 
@@ -58,7 +58,7 @@ The app file should export a `AppPluginDefinition` using `defineApp`.
 
 > `optional` **client**: `string` \| `null`
 
-Defined in: [define-plugin.ts:48](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L48)
+Defined in: [define-plugin.ts:49](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L49)
 
 Relative path to client file (with or without extension).
 
@@ -83,7 +83,7 @@ The client file should export a `PluginClientInstance` as default.
 
 > `optional` **meta**: [`PluginMetadata`](../../../core/interfaces/PluginMetadata.md)
 
-Defined in: [define-plugin.ts:71](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L71)
+Defined in: [define-plugin.ts:72](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L72)
 
 Plugin metadata (name, version, description, author, homepage, repository)
 
@@ -93,7 +93,7 @@ Plugin metadata (name, version, description, author, homepage, repository)
 
 > **name**: `string`
 
-Defined in: [define-plugin.ts:32](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L32)
+Defined in: [define-plugin.ts:33](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L33)
 
 Display name of the plugin (shown in DevTools UI)
 
@@ -103,7 +103,7 @@ Display name of the plugin (shown in DevTools UI)
 
 > **root**: `string`
 
-Defined in: [define-plugin.ts:38](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L38)
+Defined in: [define-plugin.ts:39](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L39)
 
 Must pass `import.meta.url` so we can resolve paths.
 This is used to determine the plugin's directory and resolve relative paths.
@@ -114,7 +114,7 @@ This is used to determine the plugin's directory and resolve relative paths.
 
 > `optional` **server**: `string` \| `null`
 
-Defined in: [define-plugin.ts:68](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L68)
+Defined in: [define-plugin.ts:69](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L69)
 
 Relative path to server file (with or without extension).
 If specified, will be automatically loaded and `setupServer` export will be called.
@@ -140,7 +140,7 @@ The server file should export a `setupServer` function.
 
 > `optional` **useDist**: `boolean`
 
-Defined in: [define-plugin.ts:86](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L86)
+Defined in: [define-plugin.ts:87](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L87)
 
 Force use production paths (dist/file.js) even in dev mode.
 Useful for debugging built plugin version.
@@ -157,7 +157,7 @@ false
 
 > `optional` **vitePlugins**: () => `any`[]
 
-Defined in: [define-plugin.ts:79](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L79)
+Defined in: [define-plugin.ts:80](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L80)
 
 Vite plugins to inject into the dev server.
 These plugins will be merged with the main DevTools plugin.

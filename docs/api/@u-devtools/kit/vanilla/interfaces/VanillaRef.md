@@ -6,7 +6,7 @@
 
 # Interface: VanillaRef\<T\>
 
-Defined in: [vanilla.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/vanilla.ts#L11)
+Defined in: [vanilla.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/vanilla.ts#L11)
 
 Reactive variable interface for Vanilla JS
 
@@ -22,7 +22,7 @@ Reactive variable interface for Vanilla JS
 
 > **dispose**: () => `void`
 
-Defined in: [vanilla.ts:19](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/vanilla.ts#L19)
+Defined in: [vanilla.ts:19](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/vanilla.ts#L19)
 
 Unsubscribes from updates.
 
@@ -36,6 +36,6 @@ Unsubscribes from updates.
 
 > **value**: `T`
 
-Defined in: [vanilla.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/vanilla.ts#L15)
+Defined in: [vanilla.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/vanilla.ts#L15)
 
 Current value. When assigned, automatically updates SyncedState.

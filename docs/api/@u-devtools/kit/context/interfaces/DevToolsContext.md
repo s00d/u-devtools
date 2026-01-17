@@ -6,7 +6,7 @@
 
 # Interface: DevToolsContext
 
-Defined in: [context.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L9)
+Defined in: [context.ts:9](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L9)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [context.ts:9](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > `optional` **api**: [`ClientApi`](../../../core/interfaces/ClientApi.md)
 
-Defined in: [context.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L10)
+Defined in: [context.ts:10](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L10)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [context.ts:10](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **bridge**: [`AppBridge`](../../../core/classes/AppBridge.md)\<`any`\>
 
-Defined in: [context.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L11)
+Defined in: [context.ts:11](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L11)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [context.ts:11](https://github.com/s00d/u-devtools/blob/4fad699ef961
 
 > **toast**: [`Toast`](Toast.md)
 
-Defined in: [context.ts:12](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/context.ts#L12)
+Defined in: [context.ts:12](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/context.ts#L12)

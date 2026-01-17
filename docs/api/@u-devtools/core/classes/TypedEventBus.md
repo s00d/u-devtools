@@ -6,7 +6,7 @@
 
 # Class: TypedEventBus\<T\>
 
-Defined in: [event-bus.ts:67](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L67)
+Defined in: [event-bus.ts:67](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L67)
 
 Typed Event Emitter for inter-plugin communication.
 Provides type-safe event emission and subscription.
@@ -67,7 +67,7 @@ bus.off('plugin:mounted', handler);
 
 > **clear**(): `void`
 
-Defined in: [event-bus.ts:116](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L116)
+Defined in: [event-bus.ts:116](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L116)
 
 Clear all subscriptions
 
@@ -81,7 +81,7 @@ Clear all subscriptions
 
 > **emit**\<`K`\>(`event`, `data`): `void`
 
-Defined in: [event-bus.ts:73](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L73)
+Defined in: [event-bus.ts:73](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L73)
 
 Emit an event
 
@@ -108,7 +108,7 @@ Emit an event
 
 > **listenerCount**\<`K`\>(`event`): `number`
 
-Defined in: [event-bus.ts:123](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L123)
+Defined in: [event-bus.ts:123](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L123)
 
 Get the number of subscribers for an event
 
@@ -134,7 +134,7 @@ Get the number of subscribers for an event
 
 > **off**\<`K`\>(`event`, `handler`): `void`
 
-Defined in: [event-bus.ts:103](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L103)
+Defined in: [event-bus.ts:103](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L103)
 
 Unsubscribe from an event
 
@@ -161,7 +161,7 @@ Unsubscribe from an event
 
 > **on**\<`K`\>(`event`, `handler`): () => `void`
 
-Defined in: [event-bus.ts:85](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/event-bus.ts#L85)
+Defined in: [event-bus.ts:85](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/event-bus.ts#L85)
 
 Subscribe to an event
 

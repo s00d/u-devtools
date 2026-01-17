@@ -6,7 +6,7 @@
 
 # Interface: EventBusApi
 
-Defined in: [index.ts:194](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L194)
+Defined in: [index.ts:194](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L194)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:194](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **emit**(`event`, `data?`): `void`
 
-Defined in: [index.ts:200](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L200)
+Defined in: [index.ts:200](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L200)
 
 Emit an event.
 
@@ -35,7 +35,7 @@ Emit an event.
 
 > **off**(`event`, `handler`): `void`
 
-Defined in: [index.ts:215](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L215)
+Defined in: [index.ts:215](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L215)
 
 Unsubscribe from an event.
 
@@ -56,7 +56,7 @@ Unsubscribe from an event.
 
 > **on**(`event`, `handler`): () => `void`
 
-Defined in: [index.ts:208](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L208)
+Defined in: [index.ts:208](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L208)
 
 Subscribe to an event.
 

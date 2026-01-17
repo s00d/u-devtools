@@ -8,7 +8,7 @@
 
 > **defineApp**(`def`): [`AppPluginDefinition`](../interfaces/AppPluginDefinition.md)
 
-Defined in: [index.ts:78](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L78)
+Defined in: [index.ts:78](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L78)
 
 Declarative definition of a plugin part that works in the page context
 

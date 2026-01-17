@@ -6,7 +6,7 @@
 
 # Class: SyncedState\<T\>
 
-Defined in: [bridge-app.ts:36](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L36)
+Defined in: [bridge-app.ts:36](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L36)
 
 Universal state class with automatic synchronization between App and Client contexts.
 Implements "Handshake" protocol for getting current data on initialization.
@@ -51,7 +51,7 @@ unsubscribe();
 
 > **new SyncedState**\<`T`\>(`bridge`, `key`, `initialValue`): `SyncedState`\<`T`\>
 
-Defined in: [bridge-app.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L41)
+Defined in: [bridge-app.ts:41](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L41)
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Defined in: [bridge-app.ts:41](https://github.com/s00d/u-devtools/blob/4fad699ef
 
 > **get** **value**(): `T`
 
-Defined in: [bridge-app.ts:79](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L79)
+Defined in: [bridge-app.ts:79](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L79)
 
 ##### Returns
 
@@ -83,7 +83,7 @@ Defined in: [bridge-app.ts:79](https://github.com/s00d/u-devtools/blob/4fad699ef
 
 > **set** **value**(`newValue`): `void`
 
-Defined in: [bridge-app.ts:83](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L83)
+Defined in: [bridge-app.ts:83](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L83)
 
 ##### Parameters
 
@@ -101,7 +101,7 @@ Defined in: [bridge-app.ts:83](https://github.com/s00d/u-devtools/blob/4fad699ef
 
 > **getSnapshot**(): `T`
 
-Defined in: [bridge-app.ts:104](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L104)
+Defined in: [bridge-app.ts:104](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L104)
 
 #### Returns
 
@@ -113,7 +113,7 @@ Defined in: [bridge-app.ts:104](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **subscribe**(`fn`): () => `void`
 
-Defined in: [bridge-app.ts:96](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L96)
+Defined in: [bridge-app.ts:96](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L96)
 
 #### Parameters
 

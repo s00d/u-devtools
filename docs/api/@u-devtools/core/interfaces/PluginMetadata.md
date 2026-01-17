@@ -6,7 +6,7 @@
 
 # Interface: PluginMetadata
 
-Defined in: [index.ts:575](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L575)
+Defined in: [index.ts:575](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L575)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:575](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > `optional` **author**: `string`
 
-Defined in: [index.ts:579](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L579)
+Defined in: [index.ts:579](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L579)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:579](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > `optional` **description**: `string`
 
-Defined in: [index.ts:578](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L578)
+Defined in: [index.ts:578](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L578)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:578](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > `optional` **homepage**: `string`
 
-Defined in: [index.ts:580](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L580)
+Defined in: [index.ts:580](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L580)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:580](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **name**: `string`
 
-Defined in: [index.ts:576](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L576)
+Defined in: [index.ts:576](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L576)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:576](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > `optional` **repository**: `string`
 
-Defined in: [index.ts:581](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L581)
+Defined in: [index.ts:581](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L581)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [index.ts:581](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **version**: `string`
 
-Defined in: [index.ts:577](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L577)
+Defined in: [index.ts:577](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L577)

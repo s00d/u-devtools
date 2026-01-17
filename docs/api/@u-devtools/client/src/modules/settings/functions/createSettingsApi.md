@@ -8,7 +8,7 @@
 
 > **createSettingsApi**(`pluginName`): [`SettingsApi`](../../../../../core/interfaces/SettingsApi.md)
 
-Defined in: [modules/settings.ts:65](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/client/src/modules/settings.ts#L65)
+Defined in: [modules/settings.ts:65](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/client/src/modules/settings.ts#L65)
 
 Создает API настроек, скоупированное (изолированное) для конкретного плагина.
 

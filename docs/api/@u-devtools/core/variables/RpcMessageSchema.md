@@ -8,7 +8,7 @@
 
 > `const` **RpcMessageSchema**: `ZodObject`\<[`RpcMessageType`](../type-aliases/RpcMessageType.md)\>
 
-Defined in: [schemas/rpc.ts:7](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/schemas/rpc.ts#L7)
+Defined in: [schemas/rpc.ts:7](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/schemas/rpc.ts#L7)
 
 Zod schema for RPC message validation.
 Validates the structure of RPC messages used for communication between Server and Client contexts.

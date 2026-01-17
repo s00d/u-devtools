@@ -6,7 +6,7 @@
 
 # Interface: InspectorEvent
 
-Defined in: [index.ts:626](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L626)
+Defined in: [index.ts:626](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L626)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:626](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **data**: `object`
 
-Defined in: [index.ts:628](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L628)
+Defined in: [index.ts:628](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L628)
 
 #### attrs
 
@@ -50,4 +50,4 @@ Defined in: [index.ts:628](https://github.com/s00d/u-devtools/blob/4fad699ef961c
 
 > **type**: `"element-selected"`
 
-Defined in: [index.ts:627](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L627)
+Defined in: [index.ts:627](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L627)

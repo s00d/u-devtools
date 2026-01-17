@@ -6,7 +6,7 @@
 
 # Interface: PluginClientInstance
 
-Defined in: [index.ts:478](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L478)
+Defined in: [index.ts:478](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L478)
 
 Plugin Client Instance - Definition of a plugin's UI and behavior in Client context.
 This is the main export from a plugin's client.ts file.
@@ -36,7 +36,7 @@ export default plugin;
 
 > `optional` **commands**: [`PluginCommand`](PluginCommand.md)[]
 
-Defined in: [index.ts:494](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L494)
+Defined in: [index.ts:494](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L494)
 
 Commands accessible via Command Palette (Cmd+K / Ctrl+K)
 
@@ -46,7 +46,7 @@ Commands accessible via Command Palette (Cmd+K / Ctrl+K)
 
 > `optional` **generalMenuItems**: [`GeneralMenuItem`](GeneralMenuItem.md)[]
 
-Defined in: [index.ts:500](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L500)
+Defined in: [index.ts:500](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L500)
 
 Menu items for the "General" section in ActivityBar.
 Allows plugins to add their actions to the general menu.
@@ -57,7 +57,7 @@ Allows plugins to add their actions to the general menu.
 
 > `optional` **hideFromMenu**: `boolean`
 
-Defined in: [index.ts:488](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L488)
+Defined in: [index.ts:488](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L488)
 
 Hide plugin from main ActivityBar menu.
 Plugin will still be accessible via navigation API or generalMenuItems.
@@ -68,7 +68,7 @@ Plugin will still be accessible via navigation API or generalMenuItems.
 
 > **icon**: `string`
 
-Defined in: [index.ts:482](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L482)
+Defined in: [index.ts:482](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L482)
 
 Heroicons icon name (e.g., 'Cube', 'MagnifyingGlass', 'WrenchScrewdriver')
 
@@ -78,7 +78,7 @@ Heroicons icon name (e.g., 'Cube', 'MagnifyingGlass', 'WrenchScrewdriver')
 
 > **name**: `string`
 
-Defined in: [index.ts:480](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L480)
+Defined in: [index.ts:480](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L480)
 
 Display name shown in DevTools UI
 
@@ -88,7 +88,7 @@ Display name shown in DevTools UI
 
 > `optional` **renderMain**: (`el`, `api`, `options`) => [`UnmountFn`](../type-aliases/UnmountFn.md)
 
-Defined in: [index.ts:519](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L519)
+Defined in: [index.ts:519](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L519)
 
 Render main panel (optional).
 This is the primary UI for your plugin.
@@ -114,7 +114,7 @@ Cleanup function called when plugin is unmounted
 
 > `optional` **renderSettings**: (`el`, `api`, `options`) => [`UnmountFn`](../type-aliases/UnmountFn.md)
 
-Defined in: [index.ts:529](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L529)
+Defined in: [index.ts:529](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L529)
 
 Render custom settings UI (optional).
 If not provided, settings will use the default form based on settings schema.
@@ -140,7 +140,7 @@ Cleanup function called when plugin is unmounted
 
 > `optional` **renderSidebar**: (`el`, `api`, `options`) => [`UnmountFn`](../type-aliases/UnmountFn.md)
 
-Defined in: [index.ts:509](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L509)
+Defined in: [index.ts:509](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L509)
 
 Render sidebar panel (optional).
 
@@ -165,6 +165,6 @@ Cleanup function called when plugin is unmounted
 
 > `optional` **settings**: [`PluginSettingsSchema`](PluginSettingsSchema.md)
 
-Defined in: [index.ts:491](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L491)
+Defined in: [index.ts:491](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L491)
 
 Settings schema for user-configurable options

@@ -6,7 +6,7 @@
 
 # Interface: UpdateOptions
 
-Defined in: [package-manager.ts:20](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L20)
+Defined in: [package-manager.ts:20](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L20)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [package-manager.ts:20](https://github.com/s00d/u-devtools/blob/4fad
 
 > `optional` **dev**: `boolean`
 
-Defined in: [package-manager.ts:22](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L22)
+Defined in: [package-manager.ts:22](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L22)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [package-manager.ts:22](https://github.com/s00d/u-devtools/blob/4fad
 
 > `optional` **latest**: `boolean`
 
-Defined in: [package-manager.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L23)
+Defined in: [package-manager.ts:23](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L23)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [package-manager.ts:23](https://github.com/s00d/u-devtools/blob/4fad
 
 > **packages**: `string`[]
 
-Defined in: [package-manager.ts:21](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils-node/src/package-manager.ts#L21)
+Defined in: [package-manager.ts:21](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils-node/src/package-manager.ts#L21)

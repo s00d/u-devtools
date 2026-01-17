@@ -8,7 +8,7 @@
 
 > `const` **plugin**: () => [`DevToolsPlugin`](../../core/interfaces/DevToolsPlugin.md) = `vueInspectorPlugin`
 
-Defined in: [index.ts:23](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/plugins/vue-inspector/src/index.ts#L23)
+Defined in: [index.ts:23](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/plugins/vue-inspector/src/index.ts#L23)
 
 ## Returns
 

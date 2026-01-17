@@ -6,7 +6,7 @@
 
 # Interface: AppPluginDefinition
 
-Defined in: [index.ts:40](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L40)
+Defined in: [index.ts:40](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L40)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:40](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > `optional` **commands**: `object`[]
 
-Defined in: [index.ts:66](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L66)
+Defined in: [index.ts:66](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L66)
 
 Declarative commands
 
@@ -54,7 +54,7 @@ Declarative commands
 
 > `optional` **component**: `Component`
 
-Defined in: [index.ts:44](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L44)
+Defined in: [index.ts:44](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L44)
 
 Vue component that will be rendered in the plugins layer (on top of the page)
 
@@ -64,7 +64,7 @@ Vue component that will be rendered in the plugins layer (on top of the page)
 
 > `optional` **menu**: `object`
 
-Defined in: [index.ts:55](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L55)
+Defined in: [index.ts:55](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L55)
 
 Declarative menu (required for plugins with UI in overlay)
 
@@ -94,7 +94,7 @@ Declarative menu (required for plugins with UI in overlay)
 
 > `optional` **setup**: (`context`) => `void` \| `Promise`\<`void`\>
 
-Defined in: [index.ts:50](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/index.ts#L50)
+Defined in: [index.ts:50](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/index.ts#L50)
 
 Setup function (executed once on startup)
 Here you can attach global listeners or register menu items

@@ -8,7 +8,7 @@
 
 > **validateSettingSchemaDef**(`data`): `any`
 
-Defined in: [schemas/settings.ts:59](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/schemas/settings.ts#L59)
+Defined in: [schemas/settings.ts:59](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/schemas/settings.ts#L59)
 
 Validates a setting schema definition.
 

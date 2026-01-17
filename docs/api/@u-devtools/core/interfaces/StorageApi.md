@@ -6,7 +6,7 @@
 
 # Interface: StorageApi
 
-Defined in: [index.ts:99](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L99)
+Defined in: [index.ts:99](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L99)
 
 Storage API for plugin-specific persistent storage.
 Used for internal plugin state (e.g., last opened file, view preferences).
@@ -39,7 +39,7 @@ function useStorage(api: StorageApi) {
 
 > **get**\<`T`\>(`key`, `def`): `T`
 
-Defined in: [index.ts:107](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L107)
+Defined in: [index.ts:107](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L107)
 
 Get a stored value.
 
@@ -68,7 +68,7 @@ Stored value or default
 
 > **remove**(`key`): `void`
 
-Defined in: [index.ts:121](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L121)
+Defined in: [index.ts:121](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L121)
 
 Remove a stored value.
 
@@ -88,7 +88,7 @@ Remove a stored value.
 
 > **set**\<`T`\>(`key`, `value`): `void`
 
-Defined in: [index.ts:115](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L115)
+Defined in: [index.ts:115](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L115)
 
 Set a stored value.
 

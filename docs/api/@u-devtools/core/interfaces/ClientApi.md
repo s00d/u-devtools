@@ -6,7 +6,7 @@
 
 # Interface: ClientApi
 
-Defined in: [index.ts:305](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L305)
+Defined in: [index.ts:305](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L305)
 
 Client API - Main API object provided to plugins in Client context.
 Provides access to all DevTools services: RPC, storage, settings, notifications, etc.
@@ -69,7 +69,7 @@ const plugin: PluginClientInstance = {
 
 > **bus**: [`EventBusApi`](EventBusApi.md)
 
-Defined in: [index.ts:319](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L319)
+Defined in: [index.ts:319](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L319)
 
 Event bus for plugin-to-plugin communication
 
@@ -79,7 +79,7 @@ Event bus for plugin-to-plugin communication
 
 > **clipboard**: [`ClipboardApi`](ClipboardApi.md)
 
-Defined in: [index.ts:317](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L317)
+Defined in: [index.ts:317](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L317)
 
 Clipboard operations API
 
@@ -89,7 +89,7 @@ Clipboard operations API
 
 > **dialog**: [`DialogApi`](DialogApi.md)
 
-Defined in: [index.ts:321](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L321)
+Defined in: [index.ts:321](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L321)
 
 Dialog API for confirmations and prompts
 
@@ -99,7 +99,7 @@ Dialog API for confirmations and prompts
 
 > **navigation**: [`NavigationApi`](NavigationApi.md)
 
-Defined in: [index.ts:323](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L323)
+Defined in: [index.ts:323](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L323)
 
 Navigation API for switching between plugins
 
@@ -109,7 +109,7 @@ Navigation API for switching between plugins
 
 > **notify**: (`msg`, `type?`) => `void`
 
-Defined in: [index.ts:309](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L309)
+Defined in: [index.ts:309](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L309)
 
 Show a notification to the user
 
@@ -130,7 +130,7 @@ Show a notification to the user
 
 > **rpc**: [`RpcClientInterface`](RpcClientInterface.md)
 
-Defined in: [index.ts:307](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L307)
+Defined in: [index.ts:307](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L307)
 
 RPC client for calling server methods
 
@@ -140,7 +140,7 @@ RPC client for calling server methods
 
 > **settings**: [`SettingsApi`](SettingsApi.md)
 
-Defined in: [index.ts:313](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L313)
+Defined in: [index.ts:313](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L313)
 
 Settings API for user-configurable preferences (e.g., font size, theme)
 
@@ -150,7 +150,7 @@ Settings API for user-configurable preferences (e.g., font size, theme)
 
 > **shortcuts**: [`ShortcutApi`](ShortcutApi.md)
 
-Defined in: [index.ts:315](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L315)
+Defined in: [index.ts:315](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L315)
 
 Keyboard shortcuts API
 
@@ -160,6 +160,6 @@ Keyboard shortcuts API
 
 > **storage**: [`StorageApi`](StorageApi.md)
 
-Defined in: [index.ts:311](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/index.ts#L311)
+Defined in: [index.ts:311](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/index.ts#L311)
 
 Storage API for plugin-specific persistent state (e.g., last opened file)

@@ -6,7 +6,7 @@
 
 # Class: AppBridge\<Protocol\>
 
-Defined in: [bridge-app.ts:150](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L150)
+Defined in: [bridge-app.ts:150](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L150)
 
 AppBridge - Typed communication bridge between App context (main window) and Client context (DevTools iframe).
 
@@ -53,7 +53,7 @@ selectedElement.value = document.getElementById('my-element');
 
 > **new AppBridge**\<`Protocol`\>(`namespace`): `AppBridge`\<`Protocol`\>
 
-Defined in: [bridge-app.ts:155](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L155)
+Defined in: [bridge-app.ts:155](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L155)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ Defined in: [bridge-app.ts:155](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **displayName**: `string`
 
-Defined in: [bridge-app.ts:153](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L153)
+Defined in: [bridge-app.ts:153](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L153)
 
 ***
 
@@ -79,7 +79,7 @@ Defined in: [bridge-app.ts:153](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **namespace**: `string`
 
-Defined in: [bridge-app.ts:152](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L152)
+Defined in: [bridge-app.ts:152](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L152)
 
 ## Methods
 
@@ -87,7 +87,7 @@ Defined in: [bridge-app.ts:152](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **close**(): `void`
 
-Defined in: [bridge-app.ts:207](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L207)
+Defined in: [bridge-app.ts:207](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L207)
 
 #### Returns
 
@@ -99,7 +99,7 @@ Defined in: [bridge-app.ts:207](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **on**\<`K`\>(`event`, `cb`): () => `void`
 
-Defined in: [bridge-app.ts:171](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L171)
+Defined in: [bridge-app.ts:171](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L171)
 
 #### Type Parameters
 
@@ -128,7 +128,7 @@ Defined in: [bridge-app.ts:171](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **request**\<`RequestData`, `ResponseData`\>(`requestEvent`, `requestData`, `responseEvent`, `timeout`, `responseFilter?`): `Promise`\<`ResponseData`\>
 
-Defined in: [bridge-app.ts:180](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L180)
+Defined in: [bridge-app.ts:180](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L180)
 
 #### Type Parameters
 
@@ -157,7 +157,7 @@ Defined in: [bridge-app.ts:180](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **send**\<`K`\>(`event`, ...`args`): `void`
 
-Defined in: [bridge-app.ts:163](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L163)
+Defined in: [bridge-app.ts:163](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L163)
 
 #### Type Parameters
 
@@ -182,7 +182,7 @@ Defined in: [bridge-app.ts:163](https://github.com/s00d/u-devtools/blob/4fad699e
 
 > **state**\<`T`\>(`key`, `initialValue`): [`SyncedState`](SyncedState.md)\<`T`\>
 
-Defined in: [bridge-app.ts:211](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/core/src/bridge-app.ts#L211)
+Defined in: [bridge-app.ts:211](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/core/src/bridge-app.ts#L211)
 
 #### Type Parameters
 

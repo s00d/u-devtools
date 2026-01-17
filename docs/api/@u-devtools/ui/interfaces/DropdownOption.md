@@ -6,7 +6,7 @@
 
 # Interface: DropdownOption
 
-Defined in: [types.ts:13](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L13)
+Defined in: [types.ts:13](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L13)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types.ts:13](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > `optional` **disabled**: `boolean`
 
-Defined in: [types.ts:17](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L17)
+Defined in: [types.ts:17](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L17)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types.ts:17](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > `optional` **icon**: `string`
 
-Defined in: [types.ts:16](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L16)
+Defined in: [types.ts:16](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L16)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types.ts:16](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **label**: `string`
 
-Defined in: [types.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L14)
+Defined in: [types.ts:14](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L14)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [types.ts:14](https://github.com/s00d/u-devtools/blob/4fad699ef961c2
 
 > **value**: `string`
 
-Defined in: [types.ts:15](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/ui/src/types.ts#L15)
+Defined in: [types.ts:15](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/ui/src/types.ts#L15)

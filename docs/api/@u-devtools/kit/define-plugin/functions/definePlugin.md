@@ -8,7 +8,7 @@
 
 > **definePlugin**(`options`): [`DevToolsPlugin`](../../../core/interfaces/DevToolsPlugin.md)
 
-Defined in: [define-plugin.ts:122](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/kit/src/define-plugin.ts#L122)
+Defined in: [define-plugin.ts:123](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/kit/src/define-plugin.ts#L123)
 
 Smart factory for creating DevTools plugins.
 

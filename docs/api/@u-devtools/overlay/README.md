@@ -27,7 +27,36 @@ This package is automatically used by `@u-devtools/vite` plugin. You typically d
 
 [GitHub](https://github.com/s00d/u-devtools/tree/main/packages/overlay)
 
-## Modules
+## Classes
 
-- [](README.md)
-- [toast](toast/README.md)
+- [UOverlayBox](classes/UOverlayBox.md)
+
+## Interfaces
+
+- [ElementRect](interfaces/ElementRect.md)
+- [Toast](interfaces/Toast.md)
+
+## Type Aliases
+
+- [OverlayLayer](type-aliases/OverlayLayer.md)
+
+## Variables
+
+- [OVERLAY\_ID](variables/OVERLAY_ID.md)
+- [OVERLAY\_READY\_EVENT](variables/OVERLAY_READY_EVENT.md)
+
+## Functions
+
+- [createToast](functions/createToast.md)
+- [getOverlayHost](functions/getOverlayHost.md)
+- [getOverlayLayer](functions/getOverlayLayer.md)
+- [getOverlayShadowRoot](functions/getOverlayShadowRoot.md)
+- [mountAppOverlay](functions/mountAppOverlay.md)
+- [onOverlayReady](functions/onOverlayReady.md)
+- [useElementRect](functions/useElementRect.md)
+
+## References
+
+### OverlayBox
+
+Renames and re-exports [UOverlayBox](classes/UOverlayBox.md)

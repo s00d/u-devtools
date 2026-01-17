@@ -8,7 +8,7 @@
 
 > **getLevelColor**(`level`): [`StatusColor`](../type-aliases/StatusColor.md)
 
-Defined in: [colors.ts:26](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils/src/colors.ts#L26)
+Defined in: [colors.ts:26](https://github.com/s00d/u-devtools/blob/7cf3bd4421382e175ecee9dc3ffd84c28e30244d/packages/utils/src/colors.ts#L26)
 
 Gets a color based on console log level.
 
