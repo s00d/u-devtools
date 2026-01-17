@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/vite",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Universal DevTools Kit for Vite applications",
   "keywords": [
     "vite",
@@ -58,7 +58,8 @@
     "@u-devtools/core": "workspace:*",
     "@u-devtools/utils": "workspace:*",
     "@u-devtools/utils-node": "workspace:*",
-    "launch-editor": "catalog:"
+    "launch-editor": "catalog:",
+    "ws": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
