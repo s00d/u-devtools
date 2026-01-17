@@ -4,6 +4,7 @@ import { ViteRpcClient, ViteRpcServer } from '../src/index';
 class MockTransport {
   listeners = new Map<string, (...args: unknown[]) => unknown>();
   peer?: MockTransport;
+  originalSender?: MockTransport; // Track who sent the message
 
   on(event: string, fn: (...args: unknown[]) => unknown) {
     this.listeners.set(event, fn);
@@ -12,21 +13,40 @@ class MockTransport {
   send(event: string, data: unknown) {
     process.nextTick(() => {
       if (this.peer) {
+        // Send to peer's listeners
         const handler = this.peer.listeners.get(event);
+        const sender = this; // Capture sender reference
         if (handler) {
-          handler(data, {
+          // ViteRpcServer expects handler(data, client) where client has send method
+          // ViteRpcClient (HmrTransport) expects handler(data) only
+          // Try calling with 2 parameters first (for server)
+          const client = {
             send: (evt: string, payload: unknown) => {
               process.nextTick(() => {
-                this.receive(evt, payload);
+                // When server sends response/event, route it back to the original sender
+                sender.receive(evt, payload);
               });
             },
-          });
+          };
+          
+          // Check handler length to determine if it's server or client handler
+          if (handler.length === 2) {
+            // Server handler expects (data, client)
+            handler(data, client);
+          } else {
+            // Client handler expects (data) only
+            handler(data);
+          }
+        } else {
+          // If no handler found, route to receive (for direct event routing)
+          this.peer.receive(event, data);
         }
       }
     });
   }
 
   receive(event: string, data: unknown) {
+    // Call all registered listeners for this event
     const handler = this.listeners.get(event);
     if (handler) {
       handler(data);
@@ -46,7 +66,8 @@ describe('RPC Bridge', () => {
       clientTransport as unknown as {
         send: (event: string, data: unknown) => void;
         on: (event: string, fn: (...args: unknown[]) => unknown) => void;
-      }
+      },
+      'ws://localhost:5173/__u-devtools-ws'
     );
     const server = new ViteRpcServer(
       serverTransport as unknown as {
@@ -74,7 +95,8 @@ describe('RPC Bridge', () => {
       clientTransport as unknown as {
         send: (event: string, data: unknown) => void;
         on: (event: string, fn: (...args: unknown[]) => unknown) => void;
-      }
+      },
+      'ws://localhost:5173/__u-devtools-ws'
     );
     const server = new ViteRpcServer(
       serverTransport as unknown as {
@@ -100,7 +122,8 @@ describe('RPC Bridge', () => {
       clientTransport as unknown as {
         send: (event: string, data: unknown) => void;
         on: (event: string, fn: (...args: unknown[]) => unknown) => void;
-      }
+      },
+      'ws://localhost:5173/__u-devtools-ws'
     );
     const server = new ViteRpcServer(
       serverTransport as unknown as {

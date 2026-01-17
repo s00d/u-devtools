@@ -38,6 +38,10 @@ export class ViteRpcClient {
 
   private getDefaultWsUrl(): string {
     // Try to determine WebSocket server URL
+    if (typeof window === 'undefined') {
+      // Fallback for Node.js environments (tests, SSR)
+      return 'ws://localhost:5173/__u-devtools-ws';
+    }
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
     return `${protocol}//${host}/__u-devtools-ws`;
@@ -193,6 +197,7 @@ export class ViteRpcServer {
    */
   broadcast(event: string, payload?: unknown) {
     this.ws.send('u-devtools:event', {
+      id: Math.random().toString(36).substring(2, 15),
       type: 'event',
       method: event,
       payload,

@@ -51,7 +51,7 @@ export abstract class Transport {
       });
 
       // Send request
-      this.sendMessage('request', { id, method, payload });
+      this.sendMessage('request', { id, type: 'request', method, payload });
 
       // Timeout
       setTimeout(() => {
