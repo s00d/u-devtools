@@ -8,12 +8,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const baseConfig = createViteConfig({
   name: 'DevToolsClient',
-  entry: 'src/main.ts',
+  entry: 'src/index.ts',
   dir: __dirname,
   clearScreen: false,
   useVue: true,
   formats: ['es'], // Важно: ES модуль
-  fileName: 'main',
   // Убираем cssCodeSplit, чтобы Vite не генерировал отдельные CSS файлы
   cssCodeSplit: false,
   dtsOptions: {

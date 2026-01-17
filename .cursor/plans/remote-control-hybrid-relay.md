@@ -107,9 +107,9 @@ export interface BridgeTransport {
   - `standalone` → `new AppBridge(new RelayTransport(rpc, namespace))`
 - Экспортировать `createBridge` функцию для использования плагинами
 
-**3.2. Обновить main.ts для dependency injection**
+**3.2. Обновить index.ts для dependency injection**
 
-**Файл:** `packages/client/src/main.ts`
+**Файл:** `packages/client/src/index.ts`
 
 - Экспортировать функцию `mountDevTools(selector: string, options?: { rpcUrl?: string })`
 - Если передан `rpcUrl` → `standalone` режим, создаем `ViteRpcClient(undefined, rpcUrl)`

@@ -292,7 +292,7 @@ bridge.on('event-name', (data) => {
 ```
 packages/client/src/
 ├── App.vue                    # Root component
-├── main.ts                    # Entry point
+├── index.ts                   # Entry point
 ├── components/
 │   ├── shell/                 # Shell components
 │   │   ├── ActivityBar.vue    # Left sidebar

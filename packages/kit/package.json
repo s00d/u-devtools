@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/kit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SDK for creating Universal DevTools plugins",
   "type": "module",
   "main": "./src/index.ts",
@@ -67,7 +67,7 @@
       },
       "./web-components": {
         "types": "./dist/web-components.d.ts",
-        "import": "./dist/web-components.js",
+        "import": "./dist/web-components.es.js",
         "require": "./dist/web-components.cjs.js"
       },
       "./define-plugin": {
@@ -77,42 +77,42 @@
       },
       "./vue": {
         "types": "./dist/vue.d.ts",
-        "import": "./dist/vue.js",
+        "import": "./dist/vue.es.js",
         "require": "./dist/vue.cjs.js"
       },
       "./react": {
         "types": "./dist/react.d.ts",
-        "import": "./dist/react.js",
+        "import": "./dist/react.es.js",
         "require": "./dist/react.cjs.js"
       },
       "./solid": {
         "types": "./dist/solid.d.ts",
-        "import": "./dist/solid.js",
+        "import": "./dist/solid.es.js",
         "require": "./dist/solid.cjs.js"
       },
       "./svelte": {
         "types": "./dist/svelte.d.ts",
-        "import": "./dist/svelte.js",
+        "import": "./dist/svelte.es.js",
         "require": "./dist/svelte.cjs.js"
       },
       "./lit": {
         "types": "./dist/lit.d.ts",
-        "import": "./dist/lit.js",
+        "import": "./dist/lit.es.js",
         "require": "./dist/lit.cjs.js"
       },
       "./vanilla": {
         "types": "./dist/vanilla.d.ts",
-        "import": "./dist/vanilla.js",
+        "import": "./dist/vanilla.es.js",
         "require": "./dist/vanilla.cjs.js"
       },
       "./context": {
         "types": "./dist/context.d.ts",
-        "import": "./dist/context.js",
+        "import": "./dist/context.es.js",
         "require": "./dist/context.cjs.js"
       },
       "./toast": {
         "types": "./dist/toast.d.ts",
-        "import": "./dist/toast.js",
+        "import": "./dist/toast.es.js",
         "require": "./dist/toast.cjs.js"
       },
       "./package.json": "./package.json"

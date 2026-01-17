@@ -128,7 +128,7 @@ export function createViteConfig({
 
   const defaultFileName = (format: string, entryName?: string) => {
     if (entryName && entryName !== 'index') {
-      return `${entryName}.${format === 'es' ? 'js' : 'cjs'}`;
+      return `${entryName}.${format === 'es' ? 'es' : 'cjs'}.js`;
     }
     return `index.${format === 'es' ? 'es' : 'cjs'}.js`;
   };

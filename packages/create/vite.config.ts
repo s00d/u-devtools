@@ -10,8 +10,7 @@ const baseConfig = createViteConfig({
   entry: 'src/index.ts',
   dir: __dirname,
   useVue: false,
-  formats: ['es'],
-  fileName: 'index',
+  formats: ['es', 'cjs'],
   dtsOptions: {
     insertTypesEntry: true,
   },

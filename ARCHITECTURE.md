@@ -223,7 +223,7 @@ rpc.broadcast('my-plugin:update', { data: 'value' });
 ```
 packages/client/src/
 ├── App.vue                    # Корневой компонент
-├── main.ts                    # Точка входа
+├── index.ts                   # Точка входа
 ├── style.css                  # Глобальные стили
 ├── components/
 │   ├── shell/

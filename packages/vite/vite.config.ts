@@ -10,8 +10,7 @@ export default createViteConfig({
   dir: __dirname,
   clearScreen: false,
   useVue: false,
-  formats: ['es'],
-  fileName: 'index',
+  formats: ['es', 'cjs'],
   dtsOptions: {
     rollupTypes: true,
     copyDtsFiles: false,

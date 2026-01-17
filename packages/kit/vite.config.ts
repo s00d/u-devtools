@@ -29,7 +29,7 @@ const baseConfig = createViteConfig({
     if (entryName === 'define-plugin') {
       return `define-plugin.${format === 'es' ? 'es' : 'cjs'}.js`;
     }
-    return `${entryName}.${format === 'es' ? 'js' : 'cjs.js'}`;
+    return `${entryName}.${format === 'es' ? 'es' : 'cjs'}.js`;
   },
   dtsOptions: {
     insertTypesEntry: false,

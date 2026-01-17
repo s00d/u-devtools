@@ -49,7 +49,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
   if (isRunningFromSrc) {
     // DEV MODE (Monorepo)
-    clientEntryPath = path.resolve(__dirname, '../../client/src/main.ts');
+    clientEntryPath = path.resolve(__dirname, '../../client/src/index.ts');
     overlayEntryPath = path.resolve(__dirname, '../../overlay/src/main.ts');
   } else {
     // PROD MODE (User usage)
@@ -58,7 +58,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const clientRoot = path.dirname(clientPkgPath);
       const clientPkg = require(clientPkgPath);
       // For build use dist version
-      clientEntryPath = path.resolve(clientRoot, 'dist/main.js');
+      clientEntryPath = path.resolve(clientRoot, 'dist/index.es.js');
 
       const overlayPkgPath = require.resolve('@u-devtools/overlay/package.json');
       const overlayRoot = path.dirname(overlayPkgPath);
