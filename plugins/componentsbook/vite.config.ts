@@ -19,6 +19,6 @@ export default createViteConfig({
     insertTypesEntry: true,
     exclude: ['src/ui/**/*.vue', 'src/app/**/*.vue'],
   },
-  external: ['globby', 'chokidar', 'vue-docgen-api'],
+  external: ['globby', 'chokidar', 'vue-docgen-api', 'react', 'react-dom', 'react-dom/client', 'svelte', 'solid-js', 'solid-js/web'],
 });
 

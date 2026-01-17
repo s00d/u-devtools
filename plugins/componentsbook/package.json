@@ -54,6 +54,7 @@
     "@u-devtools/utils-node": "workspace:*",
     "chokidar": "catalog:",
     "markdown-it": "catalog:",
+    "react": "catalog:",
     "react-dom": "catalog:",
     "solid-js": "catalog:",
     "svelte": "catalog:",

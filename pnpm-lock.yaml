@@ -908,6 +908,9 @@ importers:
       markdown-it:
         specifier: 'catalog:'
         version: 14.1.0
+      react:
+        specifier: 'catalog:'
+        version: 18.3.1
       react-dom:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
