@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/vite",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Universal DevTools Kit for Vite applications",
   "keywords": [
     "vite",
@@ -35,13 +35,13 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/index.es.js",
+    "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
+        "import": "./dist/index.es.js"
       },
       "./package.json": "./package.json"
     }

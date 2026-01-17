@@ -1,11 +1,11 @@
 {
   "name": "create-u-devtools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI tool to scaffold Universal DevTools plugins",
   "type": "module",
   "bin": {
-    "create-u-devtools": "./dist/index.js",
-    "create-u-devtools-plugin": "./dist/index.js"
+    "create-u-devtools": "./dist/index.es.js",
+    "create-u-devtools-plugin": "./dist/index.es.js"
   },
   "files": [
     "dist",
@@ -15,13 +15,13 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/index.es.js",
+    "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
+        "import": "./dist/index.es.js"
       },
       "./package.json": "./package.json"
     }
