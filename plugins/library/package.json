@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-library",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "UI Library - Component snippets and drag-and-drop inserter",
   "type": "module",
   "main": "./src/index.ts",

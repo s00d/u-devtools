@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-remote-control",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "Remote Control plugin - DOM Mirroring",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
