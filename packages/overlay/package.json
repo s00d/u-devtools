@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",
+    "tailwindcss": "catalog:",
     "vite": "catalog:",
     "typescript": "catalog:",
     "vue-tsc": "catalog:"

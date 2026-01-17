@@ -80,6 +80,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
+    "tailwindcss": "catalog:",
     "vite": "catalog:",
     "typescript": "catalog:",
     "vue-tsc": "catalog:"

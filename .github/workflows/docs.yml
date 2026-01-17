@@ -5,14 +5,14 @@ permissions:
 
 on:
   # trigger deployment on every push to main branch, but only if docs folder has changes
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'  # ограничиваем только изменениями в папке docs
-      - 'packages/**'  # изменения в пакетах могут влиять на API документацию
-      - 'plugins/**'  # изменения в плагинах могут влиять на документацию
-      - 'typedoc.json'  # изменения в конфигурации TypeDoc
-      - 'package.json'  # изменения в зависимостях
+#  push:
+#    branches: [main]
+#    paths:
+#      - 'docs/**'  # ограничиваем только изменениями в папке docs
+#      - 'packages/**'  # изменения в пакетах могут влиять на API документацию
+#      - 'plugins/**'  # изменения в плагинах могут влиять на документацию
+#      - 'typedoc.json'  # изменения в конфигурации TypeDoc
+#      - 'package.json'  # изменения в зависимостях
   # trigger deployment when a new release is published
   release:
     types: [published]
