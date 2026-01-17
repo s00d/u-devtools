@@ -41,6 +41,9 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
+  "dependencies": {
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "vite": "catalog:",
     "typescript": "catalog:"

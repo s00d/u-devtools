@@ -724,6 +724,10 @@ importers:
         version: 3.2.1(typescript@5.9.3)
 
   packages/utils:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
       typescript:
         specifier: ^5.9.3
