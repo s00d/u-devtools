@@ -63,7 +63,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       const overlayPkgPath = require.resolve('@u-devtools/overlay/package.json');
       const overlayRoot = path.dirname(overlayPkgPath);
       const overlayPkg = require(overlayPkgPath);
-      overlayEntryPath = path.resolve(overlayRoot, 'dist/index.js');
+      overlayEntryPath = path.resolve(overlayRoot, 'dist/index.es.js');
     } catch (e: unknown) {
       const errorMessage = extractErrorMessage(e);
       throw new Error(
