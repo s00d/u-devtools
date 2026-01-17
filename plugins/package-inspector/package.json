@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-package-inspector",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Package Inspector plugin for viewing dependencies from package.json",
   "type": "module",
   "main": "./src/index.ts",
@@ -46,6 +46,10 @@
       },
       "./client": {
         "import": "./dist/client.js"
+      },
+      "./server": {
+        "import": "./dist/server.es.js",
+        "require": "./dist/server.cjs.js"
       },
       "./package.json": "./package.json"
     }

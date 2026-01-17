@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-vite-inspector",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vite Inspector plugin for Universal DevTools - deep dive into Vite configuration and server",
   "type": "module",
   "main": "./src/index.ts",
@@ -45,6 +45,10 @@
       },
       "./client": {
         "import": "./dist/client.js"
+      },
+      "./server": {
+        "import": "./dist/server.es.js",
+        "require": "./dist/server.cjs.js"
       },
       "./package.json": "./package.json"
     }

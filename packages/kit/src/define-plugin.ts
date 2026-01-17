@@ -1,6 +1,7 @@
 import type { DevToolsPlugin, RpcServerInterface, ServerContext } from '@u-devtools/core';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve, basename } from 'node:path';
+import { existsSync } from 'node:fs';
 
 /**
  * Options for defining a DevTools plugin using the `definePlugin` helper.
@@ -135,7 +136,7 @@ export function definePlugin(options: DefinePluginOptions): DevToolsPlugin {
   // Helper for forming absolute path
   const resolvePath = (relativePath: string) => {
     // Remove extension if user accidentally wrote it
-    const cleanPath = relativePath.replace(/\.(ts|js)$/, '');
+    const cleanPath = relativePath.replace(/\.(ts|js|es\.js|cjs\.js)$/, '');
 
     let baseDir = __dirname;
 
@@ -146,6 +147,14 @@ export function definePlugin(options: DefinePluginOptions): DevToolsPlugin {
       if (basename(baseDir) === 'src') {
         // Go up one level and enter dist
         baseDir = resolve(baseDir, '../dist');
+      }
+    }
+
+    // In production (not dev), try .es.js first, then .js
+    if (!isDev || useDist) {
+      const esPath = resolve(baseDir, cleanPath + '.es.js');
+      if (existsSync(esPath)) {
+        return esPath;
       }
     }
 

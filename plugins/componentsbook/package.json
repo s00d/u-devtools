@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-componentsbook",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Component storybook plugin for Universal DevTools - Interactive component development and documentation",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -22,6 +22,10 @@
       },
       "./client": {
         "import": "./dist/client.js"
+      },
+      "./server": {
+        "import": "./dist/server.es.js",
+        "require": "./dist/server.cjs.js"
       },
       "./package.json": "./package.json"
     }

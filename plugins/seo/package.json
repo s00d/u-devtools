@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-seo",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "SEO Studio plugin for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",
@@ -24,6 +24,10 @@
       },
       "./client": {
         "import": "./dist/client.js"
+      },
+      "./server": {
+        "import": "./dist/server.es.js",
+        "require": "./dist/server.cjs.js"
       },
       "./package.json": "./package.json"
     }

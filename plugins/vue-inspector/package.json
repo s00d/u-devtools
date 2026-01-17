@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-vue-inspector",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vue Inspector plugin for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",
@@ -58,7 +58,8 @@
       },
       "./server": {
         "types": "./dist/server.d.ts",
-        "import": "./dist/server.js"
+        "import": "./dist/server.es.js",
+        "require": "./dist/server.cjs.js"
       },
       "./client": {
         "import": "./dist/client.js"
