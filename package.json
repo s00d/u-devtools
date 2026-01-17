@@ -40,7 +40,7 @@
     "playground:build": "pnpm run build && pnpm --filter './playground' run build && pnpm --filter './playground' run preview",
     "docs:generate": "rm -rf .docs-api docs/api && typedoc && mv .docs-api docs/api",
     "docs:dev": "pnpm docs:generate && pnpm --filter docs dev",
-    "docs:build": "pnpm docs:generate && pnpm --filter docs build",
+    "docs:build": "cross-env NODE_ENV=production pnpm docs:generate && cross-env NODE_ENV=production pnpm --filter docs build",
     "docs:preview": "pnpm --filter docs preview",
     "docs:watch": "typedoc --watch"
   },
@@ -60,6 +60,7 @@
     "@vitest/ui": "catalog:",
     "@vueuse/core": "catalog:",
     "commander": "catalog:",
+    "cross-env": "catalog:",
     "magicast": "catalog:",
     "tsx": "catalog:",
     "typedoc": "^0.28.16",

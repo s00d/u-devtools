@@ -117,6 +117,9 @@ catalogs:
     commander:
       specifier: ^12.1.0
       version: 12.1.0
+    cross-env:
+      specifier: ^7.0.3
+      version: 7.0.3
     electron:
       specifier: ^28.0.0
       version: 28.3.3
@@ -282,6 +285,9 @@ importers:
       commander:
         specifier: 'catalog:'
         version: 12.1.0
+      cross-env:
+        specifier: 'catalog:'
+        version: 7.0.3
       magicast:
         specifier: 'catalog:'
         version: 0.5.1
@@ -3903,6 +3909,11 @@ packages:
 
   crc@3.8.0:
     resolution: {integrity: sha512-iX3mfgcTMIq3ZKLIsVFAbv7+Mc10kxabAGQb8HvjA1o3T1PIYprbakQ65d3I+2HGHt6nSKkM9PYjgoJO2KcFBQ==}
+
+  cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
 
   cross-fetch@3.1.5:
     resolution: {integrity: sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==}
@@ -9904,6 +9915,10 @@ snapshots:
     dependencies:
       buffer: 5.7.1
     optional: true
+
+  cross-env@7.0.3:
+    dependencies:
+      cross-spawn: 7.0.6
 
   cross-fetch@3.1.5(encoding@0.1.13):
     dependencies:

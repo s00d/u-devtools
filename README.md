@@ -4,6 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dw/@u-devtools/core?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/core)
 [![License](https://img.shields.io/npm/l/@u-devtools/core?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/core)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Documentation](https://img.shields.io/badge/Documentation-Online-4CAF50?style=for-the-badge)](https://s00d.github.io/u-devtools/)
 [![GitHub](https://img.shields.io/github/stars/s00d/u-devtools?style=for-the-badge)](https://github.com/s00d/u-devtools)
 [![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
 
@@ -281,7 +282,7 @@ Now that you have DevTools set up, you can:
 - See the Plugin Development Guide in the documentation
 
 **📚 For detailed documentation, examples, and API reference:**
-- **Documentation Site** - Complete guides and tutorials (run `pnpm docs:dev` to view locally)
+- **[Documentation Site](https://s00d.github.io/u-devtools/)** - Complete guides and tutorials (run `pnpm docs:dev` to view locally)
 - **API Reference** - All TypeScript interfaces and classes (auto-generated)
 - **Getting Started Guide** - Quick start tutorial
 
@@ -620,7 +621,7 @@ document.getElementById('toggle').onclick = () => {
 
 ## 📚 Documentation
 
-The documentation site is built with [VitePress](https://vitepress.dev/) and includes:
+The documentation site is available at **[https://s00d.github.io/u-devtools/](https://s00d.github.io/u-devtools/)** and is built with [VitePress](https://vitepress.dev/). It includes:
 
 - **Guides**: Step-by-step tutorials and best practices
 - **API Reference**: Auto-generated from TypeScript code using [TypeDoc](https://typedoc.org/)
