@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import type { ClientApi } from '@u-devtools/core';
-import { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
 import type { ComponentTreeNode, ComponentState } from '../types';
 
 /**
@@ -45,10 +45,9 @@ export function useVueInspector(api: ClientApi) {
   const enableInspector = () => {
     try {
       // Send via AppBridge (app.ts listens to this)
-      // We create a temporary bridge instance for sending the command
-      const bridge = new AppBridge('vue-inspector');
+      // Use bridge from context
+      const bridge = useBridge();
       bridge.send('inspector:enable');
-      bridge.close();
       // State will be updated via bridge.on('inspector:enabled') in VueInspectorPanel
     } catch (error) {
       api.notify(`Failed to enable inspector: ${error}`, 'error');
@@ -58,9 +57,8 @@ export function useVueInspector(api: ClientApi) {
   // Disable inspector
   const disableInspector = () => {
     try {
-      const bridge = new AppBridge('vue-inspector');
+      const bridge = useBridge();
       bridge.send('inspector:disable');
-      bridge.close();
       // State will be updated via bridge.on('inspector:enabled') in VueInspectorPanel
     } catch (error) {
       api.notify(`Failed to disable inspector: ${error}`, 'error');

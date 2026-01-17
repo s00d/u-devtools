@@ -14,15 +14,9 @@ export default createViteConfig({
   dir: __dirname,
   clearScreen: false,
   useVue: true,
-  formats: ['es'],
-  fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/ui/**/*.vue'],
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../../packages/core/src',
-    '@u-devtools/ui': '../../packages/ui/src',
   },
   external: ['@u-devtools/kit', 'node:fs/promises'],
 });

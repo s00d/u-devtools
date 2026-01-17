@@ -1,9 +1,10 @@
 import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
-import type { ResolvedConfig, ViteDevServer } from 'vite';
+import type { ViteDevServer } from 'vite';
 import { stringify } from 'flatted';
 import fs from 'node:fs/promises';
+import { viteInspectorState } from './index.js';
 
-// Типы для событий
+// Event types
 interface ViteEvent {
   id: string;
   type: 'hmr' | 'connection' | 'error' | 'transform' | 'middleware' | 'module';
@@ -11,7 +12,7 @@ interface ViteEvent {
   data: Record<string, unknown>;
 }
 
-// Хранилище событий (в памяти, с лимитом)
+// Event storage (in memory, with limit)
 const MAX_EVENTS = 500;
 const events: ViteEvent[] = [];
 
@@ -31,25 +32,44 @@ function addEvent(type: ViteEvent['type'], data: Record<string, unknown>) {
   return event;
 }
 
-export function setupServer(
-  rpc: RpcServerInterface,
-  _ctx: ServerContext,
-  viteData: { config: ResolvedConfig; server: ViteDevServer }
-) {
-  const { config, server } = viteData;
+export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
+  const server = ctx.server as ViteDevServer;
 
-  // Проверка наличия сервера и moduleGraph
+  // Check server availability
   if (!server) {
-    console.error('[Vite Inspector] Vite server not provided');
+    console.error('[Vite Inspector] Server not found in context');
     return;
   }
+
+  const config = server.config;
+
+  // Save for use in hooks
+  // Note: These are exported from index.ts for use in Vite hooks
+  viteInspectorState.currentConfig = config;
+  viteInspectorState.currentServer = server;
+
+  // Intercept HMR updates via WebSocket
+  server.ws.on('vite:hmr', (payload) => {
+    if (payload && typeof payload === 'object' && 'updates' in payload) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const updates = (payload as any).updates || [];
+      updates.forEach((update: any) => {
+        rpc.broadcast('vite:hmr-log', {
+          file: update.path || update.file || '',
+          timestamp: Date.now(),
+          modules: update.acceptedPath ? [update.acceptedPath] : [],
+          type: 'update',
+        });
+      });
+    }
+  });
 
   if (!server.moduleGraph) {
     console.warn('[Vite Inspector] Module graph not available yet');
   }
 
   try {
-    // 1. Основная информация
+    // 1. Basic information
     rpc.handle('vite:info', async () => {
       let viteVersion = 'unknown';
       try {
@@ -72,14 +92,14 @@ export function setupServer(
       };
     });
 
-    // 2. Конфигурация (очищенная)
+    // 2. Configuration (cleaned)
     rpc.handle('vite:config', () => {
       const { plugins, ...rest } = config;
-      // Flatted позволяет сериализовать циклические ссылки
+      // Flatted allows serializing circular references
       try {
         return JSON.parse(stringify(rest));
       } catch {
-        // Если не получилось, возвращаем упрощенную версию
+        // If failed, return simplified version
         return {
           root: rest.root,
           base: rest.base,
@@ -90,7 +110,7 @@ export function setupServer(
       }
     });
 
-    // Список стандартных хуков Vite и Rollup для отслеживания
+    // List of standard Vite and Rollup hooks for tracking
     const KNOWN_HOOKS = [
       // Universal / Rollup
       'options',
@@ -108,22 +128,22 @@ export function setupServer(
       'handleHotUpdate',
     ];
 
-    // 3. Плагины (Detailed)
+    // 3. Plugins (Detailed)
     rpc.handle('vite:plugins', () => {
       const plugins = config.plugins || [];
 
       return (
         plugins
-          // Фильтруем пустые/ложные плагины
+          // Filter empty/false plugins
           .filter((p: unknown) => p && typeof p === 'object')
           .map((p: unknown, index: number) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const plugin = p as any;
 
-            // Определяем, какие хуки используются
+            // Determine which hooks are used
             const activeHooks = KNOWN_HOOKS.filter((hook) => {
               const hookValue = plugin[hook];
-              // Хук может быть функцией или объектом { handler: ..., order: ... }
+              // Hook can be function or object { handler: ..., order: ... }
               return (
                 typeof hookValue === 'function' ||
                 (typeof hookValue === 'object' && typeof hookValue?.handler === 'function')
@@ -136,8 +156,8 @@ export function setupServer(
               enforce: plugin.enforce || '-',
               apply:
                 typeof plugin.apply === 'function' ? 'function' : plugin.apply || 'serve/build',
-              version: plugin.version || undefined, // Некоторые плагины указывают версию
-              activeHooks, // Список активных хуков
+              version: plugin.version || undefined, // Some plugins specify version
+              activeHooks, // List of active hooks
             };
           })
       );
@@ -153,14 +173,14 @@ export function setupServer(
         types: {} as Record<string, number>,
       };
 
-      // Анализ графа модулей
+      // Analyze module graph
       server.moduleGraph.idToModuleMap.forEach((mod) => {
         stats.modules++;
 
-        // Определяем тип файла по расширению
+        // Determine file type by extension
         const file = mod.file || mod.id || '';
         const ext = file.split('.').pop() || 'unknown';
-        // Группируем (ts, vue, js, css...) и убираем query params
+        // Group (ts, vue, js, css...) and remove query params
         const type = ext.split('?')[0].toLowerCase();
         stats.types[type] = (stats.types[type] || 0) + 1;
       });
@@ -168,7 +188,7 @@ export function setupServer(
       return stats;
     });
 
-    // 5. Module Graph (Список всех файлов)
+    // 5. Module Graph (List of all files)
     rpc.handle('vite:modules:list', (payload: unknown) => {
       if (!server?.moduleGraph) {
         console.warn('[Vite Inspector] Module graph not available');
@@ -185,12 +205,12 @@ export function setupServer(
       }> = [];
       const search = filter?.toLowerCase() || '';
 
-      // Итерируемся по Map (id -> module)
+      // Iterate over Map (id -> module)
       server.moduleGraph.idToModuleMap.forEach((mod, id) => {
-        // Фильтрация
+        // Filtering
         if (search && !id.toLowerCase().includes(search)) return;
 
-        // Исключаем виртуальные модули самого девтулза, чтобы не шуметь
+        // Exclude virtual modules of devtools itself to avoid noise
         if (id.includes('u-devtools') || id.includes('virtual:u-devtools')) return;
 
         modules.push({
@@ -202,17 +222,17 @@ export function setupServer(
         });
       });
 
-      // Сортировка и лимит, чтобы не забить канал
+      // Sort and limit to not clog channel
       return modules.slice(0, 500);
     });
 
-    // 6. Module Details & Transformation (Исходник vs Результат)
+    // 6. Module Details & Transformation (Source vs Result)
     rpc.handle('vite:modules:read', async (payload: unknown) => {
       const id = payload as string;
       const mod = server.moduleGraph.getModuleById(id);
       if (!mod) throw new Error('Module not found');
 
-      // Исходный код (с диска)
+      // Source code (from disk)
       let source = '';
       try {
         if (mod.file) {
@@ -225,15 +245,15 @@ export function setupServer(
         source = `// Error reading source: ${error}`;
       }
 
-      // Трансформированный код (то, что Vite отдает браузеру)
+      // Transformed code (what Vite serves to browser)
       let transformed = '';
       try {
-        // Используем pluginContainer для получения трансформированного кода
+        // Use pluginContainer to get transformed code
         const loadResult = await server.pluginContainer.load(id);
         let codeToTransform = '';
 
         if (loadResult) {
-          // loadResult может быть строкой или объектом SourceDescription
+          // loadResult can be string or SourceDescription object
           if (typeof loadResult === 'string') {
             codeToTransform = loadResult;
           } else if (loadResult && typeof loadResult === 'object' && 'code' in loadResult) {
@@ -241,7 +261,7 @@ export function setupServer(
           }
         }
 
-        // Если не получили код из load, читаем с диска
+        // If didn't get code from load, read from disk
         if (!codeToTransform && mod.file) {
           codeToTransform = await fs.readFile(mod.file, 'utf-8');
         }
@@ -277,11 +297,11 @@ export function setupServer(
       };
     });
 
-    // 7. Debug Resolve (Тестер алиасов)
+    // 7. Debug Resolve (Alias tester)
     rpc.handle('vite:resolve', async (payload: unknown) => {
       try {
         const { id, importer } = payload as { id: string; importer?: string };
-        // Вызываем внутренний резолвер Vite
+        // Call Vite internal resolver
         const result = await server.pluginContainer.resolveId(id, importer);
         return {
           id: result?.id || null,
@@ -297,13 +317,13 @@ export function setupServer(
     // 8. Middlewares Stack
     rpc.handle('vite:middlewares', () => {
       if (!server?.middlewares) return [];
-      // server.middlewares - это connect app
+      // server.middlewares is connect app
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const stack = (server.middlewares as any).stack || [];
       return stack.map((m: any, i: number) => ({
         index: i,
         route: m.route || '/',
-        // Пытаемся достать имя функции
+        // Try to get function name
         name: m.handle?.name || '(anonymous)',
       }));
     });
@@ -370,9 +390,9 @@ export function setupServer(
       return stats;
     });
 
-    // Настройка сбора событий
+    // Setup event collection
     if (server.ws) {
-      // HMR события
+      // HMR events
       server.ws.on('vite:hmr', (payload) => {
         if (payload && typeof payload === 'object' && 'updates' in payload) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -388,7 +408,7 @@ export function setupServer(
         }
       });
 
-      // WebSocket подключения
+      // WebSocket connections
       server.ws.on('connection', () => {
         addEvent('connection', {
           action: 'connected',
@@ -396,7 +416,7 @@ export function setupServer(
         });
       });
 
-      // Ошибки WebSocket
+      // WebSocket errors
       server.ws.on('error', (error) => {
         addEvent('error', {
           message: error instanceof Error ? error.message : String(error),

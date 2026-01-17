@@ -1,0 +1,80 @@
+{
+  "name": "@u-devtools/plugin-repo2txt",
+  "version": "0.0.0",
+  "description": "repo2txt plugin",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./src/server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
+      },
+      "./client": {
+        "import": "./dist/client.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "vite build && vite build -c vite.config.standalone.ts",
+    "build:standalone": "vite build -c vite.config.standalone.ts",
+    "typecheck": "tsc --noEmit",
+    "typecheck:vue": "vue-tsc --noEmit --skipLibCheck",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "vue"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "plugins/repo2txt"
+  },
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "@u-devtools/utils": "workspace:*",
+    "@u-devtools/utils-node": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
+    "@u-devtools/overlay": "workspace:*",
+    "ignore": "catalog:",
+    "js-tiktoken": "catalog:",
+    "@tanstack/vue-virtual": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "vite": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vue-tsc": "catalog:"
+  }
+}
+

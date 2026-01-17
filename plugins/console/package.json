@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-console",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Console logger plugin for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",
@@ -8,7 +8,8 @@
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "u-devtools-plugin",
@@ -26,19 +27,26 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
-      }
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
+      },
+      "./client": {
+        "import": "./dist/client.js"
+      },
+      "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build -c vite.config.standalone.ts",
+    "build:standalone": "vite build -c vite.config.standalone.ts",
     "typecheck": "tsc --noEmit",
+    "typecheck:vue": "vue-tsc --noEmit --skipLibCheck",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
@@ -46,10 +54,13 @@
     "@u-devtools/ui": "workspace:*",
     "@u-devtools/utils": "workspace:*",
     "@u-devtools/kit": "workspace:*",
-    "vue": "^3.5.26"
+    "@u-devtools/overlay": "workspace:*",
+    "vue": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^20.19.27",
-    "typescript": "^5.9.3"
+    "vite": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vue-tsc": "catalog:"
   }
 }

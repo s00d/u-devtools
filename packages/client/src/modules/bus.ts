@@ -1,54 +1,33 @@
-import type { EventBusApi } from '@u-devtools/core';
+import type { EventBusApi, BusEvents } from '@u-devtools/core';
+import { TypedEventBus } from '@u-devtools/core';
 
-// Простая реализация Event Bus без внешних зависимостей
-class SimpleEventBus {
-  private listeners = new Map<string, Set<(data: unknown) => void>>();
-
-  emit(event: string, data?: unknown) {
-    const handlers = this.listeners.get(event);
-    if (handlers) {
-      handlers.forEach((fn) => {
-        fn(data);
-      });
-    }
-  }
-
-  on(event: string, handler: (data: unknown) => void): () => void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
-    }
-    const handlers = this.listeners.get(event);
-    if (handlers) {
-      handlers.add(handler);
-    }
-
-    // Возвращаем функцию отписки
-    return () => {
-      this.off(event, handler);
-    };
-  }
-
-  off(event: string, handler: (data: unknown) => void) {
-    const handlers = this.listeners.get(event);
-    if (handlers) {
-      handlers.delete(handler);
-      if (handlers.size === 0) {
-        this.listeners.delete(event);
-      }
-    }
-  }
-}
-
-// Глобальная шина событий
-const bus = new SimpleEventBus();
+// Глобальная типизированная шина событий
+const bus = new TypedEventBus<BusEvents>();
 
 /**
  * Создает API для межплагинного взаимодействия.
+ * Использует типизированный EventBus для type safety.
  */
 export function createBusApi(): EventBusApi {
   return {
-    emit: (event: string, data?: unknown) => bus.emit(event, data),
-    on: (event: string, handler: (data: unknown) => void) => bus.on(event, handler),
-    off: (event: string, handler: (data: unknown) => void) => bus.off(event, handler),
+    emit: (event: string, data?: unknown) => {
+      bus.emit(event as keyof BusEvents, data as BusEvents[keyof BusEvents]);
+    },
+    on: (event: string, handler: (data: unknown) => void) => {
+      return bus.on(
+        event as keyof BusEvents,
+        handler as (data: BusEvents[keyof BusEvents]) => void
+      );
+    },
+    off: (event: string, handler: (data: unknown) => void) => {
+      bus.off(event as keyof BusEvents, handler as (data: BusEvents[keyof BusEvents]) => void);
+    },
   };
+}
+
+/**
+ * Получить типизированный доступ к EventBus (для внутреннего использования)
+ */
+export function getTypedBus(): TypedEventBus<BusEvents> {
+  return bus;
 }

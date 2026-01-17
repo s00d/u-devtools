@@ -18,13 +18,10 @@ export default createViteConfig({
     server: 'src/server.ts',
   },
   dir: __dirname,
+  clearScreen: false,
   useVue: false,
   dtsOptions: {
     insertTypesEntry: true,
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../../packages/core/src',
-    '@u-devtools/kit': '../../packages/kit/src',
   },
   external: ['node:path', 'node:url'],
 });

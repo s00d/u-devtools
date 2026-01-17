@@ -1,0 +1,7 @@
+{
+  "success": false,
+  "errors": "✗ Build failed in 6ms\nerror during build:\nCould not resolve entry module \"vite.config.react.ts/index.html\".\n    at getRollupError (file:///Users/s00d/Downloads/vite-devtools/node_modules/.pnpm/rollup@4.54.0/node_modules/rollup/dist/es/shared/parseAst.js:401:41)\n    at error (file:///Users/s00d/Downloads/vite-devtools/node_modules/.pnpm/rollup@4.54.0/node_modules/rollup/dist/es/shared/parseAst.js:397:42)\n    at ModuleLoader.loadEntryModule (file:///Users/s00d/Downloads/vite-devtools/node_modules/.pnpm/rollup@4.54.0/node_modules/rollup/dist/es/shared/node-entry.js:21682:20)\n    at async Promise.all (index 0)\n",
+  "timestamp": "2026-01-02 00:14:17",
+  "vite_ruby": "3.8.0",
+  "digest": "24403e285393c8486387c89bb4a0e261c7782c99"
+}

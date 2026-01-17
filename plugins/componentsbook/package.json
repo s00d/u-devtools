@@ -1,0 +1,75 @@
+{
+  "name": "@u-devtools/plugin-componentsbook",
+  "version": "0.2.0",
+  "description": "Component storybook plugin for Universal DevTools - Interactive component development and documentation",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
+      },
+      "./client": {
+        "import": "./dist/client.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "vite build && vite build -c vite.config.standalone.ts",
+    "build:standalone": "vite build -c vite.config.standalone.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "u-devtools-plugin",
+    "devtools",
+    "vue",
+    "components",
+    "storybook",
+    "component-development",
+    "documentation",
+    "interactive",
+    "props",
+    "events",
+    "slots"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
+    "@u-devtools/overlay": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "@u-devtools/utils-node": "workspace:*",
+    "chokidar": "catalog:",
+    "markdown-it": "catalog:",
+    "react-dom": "catalog:",
+    "solid-js": "catalog:",
+    "svelte": "catalog:",
+    "vue": "catalog:",
+    "vue-docgen-api": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "globby": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:"
+  }
+}

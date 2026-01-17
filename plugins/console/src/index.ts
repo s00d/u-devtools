@@ -1,10 +1,13 @@
-import { definePlugin } from '@u-devtools/kit';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-export const consolePlugin = () =>
+const consolePlugin = () =>
   definePlugin({
-    name: 'Console',
+    name: 'console',
     root: import.meta.url,
     client: './client',
     app: './app',
+    server: null, // No server file
   });
 
+export const plugin = consolePlugin;
+export { consolePlugin };

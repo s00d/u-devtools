@@ -1,5 +1,8 @@
-import { AppBridge } from '@u-devtools/core';
+import { defineApp } from '@u-devtools/kit';
+import type { AppBridge } from '@u-devtools/core';
+import { setupDevTools } from './context';
 import type { StorageDriver } from './drivers/types';
+import type { StorageProtocol } from './types';
 import { WebStorageDriver } from './drivers/web-storage';
 import { CookieDriver } from './drivers/cookie';
 import { IndexedDBDriver } from './drivers/indexeddb';
@@ -7,9 +10,8 @@ import { CacheStorageDriver } from './drivers/cache';
 import { OPFSDriver } from './drivers/opfs';
 import { openDB } from 'idb';
 
-const bridge = new AppBridge('storage');
 
-// Реестр драйверов
+// Driver registry
 const drivers: Record<string, StorageDriver> = {
   local: new WebStorageDriver('local'),
   session: new WebStorageDriver('session'),
@@ -19,7 +21,7 @@ const drivers: Record<string, StorageDriver> = {
   opfs: new OPFSDriver(),
 };
 
-// --- Безопасное получение Local/Session Storage ---
+// --- Safe Local/Session Storage retrieval ---
 const getStorage = (type: 'local' | 'session') => {
   try {
     const store = type === 'local' ? localStorage : sessionStorage;
@@ -29,7 +31,7 @@ const getStorage = (type: 'local' | 'session') => {
       if (key) {
         let value = store.getItem(key);
         try {
-          // Пытаемся распарсить, но сохраняем оригинал если это не JSON
+          // Try to parse, but keep original if not JSON
           if (value) {
             const parsed = JSON.parse(value);
             value = parsed;
@@ -46,7 +48,7 @@ const getStorage = (type: 'local' | 'session') => {
   }
 };
 
-// --- Безопасное получение Cookies (клиентские) ---
+// --- Safe Cookie retrieval (client-side) ---
 const getClientCookies = () => {
   try {
     if (!document.cookie) return [];
@@ -67,22 +69,22 @@ const getClientCookies = () => {
   }
 };
 
-// --- Получение HttpOnly Cookies с сервера ---
+// --- Get HttpOnly Cookies from server ---
 const getServerCookies = async () => {
   try {
     const res = await fetch('/__u-devtools/cookies');
     if (!res.ok) return [];
     const cookies = await res.json();
-    return cookies; // Ожидаем массив { key, value, httpOnly: true }
+    return cookies; // Expect array { key, value, httpOnly: true }
   } catch {
-    // Тихая ошибка - если сервер недоступен, просто не показываем HttpOnly куки
+    // Silent error - if server unavailable, just don't show HttpOnly cookies
     return [];
   }
 };
 
-// --- Безопасное получение IndexedDB ---
+// --- Safe IndexedDB retrieval ---
 const getIDB = async () => {
-  // Проверка поддержки. Метод databases() есть только в Chrome/Edge!
+  // Check support. databases() method only exists in Chrome/Edge!
   if (
     !('indexedDB' in window) ||
     typeof (window.indexedDB as { databases?: () => Promise<IDBDatabaseInfo[]> }).databases !==
@@ -105,7 +107,7 @@ const getIDB = async () => {
 
         for (const storeName of db.objectStoreNames) {
           try {
-            // Читаем только ключи или лимит данных, чтобы не упасть на Blob
+            // Read only keys or limit data to avoid crashing on Blob
             const records = await db.getAll(storeName, undefined, 50);
             const keys = await db.getAllKeys(storeName, undefined, 50);
 
@@ -131,24 +133,24 @@ const getIDB = async () => {
   }
 };
 
-// Главная функция обновления
-const refreshAll = async () => {
+// Main refresh function
+const refreshAll = async (bridge?: AppBridge<StorageProtocol>) => {
   try {
-    // Параллельная загрузка асинхронных данных
+    // Parallel loading of async data
     const [idb, serverCookies] = await Promise.all([getIDB(), getServerCookies()]);
 
-    // Синхронные данные
+    // Synchronous data
     const local = getStorage('local');
     const session = getStorage('session');
     const clientCookies = getClientCookies();
 
-    // Мержим куки (Client + Server). Серверные точнее, но клиентские обновляются мгновенно
+    // Merge cookies (Client + Server). Server ones are more accurate, but client ones update instantly
     const cookieMap = new Map<string, { key: string; value: string; httpOnly: boolean }>();
     for (const c of clientCookies) {
       cookieMap.set(c.key, c);
     }
 
-    // Если сервер вернул куки, обновляем/добавляем их
+    // If server returned cookies, update/add them
     if (Array.isArray(serverCookies)) {
       for (const c of serverCookies) {
         const cookie = c as { key: string; value: string; httpOnly?: boolean };
@@ -160,7 +162,7 @@ const refreshAll = async () => {
       }
     }
 
-    // Получаем остальные данные через драйверы (cache, opfs)
+    // Get other data via drivers (cache, opfs)
     const cache = await (async () => {
       try {
         const data = drivers.cache.fetchAll();
@@ -179,7 +181,7 @@ const refreshAll = async () => {
       }
     })();
 
-    const result: Record<string, unknown> = {
+    const result = {
       local,
       session,
       cookie: Array.from(cookieMap.values()),
@@ -188,23 +190,26 @@ const refreshAll = async () => {
       opfs,
     };
 
-    bridge.send('data', result);
+    if (bridge) {
+      bridge.send('data', result);
+    }
   } catch (e) {
     console.error('[U-DevTools] Storage refresh failed:', e);
-    // Отправляем пустые данные, чтобы UI не завис
-    bridge.send('data', {
-      local: [],
-      session: [],
-      cookie: [],
-      indexeddb: [],
-      cache: [],
-      opfs: [],
-    });
+    if (bridge) {
+      bridge.send('data', {
+        local: [],
+        session: [],
+        cookie: [],
+        indexeddb: [],
+        cache: [],
+        opfs: [],
+      });
+    }
   }
 };
 
-// Обработка команд от UI
-const handleAction = async (action: 'save' | 'remove' | 'clear', payload: unknown) => {
+// Handle commands from UI
+const handleAction = async (action: 'save' | 'remove' | 'clear', payload: unknown, bridge?: AppBridge<StorageProtocol>) => {
   const p = payload as { type: string };
   const driver = drivers[p.type] as StorageDriver | undefined;
   if (!driver) return;
@@ -223,37 +228,39 @@ const handleAction = async (action: 'save' | 'remove' | 'clear', payload: unknow
       if (result instanceof Promise) await result;
     }
 
-    // После изменения сразу обновляем данные
-    refreshAll();
+    // After change immediately update data
+    await refreshAll(bridge);
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
     console.error(`[Storage] Action ${action} failed:`, e);
-    bridge.send('error', error);
+    if (bridge) {
+      bridge.send('error', error);
+    }
   }
 };
 
-// Подписки
-bridge.on('refresh', refreshAll);
-bridge.on('save', (p) => handleAction('save', p));
-bridge.on('delete', (p) => handleAction('remove', p));
-bridge.on('clear', (p) => handleAction('clear', p));
+export default defineApp({
+  component: undefined,
+  setup({ bridge, onCleanup }) {
+    const typedBridge = bridge as AppBridge<StorageProtocol>;
+    setupDevTools({ bridge: typedBridge });
+    
+    // Initial refresh
+    refreshAll(typedBridge);
+    
+    // Subscriptions
+    typedBridge.on('refresh', () => refreshAll(typedBridge));
+    typedBridge.on('save', (p) => handleAction('save', p, typedBridge));
+    typedBridge.on('delete', (p) => handleAction('remove', p, typedBridge));
+    typedBridge.on('clear', (p) => handleAction('clear', p, typedBridge));
 
-// Auto-refresh triggers
-window.addEventListener('storage', refreshAll);
-const intervalId = setInterval(refreshAll, 3000); // Poll for cookies/IDB
+    // Auto-refresh triggers
+    const storageHandler = () => refreshAll(typedBridge);
+    window.addEventListener('storage', storageHandler);
 
-// Задержка для того, чтобы UI успел подписаться
-setTimeout(() => {
-  refreshAll();
-}, 500);
-
-// --- CLEANUP (ВАЖНО!) ---
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot;
-if (hot) {
-  hot.dispose(() => {
-    window.removeEventListener('storage', refreshAll);
-    clearInterval(intervalId);
-    bridge.close();
-  });
-}
+    // --- CLEANUP ---
+    onCleanup(() => {
+      window.removeEventListener('storage', storageHandler);
+    });
+  },
+});

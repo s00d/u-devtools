@@ -1,17 +1,37 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue';
-import type { ClientApi } from '@u-devtools/core';
-import { UInput, USplitter, UButton, ULoading, UModal } from '@u-devtools/ui';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+import { UInput, USplitter, UButton, ULoading, UIcon } from '@u-devtools/ui';
+import { useApi, useBridge } from '../../context';
 import { useComponentTree } from '../../composables/useComponentTree';
+import { useVueApps } from '../../composables/useVueApps';
 import ComponentTree from '../components/ComponentTree.vue';
 import ComponentState from '../components/ComponentState.vue';
 import ComponentRenderCode from '../components/ComponentRenderCode.vue';
+import VueAppsList from '../components/VueAppsList.vue';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
+const bridge = useBridge();
 
-const componentTree = useComponentTree();
+const vueApps = useVueApps();
+const componentTree = useComponentTree(() => vueApps.selectedAppId.value);
 
-// Получаем настройку редактора из глобальных настроек
+// При переключении приложения обновляем дерево компонентов
+watch(() => vueApps.selectedAppId.value, () => {
+  if (vueApps.selectedAppId.value) {
+    // Небольшая задержка, чтобы app успел переключиться
+    setTimeout(() => {
+      componentTree.getComponentTree();
+    }, 100);
+  }
+});
+
+// Также слушаем событие ready после переключения приложения
+bridge.on('inspector:ready', () => {
+  // После переключения приложения запрашиваем дерево компонентов
+  componentTree.getComponentTree();
+});
+
+// Get editor setting from global settings
 const editor = computed(() => {
   try {
     const saved = localStorage.getItem('u-devtools-global-settings');
@@ -30,15 +50,15 @@ const componentRenderCode = ref('');
 const componentRenderCodeVisible = ref(false);
 
 // Inspect component inspector state
-const inspectComponentTipVisible = ref(false);
+const isInspecting = ref(false);
 
 const copyFilePath = async () => {
   if (selectedComponent.value?.file) {
     try {
       await navigator.clipboard.writeText(selectedComponent.value.file);
-      props.api.notify('File path copied to clipboard', 'success');
+      api.notify('File path copied to clipboard', 'success');
     } catch (error) {
-      props.api.notify(`Failed to copy path: ${error}`, 'error');
+      api.notify(`Failed to copy path: ${error}`, 'error');
     }
   }
 };
@@ -70,16 +90,16 @@ const handleToggleExpanded = (nodeId: string) => {
 const openSelectedInEditor = async () => {
   if (selectedComponent.value?.file) {
     try {
-      await props.api.rpc.call('sys:openFile', {
+      await api.rpc.call('sys:openFile', {
         file: selectedComponent.value.file,
         line: selectedComponent.value.line || 1,
         column: selectedComponent.value.column || 1,
         editor: editor.value,
       });
-      props.api.notify(`Opening ${selectedComponent.value.file} in ${editor.value}`, 'success');
+      api.notify(`Opening ${selectedComponent.value.file} in ${editor.value}`, 'success');
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      props.api.notify(`Failed to open file: ${message}`, 'error');
+      api.notify(`Failed to open file: ${message}`, 'error');
     }
   }
 };
@@ -97,44 +117,24 @@ const closeComponentRenderCode = () => {
   componentRenderCodeVisible.value = false;
 };
 
-const inspectComponentInspector = async () => {
-  inspectComponentTipVisible.value = true;
-  try {
-    const data = await componentTree.inspectComponentInspector();
-    if (data) {
-      // Select the component that was inspected
-      const node = componentTree.flattenedTree.value.find((n) => n.id === data.id);
-      if (node) {
-        await componentTree.selectComponent(node);
-        // Expand parent nodes
-        const expandParents = (
-          nodes: typeof componentTree.flattenedTree.value,
-          targetId: string
-        ) => {
-          for (const node of nodes) {
-            if (node.id === targetId) {
-              return true;
-            }
-            if (node.children) {
-              if (expandParents(node.children, targetId)) {
-                componentTree.expandedNodes.value.add(node.id);
-                return true;
-              }
-            }
-          }
-          return false;
-        };
-        expandParents(componentTree.componentTree.value, data.id);
-      }
-    }
-  } finally {
-    inspectComponentTipVisible.value = false;
+const toggleInspect = () => {
+  if (isInspecting.value) {
+    isInspecting.value = false;
+    bridge.send('inspector:disable');
+  } else {
+    isInspecting.value = true;
+    bridge.send('inspector:enable');
   }
 };
 
-const cancelInspectComponentInspector = () => {
-  inspectComponentTipVisible.value = false;
-  componentTree.cancelInspectComponentInspector();
+const handleClosePopup = () => {
+  isInspecting.value = false;
+  bridge.send('inspector:disable');
+};
+
+const handleOutsideClick = () => {
+  isInspecting.value = false;
+  bridge.send('inspector:disable');
 };
 
 // Keyboard shortcuts
@@ -142,26 +142,31 @@ onMounted(() => {
   componentTree.getComponentTree();
 
   // Global shortcuts via api.shortcuts
-  props.api.shortcuts.register(['Meta', 'S'], () => {
-    if (!inspectComponentTipVisible.value) {
-      inspectComponentInspector();
+  api.shortcuts.register(['Meta', 'S'], () => {
+    if (!isInspecting.value) {
+      toggleInspect();
     }
   });
-  props.api.shortcuts.register(['Ctrl', 'S'], () => {
-    if (!inspectComponentTipVisible.value) {
-      inspectComponentInspector();
+  api.shortcuts.register(['Ctrl', 'S'], () => {
+    if (!isInspecting.value) {
+      toggleInspect();
     }
+  });
+
+  // Слушаем выключение из App (после клика или ESC)
+  bridge.on('inspector:disabled', () => {
+    isInspecting.value = false;
   });
 
   // Local shortcuts for navigation (only when component tab is active)
   const handleKeyDown = (event: KeyboardEvent) => {
-    // Escape для отмены inspect
-    if (event.key === 'Escape' && inspectComponentTipVisible.value) {
-      cancelInspectComponentInspector();
+    // Escape to cancel inspect
+    if (event.key === 'Escape' && isInspecting.value) {
+      handleClosePopup();
       return;
     }
 
-    // Навигация работает только когда компонент в фокусе или активен
+    // Navigation works only when component is focused or active
     const isActive =
       document.activeElement?.closest('.components-tab') ||
       document.querySelector('.components-tab')?.classList.contains('active');
@@ -236,7 +241,7 @@ onUnmounted(() => {
 <template>
   <div class="h-full flex flex-col bg-gray-900 components-tab">
     <!-- Toolbar -->
-    <div class="flex-none px-4 py-3 border-b border-gray-700 bg-gray-800 flex items-center justify-between">
+    <div class="flex-none px-4 py-3 border-b border-gray-700 bg-gray-800 flex items-center justify-between gap-4">
       <UInput
         v-model="componentTree.filterText.value"
         placeholder="Filter components..."
@@ -244,12 +249,13 @@ onUnmounted(() => {
       />
       <div class="flex items-center gap-2">
         <UButton
-          variant="ghost"
+          :variant="isInspecting ? 'primary' : 'ghost'"
           size="sm"
           icon="CursorArrowRays"
-          @click="inspectComponentInspector"
+          @click="toggleInspect"
+          :class="{ 'animate-pulse': isInspecting }"
         >
-          Inspect
+          {{ isInspecting ? 'Picking...' : 'Inspect' }}
         </UButton>
         <div v-if="selectedComponent" class="flex items-center gap-2">
           <UButton
@@ -290,49 +296,80 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content - 3 Panel Layout -->
     <div class="flex-1 flex overflow-hidden relative">
       <div v-if="componentTree.isLoading.value" class="absolute inset-0 flex items-center justify-center bg-gray-900/80 z-10">
         <ULoading text="Loading components..." />
       </div>
-      <USplitter :defaultSize="300" class="flex-1">
+      <!-- Outer Splitter: Apps List (left) and Component Tree + State (right) -->
+      <USplitter :defaultSize="200" :min="150" :max="300" class="flex-1" persistence-key="vue-inspector-apps-panel">
         <template #left>
-          <ComponentTree
-            :tree="componentTree.componentTree.value"
-            :selected-id="componentTree.selectedComponentId.value"
-            :expanded-nodes="componentTree.expandedNodes.value"
-            @select="handleSelect"
-            @hover="handleHover"
-            @leave="handleLeave"
-            @toggle-expanded="handleToggleExpanded"
+          <!-- Panel 1: Apps List -->
+          <VueAppsList
+            :apps="vueApps.apps.value"
+            :selected-app-id="vueApps.selectedAppId.value"
+            @select="vueApps.switchApp"
           />
         </template>
         <template #right>
-          <div class="relative h-full">
-            <ComponentState
-              :state="componentTree.componentState.value"
-              :is-loading="componentTree.isLoading.value"
-            />
-            <ComponentRenderCode
-              v-if="componentRenderCodeVisible && componentRenderCode"
-              :code="componentRenderCode"
-              @close="closeComponentRenderCode"
-            />
-          </div>
+          <!-- Inner Splitter: Component Tree (left) and State (right) -->
+          <USplitter :defaultSize="300" :min="200" :max="600" class="h-full" persistence-key="vue-inspector-tree-panel">
+            <template #left>
+              <!-- Panel 2: Component Tree -->
+              <div class="h-full flex flex-col bg-gray-900 border-r border-gray-700">
+                <div class="flex-none px-3 py-2 border-b border-gray-700 bg-gray-800/50">
+                  <div class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Component Tree</div>
+                </div>
+                <div class="flex-1 overflow-auto">
+                  <ComponentTree
+                    :tree="componentTree.componentTree.value"
+                    :selected-id="componentTree.selectedComponentId.value"
+                    :expanded-nodes="componentTree.expandedNodes.value"
+                    @select="handleSelect"
+                    @hover="handleHover"
+                    @leave="handleLeave"
+                    @toggle-expanded="handleToggleExpanded"
+                  />
+                </div>
+              </div>
+            </template>
+            <template #right>
+              <!-- Panel 3: Component State -->
+              <div class="relative h-full">
+                <ComponentState
+                  :state="componentTree.componentState.value"
+                  :is-loading="componentTree.isLoading.value"
+                />
+                <ComponentRenderCode
+                  v-if="componentRenderCodeVisible && componentRenderCode"
+                  :code="componentRenderCode"
+                  @close="closeComponentRenderCode"
+                />
+              </div>
+            </template>
+          </USplitter>
         </template>
       </USplitter>
     </div>
 
-    <!-- Inspect Component Dialog -->
-    <UModal
-      :visible="inspectComponentTipVisible"
-      title="Inspect Component"
-      @close="cancelInspectComponentInspector"
+    <!-- Inspect Component Popup -->
+    <div
+      v-if="isInspecting"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm pointer-events-none"
+      @click.self="handleOutsideClick"
     >
-      <div class="p-4 text-center">
-        <p class="text-gray-300 mb-4">Click on a component in the page to inspect it</p>
-        <p class="text-sm text-gray-500">Press Escape to cancel</p>
+      <div class="bg-[#252526] p-6 rounded-xl shadow-2xl text-center border border-indigo-500 pointer-events-auto relative">
+        <button
+          @click="handleClosePopup"
+          class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white rounded transition-colors"
+        >
+          <UIcon name="XMark" class="w-5 h-5" />
+        </button>
+        <UIcon name="CursorArrowRays" class="w-12 h-12 mx-auto text-indigo-400 mb-4 animate-bounce" />
+        <h3 class="text-xl font-bold text-white mb-2">Pick a component</h3>
+        <p class="text-gray-400">Hover and click on any Vue component to inspect it.</p>
+        <p class="text-xs text-gray-500 mt-4">Press ESC to cancel</p>
       </div>
-    </UModal>
+    </div>
   </div>
 </template>

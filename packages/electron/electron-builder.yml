@@ -1,0 +1,89 @@
+appId: com.u-devtools.electron
+productName: Universal DevTools
+directories:
+  output: dist-electron
+
+# Включаем ASAR
+asar: true
+
+# Исключаем ненужные файлы из app.asar
+files:
+  - "dist/**/*"
+  - "package.json"
+  # Исключаем map-файлы и исходники из финальной сборки
+  - "!**/*.map"
+  - "!**/*.ts" 
+  - "!scripts/**/*"
+  - "!src/**/*"
+  - "!tsconfig.json"
+# Отключаем автоматический rebuild нативных зависимостей (не нужен для нашего случая)
+npmRebuild: false
+# Копируем статические файлы клиента и плагинов в extraResources
+extraResources:
+  # 1. UI Клиент
+  - from: ../client/dist-app
+    to: client-dist
+    filter: ["**/*"]
+  
+  # 2. Плагины (dist папки)
+  # Копируем dist папки плагинов в resources/plugins/{pluginName}/dist
+  - from: ../../plugins/repo2txt/dist
+    to: plugins/repo2txt/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/console/dist
+    to: plugins/console/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/network/dist
+    to: plugins/network/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/inspector/dist
+    to: plugins/inspector/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/storage/dist
+    to: plugins/storage/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/i18n/dist
+    to: plugins/i18n/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/manager/dist
+    to: plugins/manager/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/seo/dist
+    to: plugins/seo/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/tailwind/dist
+    to: plugins/tailwind/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/terminal/dist
+    to: plugins/terminal/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/vite-inspector/dist
+    to: plugins/vite-inspector/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/vue-inspector/dist
+    to: plugins/vue-inspector/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/package-inspector/dist
+    to: plugins/package-inspector/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/componentsbook/dist
+    to: plugins/componentsbook/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/library/dist
+    to: plugins/library/dist
+    filter: ["client.js", "client.es.js"]
+  - from: ../../plugins/remote-control/dist
+    to: plugins/remote-control/dist
+    filter: ["client.js", "client.es.js"]
+
+win:
+  target: nsis
+  sign: null
+  verifyUpdateCodeSignature: false
+mac:
+  target: dmg
+  identity: null
+  gatekeeperAssess: false
+  hardenedRuntime: false
+linux:
+  target: AppImage

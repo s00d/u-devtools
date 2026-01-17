@@ -6,7 +6,8 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const defaultTemplates = path.join(__dirname, '../_templates');
+// Используем переменную окружения HYGEN_TMPLS, если она установлена, иначе дефолтный путь
+const defaultTemplates = process.env.HYGEN_TMPLS || path.join(__dirname, '../_templates');
 
 runner(process.argv.slice(2), {
   templates: defaultTemplates,

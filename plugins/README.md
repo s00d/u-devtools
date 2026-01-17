@@ -11,8 +11,11 @@ These plugins work with any framework or no framework at all:
 - **@u-devtools/plugin-inspector** - DOM element inspector (universal, with framework component detection)
 - **@u-devtools/plugin-terminal** - Terminal command runner (Node.js)
 - **@u-devtools/plugin-storage** - LocalStorage/SessionStorage/Cookies manager
-- **@u-devtools/plugin-package-inspector** - Package.json dependency viewer
+- **@u-devtools/plugin-package-inspector** - Package.json dependency manager with npm integration
 - **@u-devtools/plugin-console** - Console log interceptor
+- **@u-devtools/plugin-manager** - Plugin marketplace and management (install/uninstall plugins)
+- **@u-devtools/plugin-security** - Security auditor (vulnerability scanning, secret detection)
+- **@u-devtools/plugin-seo** - SEO Studio (meta tags, structured data, social previews)
 
 ## Framework-Specific Plugins
 

@@ -17,3 +17,13 @@ export interface TreeNode {
   isFile: boolean;
   children: TreeNode[];
 }
+
+export type DriverType =
+  | 'google'
+  | 'yandex'
+  | 'deepl'
+  | 'openai'
+  | 'deepseek'
+  | 'google-free'
+  | 'yandex-cloud'
+  | 'disabled';

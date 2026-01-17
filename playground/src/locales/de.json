@@ -1,0 +1,18 @@
+{
+  "fallback": {
+    "value": "fallback de text"
+  },
+  "navigation_component": {
+    "title": "Navigation DE",
+    "home": "Home DE"
+  },
+  "key1": {
+    "key1": {
+      "key1": {
+        "key1": {
+          "key1": "de de de"
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 export interface StorageEntry {
   key: string | number;
   value: unknown;
-  // Метаданные для UI (например, размер, дата истечения куки и т.д.)
+  // Metadata for UI (e.g., size, cookie expiration date, etc.)
   meta?: Record<string, unknown>;
 }
 
@@ -9,7 +9,7 @@ export interface StorageDriver {
   name: string;
   type: string; // 'local', 'session', 'cookie', 'indexeddb', 'cache', 'opfs'
 
-  // Получить все данные
+  // Get all data
   fetchAll(): Promise<unknown> | unknown;
 
   // CRUD

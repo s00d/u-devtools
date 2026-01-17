@@ -20,12 +20,13 @@ const baseConfig = createViteConfig({
     insertTypesEntry: true,
     exclude: ['src/**/*.vue'],
   },
-  additionalPlugins: [
-    tailwindcss(),
-  ],
+  additionalPlugins: [tailwindcss()],
   // ВАЖНО: 'virtual:u-devtools-plugins' должен быть внешним,
   // но CSS мы хотим ЗАИНЛАЙНИТЬ
   external: ['virtual:u-devtools-plugins'],
 });
 
-export default mergeConfig(baseConfig, defineConfig({}));
+export default mergeConfig(baseConfig, defineConfig({
+  optimizeDeps: {
+  },
+}));

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { UTreeView, UIcon, type TreeNode } from '@u-devtools/ui';
+import { UFileTree, type TreeNode } from '@u-devtools/ui';
 import type { TreeNode as I18nTreeNode } from '../types';
 
 const props = defineProps<{
@@ -12,15 +12,15 @@ const emit = defineEmits<{
   fileSelected: [fullPath: string];
 }>();
 
-// Преобразуем i18n TreeNode в формат UTreeView TreeNode
+// Convert i18n TreeNode to UFileTree TreeNode format
 const convertToUTreeNode = (node: I18nTreeNode, parentPath = ''): TreeNode => {
   const fullPath = node.fullPath || `${parentPath}/${node.name}`.replace(/\/+/g, '/');
+  const isSelected = props.selectedFile === fullPath;
   return {
     id: fullPath,
     label: node.name,
     icon: node.isFile ? 'DocumentText' : 'FolderOpen',
-    isSelected: props.selectedFile === fullPath,
-    isExpanded: !node.isFile, // Папки раскрыты по умолчанию
+    isSelected,
     children:
       node.children && node.children.length > 0
         ? node.children.map((child) => convertToUTreeNode(child, fullPath))
@@ -36,42 +36,21 @@ const treeNodes = computed(() => props.tree.map((node) => convertToUTreeNode(nod
 
 const handleNodeSelect = (node: TreeNode) => {
   const fullPath = node.data?.fullPath as string;
-  if (fullPath && node.data?.isFile) {
+  const isFile = node.data?.isFile;
+  if (fullPath && isFile) {
     emit('fileSelected', fullPath);
   }
 };
 </script>
 
 <template>
-  <UTreeView
+  <UFileTree
     :nodes="treeNodes"
+    :selected-id="selectedFile"
+    :expand-all="false"
     :show-header="false"
-    :expand-all="true"
+    :is-file-node="(node) => (node.data?.isFile as boolean) ?? false"
     @node-select="handleNodeSelect"
-  >
-    <template #node="{ node, isExpanded, toggleExpand, handleClick }">
-      <div
-        class="py-1 px-2 my-1 cursor-pointer flex items-center text-sm rounded transition-all duration-200"
-        :class="node.isSelected
-          ? 'bg-indigo-900/30 border border-indigo-500 text-indigo-300 font-medium'
-          : 'border border-transparent hover:bg-gray-700'"
-        @click="handleClick(node, $event)"
-      >
-        <UIcon
-          v-if="node.children && node.children.length > 0"
-          :name="isExpanded ? 'ChevronDown' : 'ChevronRight'"
-          class="w-3 h-3 mr-2 text-gray-400"
-          @click.stop="toggleExpand(node, $event)"
-        />
-        <UIcon
-          :name="node.icon || 'DocumentText'"
-          class="w-4 h-4 mr-2 text-gray-400"
-        />
-        <span :class="node.isSelected ? 'text-gray-200' : 'text-gray-400'">
-          {{ node.label }}
-        </span>
-      </div>
-    </template>
-  </UTreeView>
+  />
 </template>
 

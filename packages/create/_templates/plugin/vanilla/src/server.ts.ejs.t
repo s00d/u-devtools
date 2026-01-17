@@ -12,5 +12,9 @@ import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
 
 export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
   rpc.handle('<%= pluginKebab %>:hello', () => 'Hello from Node.js to Vanilla JS!');
+  
+  rpc.handle('<%= pluginKebab %>:echo', (payload: unknown) => {
+    const message = payload as string;
+    return `Echo: ${message}`;
+  });
 }
-

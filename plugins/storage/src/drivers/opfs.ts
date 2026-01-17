@@ -1,4 +1,5 @@
 import type { StorageDriver, StorageEntry } from './types';
+import { OPFSRemovePayloadSchema } from '../schemas';
 
 export class OPFSDriver implements StorageDriver {
   type = 'opfs';
@@ -14,7 +15,7 @@ export class OPFSDriver implements StorageDriver {
       const root = await storageManager.getDirectory();
       const entries = await this.scanDir(root, '');
 
-      // OPFS - это одна большая "база", но для совместимости с UI вернем как массив
+      // OPFS is one big "database", but for UI compatibility return as array
       return [
         {
           name: 'root',
@@ -26,7 +27,7 @@ export class OPFSDriver implements StorageDriver {
     }
   }
 
-  // Рекурсивный скан
+  // Recursive scan
   private async scanDir(
     dirHandle: FileSystemDirectoryHandle,
     pathPrefix: string
@@ -50,7 +51,7 @@ export class OPFSDriver implements StorageDriver {
           },
         });
       } else if (handle.kind === 'directory') {
-        // Рекурсия
+        // Recursion
         const dirHandle = handle as FileSystemDirectoryHandle;
         const subEntries = await this.scanDir(dirHandle, path);
         entries.push(...subEntries);
@@ -64,13 +65,17 @@ export class OPFSDriver implements StorageDriver {
   }
 
   async remove(payload: { key: string }) {
-    const { key } = payload as { key: string };
+    const validationResult = OPFSRemovePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { key } = validationResult.data;
     const storageManager = navigator.storage as StorageManager & {
       getDirectory?: () => Promise<FileSystemDirectoryHandle>;
     };
     if (!storageManager.getDirectory) return;
     const root = await storageManager.getDirectory();
-    // Удаление файла по пути "folder/subfolder/file.txt"
+    // Delete file by path "folder/subfolder/file.txt"
     const parts = key.split('/');
     const fileName = parts.pop();
     if (!fileName) return;

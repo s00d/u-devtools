@@ -1,5 +1,7 @@
 import type { PluginClientInstance } from '@u-devtools/core';
 import { createApp } from 'vue';
+import { createToast } from '@u-devtools/overlay';
+import { setupDevTools } from './context';
 import TerminalPanel from './ui/TerminalPanel.vue';
 
 const plugin: PluginClientInstance = {
@@ -12,12 +14,12 @@ const plugin: PluginClientInstance = {
       label: 'Clear Terminal',
       icon: 'Trash',
       action: () => {
-        /* Можно реализовать через EventBus, если нужно вызывать снаружи */
+        /* Can implement via EventBus if need to call from outside */
       },
     },
   ],
 
-  // --- НОВЫЙ SDK НАСТРОЕК ---
+  // --- NEW SETTINGS SDK ---
   settings: {
     fontSize: {
       label: 'Font Size',
@@ -39,10 +41,16 @@ const plugin: PluginClientInstance = {
     },
   },
 
-  renderMain(el, api) {
-    const app = createApp(TerminalPanel, { api });
+  renderMain(el, api, { bridge }) {
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge, toast: createToast() });
+    
+    const app = createApp(TerminalPanel);
     app.mount(el);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      bridge.close();
+    };
   },
 };
 

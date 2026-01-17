@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useDevToolsState } from './composables/useDevToolsState';
 import { initDefaultSettings } from './modules/settings';
 
@@ -10,8 +11,10 @@ import MainView from './components/shell/MainView.vue';
 import SettingsModal from './components/settings/SettingsModal.vue';
 import CommandPalette from './components/CommandPalette.vue';
 import GlobalDialogs from './components/GlobalDialogs.vue';
+import ConnectionErrorDialog from './components/ConnectionErrorDialog.vue';
 
-const { notifications, plugins, showSettings, isPaletteOpen, activePluginId } = useDevToolsState();
+const router = useRouter();
+const { notifications, plugins, showSettings, isPaletteOpen } = useDevToolsState();
 
 // Инициализация настроек
 initDefaultSettings(plugins.value);
@@ -42,14 +45,15 @@ onMounted(() => {
     const { action, pluginName, tabName } = e.data;
 
     if (action === 'switch-plugin' && pluginName) {
-      // Переключаем на плагин
+      // Переключаем на плагин через роутер
       const plugin = plugins.value.find((p) => p.name === pluginName);
       if (plugin) {
-        activePluginId.value = pluginName;
+        router.push({ name: 'plugin', params: { pluginName } });
       }
     } else if (action === 'switch-tab' && pluginName && tabName) {
       // Переключаем таб внутри плагина
-      if (activePluginId.value === pluginName) {
+      // Проверяем, что текущий роут соответствует плагину
+      if (router.currentRoute.value.params.pluginName === pluginName) {
         // Отправляем событие для переключения таба через bus
         // Плагины могут слушать это событие
         window.dispatchEvent(
@@ -83,7 +87,7 @@ onUnmounted(() => {
     }"
   >
     <!-- Highlight Line (Верхняя подсветка для 3D эффекта) -->
-    <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none z-50"></div>
+    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none z-50"></div>
 
     <!-- Layout -->
     <ActivityBar />
@@ -93,6 +97,7 @@ onUnmounted(() => {
     <!-- Overlays -->
     <SettingsModal />
     <GlobalDialogs />
+    <ConnectionErrorDialog />
     <CommandPalette 
       v-if="isPaletteOpen" 
       :visible="isPaletteOpen" 

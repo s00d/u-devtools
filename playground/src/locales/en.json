@@ -1,14 +1,22 @@
 {
-  "app": {
-    "title": "DevTools Playground",
-    "subtitle": "Test your plugins here"
+  "test_key": "test_val",
+  "fallback": {
+    "value": "fallback en text"
   },
-  "buttons": {
-    "save": "Save Changes",
-    "cancel": "Cancel Action"
+  "navigation": {
+    "contact": "Contact"
   },
-  "messages": {
-    "welcome": "Welcome to the demo app!",
-    "error": "Something went wrong"
+  "navigation_component": {
+    "title": "Navigation EN",
+    "home": "Home"
+  },
+  "key1": {
+    "key1": {
+      "key1": {
+        "key1": {
+          "key1": "en en en"
+        }
+      }
+    }
   }
 }

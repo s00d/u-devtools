@@ -1,5 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
-import { OVERLAY_EVENT, type OverlayMenuItem } from '@u-devtools/core';
+import type { OverlayMenuItem } from '@u-devtools/core';
+
+const OVERLAY_EVENT = 'u-devtools:overlay-menu-item';
 
 declare global {
   interface Window {

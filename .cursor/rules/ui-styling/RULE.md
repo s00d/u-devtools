@@ -14,13 +14,15 @@ Use components from `@u-devtools/ui`:
 
 ```vue
 <script setup lang="ts">
-import { UButton, UInput, UModal, UIcon } from '@u-devtools/ui';
+import { UButton, UInput, UModal, UIcon, UTabs, UBadge } from '@u-devtools/ui';
 </script>
 
 <template>
   <UButton variant="primary" icon="Bolt">Click</UButton>
   <UInput v-model="value" />
   <UIcon name="Cube" />
+  <UTabs :tabs="['Tab 1', 'Tab 2']" />
+  <UBadge color="green" size="xs">Status</UBadge>
 </template>
 ```
 
@@ -81,7 +83,7 @@ Use Heroicons via `UIcon` component:
 <UIcon name="Cube" class="w-5 h-5 text-indigo-400" />
 ```
 
-Available icon names: Cube, Bolt, Cog6Tooth, XMark, etc.
+Available icon names: Cube, Bolt, Cog6Tooth, XMark, ChevronDown, ChevronUp, etc.
 
 ## Color Palette
 
@@ -90,6 +92,9 @@ Available icon names: Cube, Bolt, Cog6Tooth, XMark, etc.
 - Borders: `border-gray-700` / `border-gray-800` / `border-zinc-800`
 - Primary: `bg-indigo-600` / `text-indigo-400` / `bg-indigo-500/20`
 - Hover states: `hover:bg-gray-800` / `hover:text-gray-200`
+- Success: `bg-green-900` / `text-green-400`
+- Warning: `bg-yellow-900` / `text-yellow-400`
+- Error: `bg-red-900` / `text-red-400`
 
 ## Dynamic Styles
 
@@ -103,3 +108,11 @@ Prefer computed Tailwind classes when possible:
 <div :class="[`w-${size}`, `opacity-${opacity}`]">
 ```
 
+## Tab Navigation
+
+Use `UTabs` component for tab navigation with overflow handling:
+```vue
+<UTabs :tabs="['Tab 1', 'Tab 2', 'Tab 3']" />
+```
+
+The component automatically handles overflow (shows first 5 tabs, rest in dropdown).

@@ -1,5 +1,10 @@
 # @u-devtools/plugin-i18n
 
+[![npm version](https://img.shields.io/npm/v/@u-devtools/plugin-i18n/latest?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-i18n)
+[![npm downloads](https://img.shields.io/npm/dw/@u-devtools/plugin-i18n?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-i18n)
+[![License](https://img.shields.io/npm/l/@u-devtools/plugin-i18n?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-i18n)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 Translation management plugin for Universal DevTools. Visual JSON editor for i18n files with auto-save.
 
 ## Installation

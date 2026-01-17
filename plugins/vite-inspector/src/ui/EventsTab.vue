@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { UButton, UInput, USelect, UBadge, ULoading, UJsonTree, UIcon } from '@u-devtools/ui';
-import type { ClientApi } from '@u-devtools/core';
+import { useApi } from '../context';
 import { formatTime } from '@u-devtools/utils';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
 
 interface ViteEvent {
   id: string;
@@ -27,13 +27,13 @@ const eventsStats = ref<{
 const loadEvents = async () => {
   eventsLoading.value = true;
   try {
-    events.value = await props.api.rpc.call('vite:events:list', {
+    events.value = await api.rpc.call('vite:events:list', {
       limit: eventsLimit.value,
       type: eventsFilter.value === 'all' ? undefined : eventsFilter.value,
     });
-    eventsStats.value = await props.api.rpc.call('vite:events:stats');
+    eventsStats.value = await api.rpc.call('vite:events:stats');
   } catch (e) {
-    props.api.notify(`Failed to load events: ${e}`, 'error');
+    api.notify(`Failed to load events: ${e}`, 'error');
   } finally {
     eventsLoading.value = false;
   }
@@ -41,12 +41,12 @@ const loadEvents = async () => {
 
 const clearEvents = async () => {
   try {
-    await props.api.rpc.call('vite:events:clear');
+    await api.rpc.call('vite:events:clear');
     events.value = [];
-    eventsStats.value = await props.api.rpc.call('vite:events:stats');
-    props.api.notify('Events cleared', 'success');
+    eventsStats.value = await api.rpc.call('vite:events:stats');
+    api.notify('Events cleared', 'success');
   } catch (e) {
-    props.api.notify(`Failed to clear events: ${e}`, 'error');
+    api.notify(`Failed to clear events: ${e}`, 'error');
   }
 };
 
@@ -69,8 +69,8 @@ watch([eventsFilter, eventsLimit], () => {
 onMounted(() => {
   loadEvents();
 
-  // Подписка на новые события в реальном времени
-  props.api.rpc.on('vite:hmr-log', () => {
+  // Subscribe to new events in real-time
+  api.rpc.on('vite:hmr-log', () => {
     loadEvents();
   });
 });

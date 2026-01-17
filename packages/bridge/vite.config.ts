@@ -11,10 +11,8 @@ export default createViteConfig({
   clearScreen: false,
   useVue: false,
   dtsOptions: {
-    insertTypesEntry: true,
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../core/src',
+    rollupTypes: true,
+    copyDtsFiles: false,
   },
   external: ['vite'],
 });

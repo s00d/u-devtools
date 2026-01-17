@@ -1,5 +1,7 @@
-import type { PluginClientInstance } from '@u-devtools/core';
-import { createApp } from 'vue';
+import type { PluginClientInstance, AppBridge } from '@u-devtools/core';
+import { createApp, h } from 'vue';
+import { createToast } from '@u-devtools/overlay';
+import { setupDevTools } from './context';
 import I18nPanel from './ui/I18nPanel.vue';
 import I18nSettings from './ui/I18nSettings.vue';
 
@@ -82,21 +84,33 @@ const plugin: PluginClientInstance = {
     },
   },
 
-  renderMain(container, api) {
-    const app = createApp(I18nPanel, {
-      api,
+  renderMain(container, api, { bridge }) {
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge, toast: createToast() });
+    
+    const app = createApp(() => h(I18nPanel, {
       onRegisterRefresh: (fn: () => void) => {
         refreshSignal.value = fn;
       },
-    });
+    }));
+    
     app.mount(container);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      bridge.close();
+    };
   },
 
-  renderSettings(container, api) {
-    const app = createApp(I18nSettings, { api });
+  renderSettings(container, api, { bridge }) {
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge, toast: createToast() });
+    
+    const app = createApp(I18nSettings);
     app.mount(container);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      bridge.close();
+    };
   },
 };
 

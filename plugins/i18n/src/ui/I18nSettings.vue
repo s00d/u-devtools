@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { UInput, USelect } from '@u-devtools/ui';
-import type { PluginSettingsSchema, ClientApi } from '@u-devtools/core';
+import type { PluginSettingsSchema } from '@u-devtools/core';
+import { useApi } from '../context';
 
-const props = defineProps<{
-  api: ClientApi;
-}>();
+const api = useApi();
 
 // Read current settings from API
-const currentSettings = computed(() => props.api.settings.all);
+const currentSettings = computed(() => api.settings.all);
 const selectedDriver = computed(() =>
   String(currentSettings.value.translationDriver || 'disabled')
 );
 
 // Update field in settings API
 const updateField = (key: string, value: unknown) => {
-  props.api.settings.set(key, value);
+  api.settings.set(key, value);
 };
 
 // Handle input update (string or number)
@@ -103,22 +102,22 @@ const modelSchema: PluginSettingsSchema = {
 const fullSchema = computed(() => {
   const schema: PluginSettingsSchema = { ...baseSchema };
 
-  // API Token - показываем для всех, кроме disabled и google-free
+  // API Token - show for all except disabled and google-free
   if (selectedDriver.value !== 'disabled' && selectedDriver.value !== 'google-free') {
     Object.assign(schema, apiTokenSchema);
   }
 
-  // Folder ID - только для yandex-cloud
+  // Folder ID - only for yandex-cloud
   if (selectedDriver.value === 'yandex-cloud') {
     Object.assign(schema, folderIdSchema);
   }
 
-  // Formality - только для deepl
+  // Formality - only for deepl
   if (selectedDriver.value === 'deepl') {
     Object.assign(schema, formalitySchema);
   }
 
-  // Model - только для openai и deepseek
+  // Model - only for openai and deepseek
   if (selectedDriver.value === 'openai' || selectedDriver.value === 'deepseek') {
     Object.assign(schema, modelSchema);
   }

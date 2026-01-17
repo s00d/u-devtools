@@ -1,5 +1,10 @@
 # @u-devtools/core
 
+[![npm version](https://img.shields.io/npm/v/@u-devtools/core/latest?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/core)
+[![npm downloads](https://img.shields.io/npm/dw/@u-devtools/core?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/core)
+[![License](https://img.shields.io/npm/l/@u-devtools/core?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/core)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 Core types and interfaces for Universal DevTools Kit. This package provides the foundational TypeScript types, interfaces, and utilities used throughout the DevTools ecosystem.
 
 ## Installation
@@ -23,13 +28,13 @@ yarn add @u-devtools/core
 
 ### Core Classes
 
-- **AppBridge** - Communication bridge between App context and Client context
+- **AppBridge** - Typed communication bridge between App context and Client context
+- **SyncedState** - Universal state synchronization class with React `useSyncExternalStore` support
 - **Control** - DevTools control utilities
 
 ### Vite Configuration
 
 - **vite.config.base** - Base Vite configuration for building DevTools packages
-- **clean-timestamp-plugin** - Vite plugin for cleaning timestamp files
 
 ## Usage
 
@@ -45,13 +50,54 @@ import type {
 } from '@u-devtools/core';
 ```
 
-### Using AppBridge
+### Using AppBridge with Typed Protocol
 
 ```ts
 import { AppBridge } from '@u-devtools/core';
 
+// Define your protocol
+interface MyPluginProtocol {
+  'element-selected': (data: { id: string }) => void;
+  'toggle-inspector': (data: { state: boolean }) => void;
+}
+
+// Create typed bridge
+const bridge = new AppBridge<MyPluginProtocol>('my-plugin');
+
+// ✅ Full type safety
+bridge.send('element-selected', { id: 'el-1' });
+bridge.on('toggle-inspector', ({ state }) => {
+  // state is automatically typed as { state: boolean }
+});
+```
+
+### Using SyncedState
+
+```ts
+import { AppBridge, SyncedState } from '@u-devtools/core';
+
 const bridge = new AppBridge('my-plugin');
-bridge.send('event-name', data);
+
+// Create synced state
+const isOpen = bridge.state('isOpen', false);
+
+// Read value
+console.log(isOpen.value);
+
+// Update value (automatically syncs)
+isOpen.value = true;
+
+// Subscribe to changes
+const unsub = isOpen.subscribe((val) => {
+  console.log('Changed:', val);
+});
+
+// Use with React useSyncExternalStore
+import { useSyncExternalStore } from 'react';
+const enabled = useSyncExternalStore(
+  isOpen.subscribe,
+  isOpen.getSnapshot
+);
 ```
 
 ### Using Vite Config Base
@@ -66,10 +112,6 @@ export default createViteConfig({
   // ... other options
 });
 ```
-
-## Documentation
-
-For complete documentation, see the [main README](https://github.com/s00d/u-devtools).
 
 ## License
 

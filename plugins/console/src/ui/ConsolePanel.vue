@@ -1,27 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import type { ClientApi } from '@u-devtools/core';
-import { AppBridge } from '@u-devtools/core';
-import { UButton, UInput, UBadge, UJsonTree, UEmpty } from '@u-devtools/ui';
+// Импортируем отдельные хуки
+import { useBridge, useApi } from '../context';
+import { UButton, UInput, UBadge, UJsonTree, UEmpty, UIcon, UPluginLayout } from '@u-devtools/ui';
 import { getLevelColor } from '@u-devtools/utils';
+import type { ConsoleLog } from '../types';
 
 const props = defineProps<{
-  api: ClientApi;
   onRegisterClear: (fn: () => void) => void;
 }>();
 
-interface ConsoleLog {
-  id: string;
-  level: 'log' | 'warn' | 'error' | 'info' | 'debug';
-  message: string;
-  args: unknown[];
-  timestamp: number;
-}
+// Получаем уже типизированный bridge и api!
+// VS Code теперь знает все методы: console-log, clear-logs и т.д.
+const bridge = useBridge();
+const api = useApi();
 
 const logs = ref<ConsoleLog[]>([]);
 const filter = ref('');
 const levelFilter = ref<'all' | 'log' | 'warn' | 'error' | 'info' | 'debug'>('all');
-const bridge = new AppBridge('console');
 
 const clear = () => {
   logs.value = [];
@@ -42,10 +38,12 @@ const filteredLogs = computed(() => {
   return result;
 });
 
-let unsubscribe: (() => void) | undefined;
+// Храним функцию отписки
+let stopListening: (() => void) | undefined;
 
 onMounted(() => {
-  unsubscribe = bridge.on<ConsoleLog>('console-log', (log) => {
+  // TypeScript теперь подсказывает 'console-log' и тип аргумента log!
+  stopListening = bridge.on('console-log', (log) => {
     logs.value.unshift(log);
     if (logs.value.length > 500) {
       logs.value.pop();
@@ -56,22 +54,20 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (unsubscribe) {
-    unsubscribe();
-  }
-  bridge.close();
+  // Только отписываемся от событий.
+  // НЕ вызываем bridge.close() здесь! Это убьет плагин до перезагрузки страницы.
+  stopListening?.();
 });
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-zinc-950 text-gray-200">
-    <!-- Toolbar -->
-      <div class="p-2 border-b border-zinc-800 bg-gray-800 flex gap-2 items-center">
+  <UPluginLayout title="Console" icon="CommandLine">
+    <template #actions>
       <UButton icon="Trash" size="sm" @click="clear" title="Clear" />
-      <UInput v-model="filter" placeholder="Filter logs..." class="w-64" />
+      <UInput v-model="filter" placeholder="Filter logs..." class="w-64" size="sm" />
       <select
         v-model="levelFilter"
-        class="border border-zinc-800 rounded px-2 py-1 text-sm bg-zinc-950 text-gray-200"
+        class="border border-gray-700 rounded px-2 py-1 text-sm bg-gray-800 text-gray-200"
       >
         <option value="all">All Levels</option>
         <option value="log">Log</option>
@@ -80,11 +76,11 @@ onUnmounted(() => {
         <option value="error">Error</option>
         <option value="debug">Debug</option>
       </select>
-      <div class="text-xs text-gray-500 ml-auto">{{ filteredLogs.length }} logs</div>
-    </div>
+      <div class="text-xs text-gray-500">{{ filteredLogs.length }} logs</div>
+    </template>
 
     <!-- Logs List -->
-    <div class="flex-1 overflow-auto p-2 space-y-1">
+    <div class="h-full overflow-auto p-2 space-y-1">
       <div
         v-for="log in filteredLogs"
         :key="log.id"
@@ -111,6 +107,6 @@ onUnmounted(() => {
       </div>
       <UEmpty v-if="filteredLogs.length === 0" icon="CommandLine" title="No logs to display" description="Console logs will appear here" />
     </div>
-  </div>
+  </UPluginLayout>
 </template>
 

@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import PluginRenderer from '../PluginRenderer.vue';
 import { createApiForPlugin } from '../../modules/clientApi';
 import { UIcon } from '@u-devtools/ui';
 
-const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
+const route = useRoute();
+const { plugins } = useDevToolsState();
+
+// Вычисляем текущий плагин из роута
+const currentPlugin = computed(() => {
+  if (route.name === 'plugin' && route.params.pluginName) {
+    return plugins.value.find((p) => p.name === route.params.pluginName);
+  }
+  return undefined;
+});
+
+const isAboutActive = computed(() => route.name === 'about');
+const isManagerActive = computed(() => route.params.pluginName === 'Plugins');
 </script>
 
 <template>
@@ -23,7 +37,11 @@ const { currentPlugin, isAboutActive, isManagerActive } = useDevToolsState();
       <span>{{ currentPlugin.name }} Menu</span>
     </div>
     <div class="flex-1 overflow-hidden relative min-w-0 min-h-0">
-      <PluginRenderer :renderer="currentPlugin.renderSidebar" :api="createApiForPlugin(currentPlugin.name)" />
+      <PluginRenderer 
+        :plugin-name="currentPlugin.name"
+        :renderer="currentPlugin.renderSidebar" 
+        :api="createApiForPlugin(currentPlugin.name)" 
+      />
     </div>
   </div>
 </template>

@@ -4,7 +4,532 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Universal DevTools Playground</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Universal DevTools - Framework-Agnostic Debugging Suite</title>
+    <meta name="description" content="The framework-agnostic DevTools system for Vite applications. Debug Vue, React, Svelte, Angular and more with a unified interface." />
+    <meta name="keywords" content="devtools, vite, debugging, vue, react, svelte, angular, development tools" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Universal DevTools - Framework-Agnostic Debugging Suite" />
+    <meta property="og:description" content="The framework-agnostic DevTools system for Vite applications. Debug Vue, React, Svelte, Angular and more with a unified interface." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://u-devtools.dev" />
+    <meta property="og:image" content="https://u-devtools.dev/og-image.png" />
+    <meta property="og:site_name" content="Universal DevTools" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Universal DevTools - Framework-Agnostic Debugging Suite" />
+    <meta name="twitter:description" content="The framework-agnostic DevTools system for Vite applications." />
+    <meta name="twitter:image" content="https://u-devtools.dev/og-image.png" />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://u-devtools.dev" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Universal DevTools",
+      "description": "The framework-agnostic DevTools system for Vite applications",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Universal DevTools Team"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Universal DevTools",
+      "url": "https://u-devtools.dev",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://u-devtools.dev/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Universal DevTools",
+      "url": "https://u-devtools.dev",
+      "logo": "https://u-devtools.dev/logo.png",
+      "description": "Framework-agnostic DevTools system for Vite applications",
+      "sameAs": [
+        "https://github.com/u-devtools",
+        "https://twitter.com/u-devtools"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "email": "support@u-devtools.dev"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://u-devtools.dev"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Documentation",
+          "item": "https://u-devtools.dev/docs"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Plugins",
+          "item": "https://u-devtools.dev/docs/plugins"
+        }
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Universal DevTools - Framework-Agnostic Debugging Suite",
+      "description": "The framework-agnostic DevTools system for Vite applications. Debug Vue, React, Svelte, Angular and more with a unified interface.",
+      "image": "https://u-devtools.dev/og-image.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Universal DevTools Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Universal DevTools",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://u-devtools.dev/logo.png"
+        }
+      },
+      "datePublished": "2024-01-01",
+      "dateModified": "2024-12-01"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Universal DevTools?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Universal DevTools is a framework-agnostic DevTools system for Vite applications. It allows developers to debug Vue, React, Svelte, Angular and more with a unified interface."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which frameworks are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Universal DevTools supports Vue, React, Svelte, Angular, and any other framework that works with Vite. The system is designed to be framework-agnostic."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install Universal DevTools?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can install Universal DevTools as a Vite plugin. Simply add it to your vite.config.js and it will automatically integrate with your development workflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Universal DevTools free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Universal DevTools is completely free and open source. It's available under the MIT license."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What features does Universal DevTools provide?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Universal DevTools provides a comprehensive debugging suite including component inspection, state management, network monitoring, console logging, storage inspection, and SEO analysis tools."
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Universal DevTools",
+      "description": "Framework-agnostic DevTools system for Vite applications",
+      "brand": {
+        "@type": "Brand",
+        "name": "Universal DevTools"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "url": "https://u-devtools.dev"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "127"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Install Universal DevTools",
+      "description": "Step-by-step guide to install Universal DevTools in your Vite project",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Install the package",
+          "text": "Run npm install @u-devtools/vite in your project directory"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Add to Vite config",
+          "text": "Import and add the plugin to your vite.config.js file"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Start development server",
+          "text": "Run npm run dev and open the DevTools panel"
+        }
+      ],
+      "totalTime": "PT5M"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Universal DevTools Introduction",
+      "description": "Learn how to use Universal DevTools for debugging your applications",
+      "thumbnailUrl": "https://u-devtools.dev/video-thumbnail.jpg",
+      "uploadDate": "2024-01-15",
+      "duration": "PT5M30S",
+      "contentUrl": "https://u-devtools.dev/videos/intro.mp4"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Review",
+      "itemReviewed": {
+        "@type": "SoftwareApplication",
+        "name": "Universal DevTools"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "John Developer"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "reviewBody": "Excellent DevTools system that works seamlessly across all frameworks. Highly recommended!"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "Universal DevTools Workshop",
+      "description": "Learn how to use Universal DevTools in your projects",
+      "startDate": "2024-12-15T10:00",
+      "endDate": "2024-12-15T12:00",
+      "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "location": {
+        "@type": "VirtualLocation",
+        "url": "https://u-devtools.dev/workshop"
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "Universal DevTools Team"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "DevTools Team",
+      "jobTitle": "Development Team",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Universal DevTools"
+      },
+      "sameAs": [
+        "https://github.com/u-devtools"
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Mastering Universal DevTools",
+      "description": "Complete course on using Universal DevTools for web development",
+      "provider": {
+        "@type": "Organization",
+        "name": "Universal DevTools",
+        "sameAs": "https://u-devtools.dev"
+      },
+      "courseCode": "UDT-101",
+      "educationalLevel": "Beginner"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Getting Started with Universal DevTools",
+      "description": "A comprehensive guide to getting started with Universal DevTools",
+      "author": {
+        "@type": "Person",
+        "name": "DevTools Team"
+      },
+      "datePublished": "2024-01-01",
+      "dateModified": "2024-12-01",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Universal DevTools",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://u-devtools.dev/logo.png"
+        }
+      }
+    }
+    </script>
+    
+    <!-- КРИВЫЕ ДАННЫЕ ДЛЯ ТЕСТИРОВАНИЯ -->
+    
+    <!-- Неполный Product (без обязательных полей) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Broken Product"
+    }
+    </script>
+    
+    <!-- Organization с невалидными данными -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Invalid Data Test",
+      "url": "not-a-valid-url",
+      "logo": null,
+      "description": "This has invalid data types and missing fields"
+    }
+    </script>
+    
+    <!-- Неполный Article (без дат) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Incomplete Article",
+      "description": "This article is missing required fields like datePublished, author, publisher"
+    }
+    </script>
+    
+    <!-- LocalBusiness с неправильными типами данных -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Test Business",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": 12345,
+        "addressLocality": null,
+        "postalCode": true
+      },
+      "geo": "invalid-geo-format",
+      "priceRange": 999
+    }
+    </script>
+    
+    <!-- FAQPage с неполными вопросами -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Valid Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This is a valid answer"
+          }
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer"
+          }
+        },
+        {
+          "name": "Question without type",
+          "acceptedAnswer": "Not an object"
+        }
+      ]
+    }
+    </script>
+    
+    <!-- BreadcrumbList с невалидными URL -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "javascript:alert('xss')"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Page",
+          "item": "not-a-url"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Broken Item",
+          "item": "https://example.com"
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Product с невалидным рейтингом -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Product with Bad Rating",
+      "description": "This product has invalid rating data",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "five stars",
+        "reviewCount": -5,
+        "bestRating": "10",
+        "worstRating": "not a number"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "free",
+        "priceCurrency": 123,
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+    
+    <!-- Event с невалидными датами -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "Event with Bad Dates",
+      "startDate": "not-a-date",
+      "endDate": "2024-13-45",
+      "eventStatus": "invalid-status",
+      "location": {
+        "@type": "Place",
+        "name": "Location"
+      }
+    }
+    </script>
+    
+    <!-- HowTo с неполными шагами -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "Incomplete HowTo",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Step 1",
+          "text": "First step"
+        },
+        {
+          "@type": "HowToStep",
+          "text": "Second step without name"
+        },
+        {
+          "name": "Step 3 without type",
+          "text": null
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Recipe с неполными данными -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "Broken Recipe",
+      "recipeIngredient": [
+        "Ingredient 1",
+        12345,
+        null
+      ],
+      "recipeInstructions": "Not an array",
+      "cookTime": "invalid-time-format",
+      "prepTime": true
+    }
+    </script>
+    
     <style>
       body {
         margin: 0;

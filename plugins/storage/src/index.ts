@@ -1,9 +1,13 @@
-import { definePlugin } from '@u-devtools/kit';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-export const storagePlugin = () =>
+const storagePlugin = () =>
   definePlugin({
-    name: 'Storage',
+    name: 'storage',
     root: import.meta.url,
     client: './client',
     app: './app',
+    server: null, // No server file
   });
+
+export const plugin = storagePlugin;
+export { storagePlugin };

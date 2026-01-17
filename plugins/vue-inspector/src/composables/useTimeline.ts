@@ -1,19 +1,19 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
 import type { TimelineEvent, TimelineLayer } from '../types';
 
 /**
  * Composable for Timeline functionality
  */
 export function useTimeline() {
+  const bridge = useBridge();
+  
   const events = ref<TimelineEvent[]>([]);
   const layers = ref<TimelineLayer[]>([]);
   const selectedLayerId = ref<string>('');
   const filterType = ref<string>('');
   const isLoading = ref(false);
   const maxEvents = ref(1000); // Limit events to prevent performance issues
-
-  const bridge = new AppBridge('vue-inspector');
 
   // Filtered events
   const filteredEvents = computed(() => {

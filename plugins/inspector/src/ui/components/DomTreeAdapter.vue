@@ -30,16 +30,16 @@ const emit =
     (e: 'select-node', payload: { type: 'parent' | 'sibling' | 'child'; index?: number }) => void
   >();
 
-// Преобразуем DomContext в формат TreeNode для UTreeView
+// Convert DomContext to TreeNode format for UTreeView
 const treeNodes = computed<TreeNode[]>(() => {
   const nodes: TreeNode[] = [];
 
-  // Parent node (если есть)
+  // Parent node (if exists)
   if (props.domContext?.parent) {
     const parent = props.domContext.parent;
     nodes.push({
       id: 'parent',
-      label: '', // Будет рендериться через слот
+      label: '', // Will be rendered via slot
       data: {
         type: 'parent',
         tagName: parent.tagName,
@@ -51,12 +51,12 @@ const treeNodes = computed<TreeNode[]>(() => {
     });
   }
 
-  // Siblings (включая текущий)
+  // Siblings (including current)
   if (props.domContext?.siblings) {
     props.domContext.siblings.forEach((sibling) => {
       const node: TreeNode = {
         id: `sibling-${sibling.index}`,
-        label: '', // Будет рендериться через слот
+        label: '', // Will be rendered via slot
         data: {
           type: 'sibling',
           index: sibling.index,
@@ -73,7 +73,7 @@ const treeNodes = computed<TreeNode[]>(() => {
           sibling.isCurrent && props.domContext?.children && props.domContext.children.length > 0
             ? props.domContext.children.map((child) => ({
                 id: `child-${child.index}`,
-                label: '', // Будет рендериться через слот
+                label: '', // Will be rendered via slot
                 data: {
                   type: 'child',
                   index: child.index,

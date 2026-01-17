@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { tv } from 'tailwind-variants';
 import UIcon from './UIcon.vue';
-import type { TreeNode } from './UTreeView.vue';
+import type { TreeNode } from '../types';
 
 defineProps<{
   node: TreeNode;
@@ -19,14 +20,24 @@ defineEmits<{
 defineSlots<{
   label(props: { node: TreeNode }): unknown;
 }>();
+
+const treeNode = tv({
+  base: 'px-2 py-1 rounded cursor-pointer transition-colors',
+  variants: {
+    selected: {
+      true: 'ring-1 ring-indigo-500/50 bg-indigo-500/15',
+      false: 'hover:bg-zinc-800/50',
+    },
+  },
+  defaultVariants: {
+    selected: false,
+  },
+});
 </script>
 
 <template>
   <div
-    class="px-2 py-1 rounded cursor-pointer transition-colors"
-    :class="node.isCurrent || node.isSelected 
-      ? 'ring-1 ring-indigo-500/50 bg-indigo-500/15' 
-      : 'hover:bg-zinc-800/50'"
+    :class="treeNode({ selected: node.isCurrent || node.isSelected })"
     @click="handleClick(node, $event)"
   >
     <div class="flex items-center gap-2">

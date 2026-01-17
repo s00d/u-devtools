@@ -1,16 +1,16 @@
-import { ref } from 'vue';
-import { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
+import { useBridgeState as useSyncedRef } from '@u-devtools/kit/vue';
 
 /**
  * Composable for inspector functionality (toggle, select, bridge)
  */
 export function useInspector() {
-  const bridge = new AppBridge('inspector');
-  const isInspecting = ref(false);
+  const bridge = useBridge();
+  // Используем bridge.state() для синхронизации
+  const isInspecting = useSyncedRef(bridge.state('isInspecting', false));
 
   const toggleInspect = () => {
     isInspecting.value = !isInspecting.value;
-    bridge.send('toggle-inspector', { state: isInspecting.value });
   };
 
   const selectNode = (

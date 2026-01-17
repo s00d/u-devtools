@@ -1,17 +1,18 @@
-import type { PluginOption, ViteDevServer } from 'vite';
+import type { PluginOption, ViteDevServer, ResolvedConfig } from 'vite';
 import { ViteRpcServer } from '@u-devtools/bridge';
-import type { DevToolsPlugin } from '@u-devtools/core';
+import type { DevToolsPlugin, RpcMessage } from '@u-devtools/core';
+import { normalizePath } from '@u-devtools/utils-node';
+import { extractErrorMessage } from '@u-devtools/utils';
 import * as path from 'node:path';
-import * as fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Используем createRequire для надежного резолвинга в монорепо и node_modules
+// Use createRequire for reliable resolution in monorepo and node_modules
 const require = createRequire(import.meta.url);
 
-// Идентификаторы
+// Identifiers
 const VIRTUAL_MODULE_ID = 'virtual:u-devtools-plugins';
 const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
 const VIRTUAL_APP_ID = 'virtual:u-devtools-app';
@@ -30,16 +31,16 @@ export interface DevToolsOptions {
 export function createDevTools(options: DevToolsOptions = {}): PluginOption | PluginOption[] {
   const { base = '/__devtools', plugins = [], enabled = true } = options;
 
-  // --- ЛОГИКА ОТКЛЮЧЕНИЯ ---
+  // --- DISABLE LOGIC ---
   if (!enabled) {
     return {
       name: 'u-devtools',
       apply: 'serve',
-      // Возвращаем пустой плагин, чтобы Vite не ругался, но ничего не происходило
+      // Return empty plugin so Vite doesn't complain, but nothing happens
     };
   }
 
-  // --- 1. ОПРЕДЕЛЕНИЕ ПУТЕЙ (CLIENT & OVERLAY) ---
+  // --- 1. PATH RESOLUTION (CLIENT & OVERLAY) ---
 
   const isRunningFromSrc = import.meta.url.endsWith('.ts');
 
@@ -47,49 +48,43 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
   let overlayEntryPath: string;
 
   if (isRunningFromSrc) {
-    // --- DEV MODE (Monorepo) ---
-    // Используем относительные пути к исходникам
-    const localClientPath = path.resolve(__dirname, '../../client');
-    clientEntryPath = path.join(localClientPath, 'src/main.ts');
-
-    // Резолвим оверлей (src)
-    const localOverlayPath = path.resolve(__dirname, '../../overlay');
-    overlayEntryPath = path.join(localOverlayPath, 'src/main.ts');
+    // DEV MODE (Monorepo)
+    clientEntryPath = path.resolve(__dirname, '../../client/src/main.ts');
+    overlayEntryPath = path.resolve(__dirname, '../../overlay/src/main.ts');
   } else {
-    // --- PROD MODE (User) ---
-    // Ищем через require.resolve в node_modules
+    // PROD MODE (User usage)
     try {
-      // 1. Client
       const clientPkgPath = require.resolve('@u-devtools/client/package.json');
       const clientRoot = path.dirname(clientPkgPath);
       const clientPkg = require(clientPkgPath);
-      clientEntryPath = path.resolve(
-        clientRoot,
-        clientPkg.publishConfig?.main || 'dist/main.js'
-      );
+      // For build use dist version
+      clientEntryPath = path.resolve(clientRoot, 'dist/main.js');
 
-      // 2. Overlay
       const overlayPkgPath = require.resolve('@u-devtools/overlay/package.json');
       const overlayRoot = path.dirname(overlayPkgPath);
       const overlayPkg = require(overlayPkgPath);
-      // Используем исходные файлы (src/main.ts) вместо собранных для поддержки HMR
-      const overlaySrcPath = path.resolve(overlayRoot, 'src/main.ts');
-      const overlayDistPath = path.resolve(
-        overlayRoot,
-        overlayPkg.publishConfig?.main || 'dist/index.js'
-      );
-      overlayEntryPath = fs.existsSync(overlaySrcPath) ? overlaySrcPath : overlayDistPath;
+      overlayEntryPath = path.resolve(overlayRoot, 'dist/index.js');
     } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? e.message : String(e);
+      const errorMessage = extractErrorMessage(e);
       throw new Error(
         `[u-devtools] Failed to resolve dependencies.\n` +
-          `Ensure you have installed: @u-devtools/client and @u-devtools/overlay\n` +
-          `Error: ${errorMessage}`
+        `Ensure you have installed: @u-devtools/client and @u-devtools/overlay\n` +
+        `Error: ${errorMessage}`
       );
     }
   }
 
-  // Собираем все Vite плагины из плагинов DevTools
+  // Normalize paths for Windows
+  clientEntryPath = normalizePath(clientEntryPath);
+  overlayEntryPath = normalizePath(overlayEntryPath);
+
+  // Vite config
+  let config: ResolvedConfig;
+  // Chunk references for production build
+  let clientRefId: string | undefined;
+  let overlayRefId: string | undefined;
+
+  // Collect all Vite plugins from DevTools plugins
   const vitePluginsFromDevTools: PluginOption[] = [];
   plugins.forEach((p) => {
     if (p.vitePlugins) {
@@ -104,24 +99,167 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
     }
   });
 
+  // WebSocket server setup for remote debugging
+  // Save references for cleanup on HMR
+  let wssInstance: any = null;
+  let upgradeHandlerRef: ((request: any, socket: any, head: any) => void) | null = null;
+
+  const setupWebSocketServer = (server: ViteDevServer) => {
+    const httpServer = server.httpServer;
+    if (!httpServer) {
+      console.warn('[u-devtools] HTTP server not available, WebSocket support disabled');
+      return;
+    }
+
+    // Remove old handler if it was added earlier (HMR)
+    if (upgradeHandlerRef && httpServer) {
+      httpServer.removeListener('upgrade', upgradeHandlerRef);
+    }
+
+    // IMPORTANT: Create ONE WebSocketServer for all connections
+    const { WebSocketServer } = require('ws');
+
+    // If server already exists, close old connections
+    if (wssInstance) {
+      wssInstance.close();
+    }
+
+    wssInstance = new WebSocketServer({ noServer: true });
+    // Increase listener limit to prevent warnings
+    wssInstance.setMaxListeners(50);
+
+    // Upgrade handler for WebSocket connections
+    upgradeHandlerRef = (request: any, socket: any, head: any) => {
+      const url = new URL(request.url || '', `http://${request.headers.host}`);
+      if (url.pathname === '/__u-devtools-ws') {
+        wssInstance.handleUpgrade(request, socket, head, (ws: any) => {
+          // IMPORTANT: Pass wss (server instance) to have access to all clients
+          handleWebSocketConnection(ws, wssInstance, server);
+        });
+      }
+    };
+
+    httpServer.on('upgrade', upgradeHandlerRef);
+  };
+
+  // WebSocket connection handler
+  // Add wss argument for access to all clients
+  const handleWebSocketConnection = (ws: any, wss: any, server: ViteDevServer) => {
+    // Create WebSocket adapter compatible with ViteRpcServer
+    const wsAdapter = {
+      on: (event: string, handler: any) => {
+        if (event === 'u-devtools:request') {
+          ws.on('message', (data: Buffer) => {
+            try {
+              const msg = JSON.parse(data.toString());
+              handler(msg, {
+                // send for responding to specific request (Unicast)
+                send: (type: string, data: unknown) => {
+                  const response: RpcMessage = {
+                    ...(data as RpcMessage),
+                    type: type === 'u-devtools:event' ? 'event' : 'response',
+                  };
+                  if (ws.readyState === 1) { // WebSocket.OPEN
+                    ws.send(JSON.stringify(response));
+                  }
+                },
+              });
+            } catch (err) {
+              console.error('[u-devtools] WebSocket message parse error:', err);
+            }
+          });
+        }
+      },
+      // send is used by ViteRpcServer for BROADCAST
+      send: (event: string, data: unknown) => {
+        const message: RpcMessage = {
+          ...(data as RpcMessage),
+          type: event === 'u-devtools:event' ? 'event' : 'response',
+        };
+        const msgString = JSON.stringify(message);
+
+        // FIX: Broadcast to all clients
+        if (wss?.clients) {
+          wss.clients.forEach((client: any) => {
+            if (client.readyState === 1) { // WebSocket.OPEN
+              try {
+                client.send(msgString);
+              } catch (err) {
+                console.error('[Vite WS] Failed to send to client:', err);
+              }
+            }
+          });
+        } else {
+          // Fallback if wss is unavailable (shouldn't happen)
+          ws.send(msgString);
+        }
+      },
+    };
+
+    const rpcServer = new ViteRpcServer(wsAdapter);
+    const ctx = { root: server.config.root, server };
+
+    // Setup plugins for WebSocket connection
+    plugins.forEach((p) => {
+      if (p.setupServer) {
+        try {
+          p.setupServer(rpcServer, ctx);
+        } catch (e) {
+          const error = extractErrorMessage(e);
+          console.error(`[u-devtools] Error setting up plugin ${p.name}:`, error);
+        }
+      }
+    });
+
+    // Basic handlers
+    rpcServer.handle('sys:getPlugins', () => plugins.map((p) => ({
+      name: p.name,
+      // Return clientPath so remote client can load it
+      clientPath: p.clientPath,
+      meta: p.meta
+    })));
+
+    ws.on('close', () => {
+      // Cleanup on connection close
+    });
+  };
+
+  // Main plugin (works in both dev and build)
   const mainPlugin: PluginOption = {
     name: 'u-devtools',
-    apply: 'serve',
+    // REMOVE apply: 'serve' so plugin works in build too
+    enforce: 'pre', // Process virtual modules early
+
+    configResolved(resolvedConfig) {
+      config = resolvedConfig;
+    },
 
     config() {
       return {
         optimizeDeps: {
-          // ВАЖНО: Исключаем пакеты из пре-бандлинга.
-          // Vite будет обрабатывать файлы внутри node_modules как исходный код:
-          // 1. Сохранится import.meta.hot (HMR заработает).
-          // 2. CSS импорты будут разрешаться корректно (стили починятся).
-          exclude: ['@u-devtools/client', '@u-devtools/overlay'],
+          // IMPORTANT: Exclude packages from pre-bundling.
+          // Vite will process files inside node_modules as source code:
+          // 1. import.meta.hot will be preserved (HMR will work).
+          // 2. CSS imports will resolve correctly (styles will be fixed).
+          exclude: [
+            '@u-devtools/client',
+            '@u-devtools/overlay',
+            '@u-devtools/kit',
+          ],
         },
-        // Для надежности явно разрешаем доступ к FS
+        // For reliability explicitly allow FS access
         server: {
           fs: {
             allow: ['node_modules/@u-devtools'],
           },
+        },
+        // Override resolve.alias to handle @/ for plugin files
+        // We can't use functions in alias, so we'll handle it in resolveId
+        resolve: {
+          alias: [
+            // Keep existing aliases but add our custom resolver
+            // The actual resolution will happen in resolveId hook
+          ],
         },
       };
     },
@@ -136,9 +274,11 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       if (id === RESOLVED_VIRTUAL_MODULE_ID) {
         const clientPlugins = plugins.filter((p) => p.clientPath);
         if (clientPlugins.length === 0) return 'export const plugins = []';
-        // Добавляем .replace(/\\/g, '/') для совместимости с Windows
+        // Normalize paths for Windows compatibility
         const imports = clientPlugins
-          .map((p, i) => `import plugin${i} from '${p.clientPath?.replace(/\\/g, '/') ?? ''}'`)
+          .map(
+            (p, i) => `import plugin${i} from '${p.clientPath ? normalizePath(p.clientPath) : ''}'`
+          )
           .join('\n');
         const exports = `export const plugins = [${clientPlugins.map((_, i) => `plugin${i}`).join(', ')}]`;
         return `${imports}\n${exports}`;
@@ -146,15 +286,139 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
 
       if (id === RESOLVED_APP_ID) {
         const appPlugins = plugins.filter((p) => p.appPath);
-        if (appPlugins.length === 0) return '';
-        // Добавляем .replace(/\\/g, '/') для совместимости с Windows
-        return appPlugins
-          .map((p) => `import '${p.appPath?.replace(/\\/g, '/') ?? ''}';`)
+        if (appPlugins.length === 0) return 'export const appPlugins = [];';
+
+        // 1. Import modules
+        const imports = appPlugins
+          .map((p, i) => {
+            if (!p.appPath) return '';
+            return `import * as plugin_${i} from '${normalizePath(p.appPath)}'`;
+          })
+          .filter(Boolean)
           .join('\n');
+
+        // 2. Export array of objects with metadata and the module itself
+        // We take .default from module, as defineApp is export default
+        const exports = `export const appPlugins = [
+          ${appPlugins.map((p, i) => `{ 
+            name: '${p.name}', 
+            definition: plugin_${i}.default 
+          }`).join(',\n          ')}
+        ];`;
+
+        return `${imports}\n${exports}`;
       }
       return null;
     },
 
+    // --- PRODUCTION BUILD LOGIC ---
+    async buildStart(opts) {
+      // !!! In development mode (serve) emitFile is not needed and causes error.
+      // Logic for dev mode is handled below in transformIndexHtml/configureServer.
+      if (config.command === 'serve') {
+        return;
+      }
+      // !!! END OF BLOCK !!!
+
+      // Check that we're actually in build mode
+      // buildStart can be called in serve mode for pre-bundling dependencies
+      // Check via opts.mode or presence of emitFile method in context
+      // In dev mode emitFile is unavailable, so just check its presence
+      if (typeof this.emitFile !== 'function') {
+        return;
+      }
+
+      // Ask Rollup to build client and overlay files as separate chunks
+      clientRefId = this.emitFile({
+        type: 'chunk',
+        id: clientEntryPath,
+        fileName: `${base.replace(/^\//, '')}/client.js`, // e.g. __devtools/client.js
+      });
+
+      overlayRefId = this.emitFile({
+        type: 'chunk',
+        id: overlayEntryPath,
+        fileName: `${base.replace(/^\//, '')}/overlay.js`, // e.g. __devtools/overlay.js
+      });
+
+      // Also generate chunk for app plugins if they exist
+      const appPlugins = plugins.filter((p) => p.appPath);
+      if (appPlugins.length > 0) {
+        // Use virtual module for app plugins
+        // The virtual module will be resolved by resolveId hook
+        this.emitFile({
+          type: 'chunk',
+          id: RESOLVED_APP_ID,
+          fileName: `${base.replace(/^\//, '')}/app-plugins.js`,
+        });
+      }
+    },
+
+    generateBundle(_options, bundle) {
+      // generateBundle is only called in build mode
+      // Get generated chunk file names
+      const clientFileName = clientRefId ? this.getFileName(clientRefId) : null;
+      const overlayFileName = overlayRefId ? this.getFileName(overlayRefId) : null;
+
+      if (!clientFileName || !overlayFileName) {
+        console.warn('[u-devtools] Failed to get chunk file names');
+        return;
+      }
+
+      // Use base from config if initialized
+      const publicBase = config?.base || '/';
+
+      // Find main index.html in bundle
+      const htmlAsset = Object.values(bundle).find(
+        (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('index.html')
+      ) as { source: string } | undefined;
+
+      if (htmlAsset) {
+        // Inject scripts and config
+        const configScript = `<script>window.__UDEVTOOLS_CONFIG__={base:'${base}'};</script>`;
+
+        // For plugin applications
+        const appPlugins = plugins.filter((p) => p.appPath);
+        const appPluginsScript =
+          appPlugins.length > 0
+            ? `<script type="module" src="${publicBase}${base.replace(/^\//, '')}/app-plugins.js"></script>`
+            : '';
+
+        // References to our generated files
+        const overlayScript = `<script type="module" src="${publicBase}${overlayFileName}"></script>`;
+
+        // Insert before closing body
+        htmlAsset.source = String(htmlAsset.source).replace(
+          '</body>',
+          `${configScript}${appPluginsScript}${overlayScript}</body>`
+        );
+      }
+
+      // Create index.html for DevTools Client itself
+      this.emitFile({
+        type: 'asset',
+        fileName: `${base.replace(/^\//, '')}/index.html`, // e.g. __devtools/index.html
+        source: `
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Universal DevTools</title>
+              <style>
+                html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0f172a; }
+              </style>
+            </head>
+            <body>
+              <div id="app"></div>
+              <script type="module" src="${publicBase}${clientFileName}"></script>
+            </body>
+          </html>
+        `,
+      });
+    },
+
+    // --- DEV SERVER LOGIC ---
     configureServer(server: ViteDevServer) {
       // Set Vite server context for @vue/devtools-kit if available
       try {
@@ -163,6 +427,9 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       } catch (_e) {
         // @vue/devtools-kit might not be available, ignore
       }
+
+      // Start WebSocket server for remote debugging
+      setupWebSocketServer(server);
 
       const rpcServer = new ViteRpcServer(server.ws);
       const ctx = { root: server.config.root, server };
@@ -178,7 +445,12 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         }
       });
 
-      rpcServer.handle('sys:getPlugins', () => plugins.map((p) => ({ name: p.name })));
+      rpcServer.handle('sys:getPlugins', () => plugins.map((p) => ({
+        name: p.name,
+        // Return clientPath so remote client can load it
+        clientPath: p.clientPath,
+        meta: p.meta
+      })));
       rpcServer.handle('sys:openFile', async (payload: unknown) => {
         const {
           file,
@@ -193,8 +465,8 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         };
         const filePath = path.resolve(ctx.root, file);
         const open = (await import('launch-editor')).default;
-        // launch-editor использует переменную окружения LAUNCH_EDITOR для выбора редактора
-        // Временно устанавливаем её, если не задана
+        // launch-editor uses LAUNCH_EDITOR environment variable to select editor
+        // Temporarily set it if not set
         const originalEditor = process.env.LAUNCH_EDITOR;
         if (!originalEditor && editor) {
           process.env.LAUNCH_EDITOR = editor;
@@ -202,7 +474,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         try {
           open(filePath, `:${line}:${column}`);
         } finally {
-          // Восстанавливаем оригинальное значение, если мы его меняли
+          // Restore original value if we changed it
           if (!originalEditor && editor) {
             delete process.env.LAUNCH_EDITOR;
           }
@@ -210,210 +482,25 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
       });
 
       // --- PLUGIN MANAGER CORE LOGIC ---
-
-      // 1. Получение списка плагинов
+      // Get plugin list (stays in core, as this is system information)
       rpcServer.handle('sys:plugins:list', () => {
         return plugins.map((p) => ({
           name: p.name,
-          // Если метаданных нет, пытаемся угадать, является ли плагин встроенным
-          isCore:
-            p.name.startsWith('I18n') ||
-            p.name.startsWith('Network') ||
-            p.name.startsWith('Inspector') ||
-            p.name.startsWith('Vite') ||
-            p.name.startsWith('Terminal') ||
-            !p.meta,
-          meta: p.meta || {
-            name: 'unknown',
-            version: '0.0.0',
-            description: 'No description provided',
+          // Only manager is a core plugin and cannot be removed
+          isCore: p.name.toLowerCase() === 'manager',
+          meta: {
+            ...(p.meta || {
+              name: 'unknown',
+              version: '0.0.0',
+              description: 'No description provided',
+            }),
+            // Support both fields for backward compatibility
+            repository: p.meta?.repository,
           },
         }));
       });
 
-      // --- PLUGIN MANAGER: MARKETPLACE ---
-
-      // Хелпер для выполнения команд
-      const runCommand = async (cmd: string, cwd: string) => {
-        const { exec } = await import('node:child_process');
-        const { promisify } = await import('node:util');
-        const execAsync = promisify(exec);
-        return execAsync(cmd, { cwd, maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
-      };
-
-      // Хелпер для определения текущего пакетного менеджера проекта
-      const getPackageManager = () => {
-        const userAgent = process.env.npm_config_user_agent;
-        if (userAgent?.startsWith('pnpm')) return 'pnpm';
-        if (userAgent?.startsWith('yarn')) return 'yarn';
-        if (userAgent?.startsWith('bun')) return 'bun';
-        return 'npm';
-      };
-
-      // 1. Поиск плагинов в NPM (через npm search)
-      rpcServer.handle('sys:plugins:search', async (payload: unknown) => {
-        const query = payload as string;
-        const text = query || 'keywords:u-devtools-plugin';
-
-        try {
-          // Используем 'npm search' с флагом --json.
-          // npm обычно установлен даже если используется pnpm/yarn.
-          // Это надежнее для парсинга, чем вывод pnpm/yarn search.
-          const { stdout } = await runCommand(`npm search ${text} --json`, ctx.root);
-
-          const data = JSON.parse(stdout);
-
-          // Приводим формат npm search к нужному нам интерфейсу
-          return Array.isArray(data)
-            ? data.map(
-                (pkg: {
-                  name: string;
-                  version: string;
-                  description?: string;
-                  maintainers?: Array<{ username: string }>;
-                  author?: { name: string };
-                  links?: { npm?: string };
-                }) => ({
-                  name: pkg.name,
-                  version: pkg.version,
-                  description: pkg.description || 'No description',
-                  author: pkg.maintainers?.[0]?.username || pkg.author?.name || 'Unknown',
-                  homepage: pkg.links?.npm || `https://www.npmjs.com/package/${pkg.name}`,
-                })
-              )
-            : [];
-        } catch (e) {
-          console.warn('[u-devtools] npm search failed:', e);
-          return [];
-        }
-      });
-
-      // 2. Установка плагина
-      rpcServer.handle('sys:plugins:install', async (payload: unknown) => {
-        const pkgName = payload as string;
-        // Динамический импорт для избежания проблем с ESM
-        const { loadFile, writeFile, builders } = await import('magicast');
-
-        // Хелпер для преобразования имени пакета в имя переменной
-        const packageToImportName = (pkgName: string): string => {
-          const name = pkgName.split('/').pop()?.replace('plugin-', '') || '';
-          return `${name.replace(/-(\w)/g, (_, c) => c.toUpperCase())}Plugin`;
-        };
-
-        const pm = getPackageManager();
-        // Формируем команду установки для конкретного менеджера
-        const cmd =
-          pm === 'npm'
-            ? `npm install -D ${pkgName}`
-            : pm === 'yarn'
-              ? `yarn add -D ${pkgName}`
-              : `${pm} add -D ${pkgName}`;
-
-        try {
-          // 1. Установка пакета через CLI
-          await runCommand(cmd, ctx.root);
-
-          // 2. Модификация vite.config.ts
-          const configPath = path.resolve(ctx.root, 'vite.config.ts');
-          if (fs.existsSync(configPath)) {
-            try {
-              const mod = await loadFile(configPath);
-              const importName = packageToImportName(pkgName);
-
-              // Добавляем импорт
-              mod.imports.$add({
-                from: pkgName,
-                imported: importName,
-              });
-
-              // Добавляем в массив plugins
-              const configObj =
-                mod.exports.default.$type === 'function-call'
-                  ? mod.exports.default.$args[0]
-                  : mod.exports.default;
-
-              if (configObj?.plugins) {
-                const pluginsArray = configObj.plugins;
-                if (Array.isArray(pluginsArray)) {
-                  pluginsArray.push(builders.functionCall(importName, []));
-                } else if (pluginsArray.$type === 'array') {
-                  pluginsArray.push(builders.functionCall(importName, []));
-                }
-              } else {
-                console.warn(
-                  `[u-devtools] Could not auto-inject plugin "${pkgName}" into vite.config.ts. Please add it manually.`
-                );
-              }
-
-              await writeFile(mod, configPath);
-            } catch (configError: unknown) {
-              const message =
-                configError instanceof Error ? configError.message : String(configError);
-              console.warn(
-                `[u-devtools] Failed to modify vite.config.ts: ${message}. Plugin installed, but you may need to add it manually.`
-              );
-            }
-          }
-
-          return { success: true };
-        } catch (e: unknown) {
-          const message = e instanceof Error ? e.message : String(e);
-          return { success: false, error: message };
-        }
-      });
-
-      // 3. Удаление плагина
-      rpcServer.handle('sys:plugins:uninstall', async (payload: unknown) => {
-        const pkgName = payload as string;
-        const pm = getPackageManager();
-        const cmd =
-          pm === 'npm'
-            ? `npm uninstall ${pkgName}`
-            : pm === 'yarn'
-              ? `yarn remove ${pkgName}`
-              : `${pm} remove ${pkgName}`;
-
-        try {
-          // Удаление пакета
-          await runCommand(cmd, ctx.root);
-
-          // Примечание: Автоматическое удаление из vite.config.ts через magicast сложно,
-          // так как нужно найти и удалить конкретный вызов функции из массива.
-          // Для MVP просто удаляем пакет, а пользователь может почистить конфиг вручную.
-
-          return { success: true };
-        } catch (e: unknown) {
-          const message = e instanceof Error ? e.message : String(e);
-          return { success: false, error: message };
-        }
-      });
-
-      // 4. Проверка обновлений (через npm view)
-      rpcServer.handle('sys:plugins:checkUpdates', async (payload: unknown) => {
-        const packages = payload as string[];
-        const updates: Record<string, string> = {};
-
-        // Запускаем проверки параллельно
-        await Promise.all(
-          packages.map(async (pkgName) => {
-            if (!pkgName || pkgName === 'unknown') return;
-            try {
-              // 'npm view <pkg> version' возвращает последнюю версию строкой
-              const { stdout } = await runCommand(`npm view ${pkgName} version`, ctx.root);
-              const latestVersion = stdout.trim();
-              if (latestVersion) {
-                updates[pkgName] = latestVersion;
-              }
-            } catch (e) {
-              // Пакет не найден или ошибка сети
-            }
-          })
-        );
-
-        return updates;
-      });
-
-      // 3. Эндпоинт для чтения HttpOnly кук
+      // 3. Endpoint for reading HttpOnly cookies
       server.middlewares.use('/__u-devtools/cookies', (req, res) => {
         const cookieHeader = req.headers.cookie || '';
         const cookies = cookieHeader
@@ -424,7 +511,7 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
             return {
               key: key?.trim() || '',
               value: decodeURIComponent(v.join('=')),
-              httpOnly: true, // Помечаем как серверные
+              httpOnly: true, // Mark as server-side
             };
           })
           .filter((c) => c.key);
@@ -434,90 +521,118 @@ export function createDevTools(options: DevToolsOptions = {}): PluginOption | Pl
         res.end(JSON.stringify(cookies));
       });
 
-      // 4. Обслуживание Shell (оболочки)
-      server.middlewares.use(`${base}/index.html`, (_req, res) => {
-        res.setHeader('Content-Type', 'text/html');
-        // Используем вычисленный путь clientEntryPath
-        const normalizedPath = clientEntryPath.replace(/\\/g, '/');
-        res.end(`
-          <!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Universal DevTools</title>
-              <style>
-                #udt-loader {
-                  position: fixed;
-                  inset: 0;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  background: #0f172a;
-                  z-index: 2147483646 !important;
-                  transition: opacity 0.3s ease;
-                }
-                #udt-loader.hidden {
-                  opacity: 0;
-                  pointer-events: none;
-                }
-                .udt-spinner {
-                  width: 48px;
-                  height: 48px;
-                  border: 4px solid rgba(99, 102, 241, 0.2);
-                  border-top-color: #6366f1;
-                  border-radius: 50%;
-                  animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                  to { transform: rotate(360deg); }
-                }
-              </style>
-            </head>
-            <body>
-              <div id="udt-loader">
-                <div class="udt-spinner"></div>
-              </div>
-              <div id="app"></div>
-              <script type="module" src="/@fs/${normalizedPath}"></script>
-            </body>
-          </html>
-        `);
+      // 4. Serve Shell (wrapper) - SPA fallback for routing
+      // Handle all requests under base that are not static files
+      server.middlewares.use((req, res, next) => {
+        const url = req.url || '/';
+
+        // If request starts with base and is not a static file (no extension)
+        // or it's a direct request to root or index.html
+        if (
+          (url.startsWith(base) && !url.includes('.')) ||
+          url === `${base}/index.html` ||
+          url === `${base}/`
+        ) {
+          // Serve HTML for SPA, but DON'T rewrite req.url
+          // This allows Vue Router to correctly determine current route from window.location
+          res.setHeader('Content-Type', 'text/html');
+          // Normalize path for Windows compatibility
+          const normalizedPath = normalizePath(clientEntryPath);
+          res.end(`
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Universal DevTools</title>
+                <style>
+                  #udt-loader {
+                    position: fixed;
+                    inset: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #0f172a;
+                    z-index: 2147483646 !important;
+                    transition: opacity 0.3s ease;
+                  }
+                  #udt-loader.hidden {
+                    opacity: 0;
+                    pointer-events: none;
+                  }
+                  .udt-spinner {
+                    width: 48px;
+                    height: 48px;
+                    border: 4px solid rgba(99, 102, 241, 0.2);
+                    border-top-color: #6366f1;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                  }
+                  @keyframes spin {
+                    to { transform: rotate(360deg); }
+                  }
+                </style>
+              </head>
+              <body>
+                <div id="udt-loader">
+                  <div class="udt-spinner"></div>
+                </div>
+                <div id="app"></div>
+                <script type="module" src="/@fs/${normalizedPath}"></script>
+              </body>
+            </html>
+          `);
+          return;
+        }
+
+        next();
       });
     },
 
     transformIndexHtml(html) {
-      const appPlugins = plugins.filter((p) => p.appPath);
+      // transformIndexHtml works in both build and serve.
+      // But in build we use generateBundle for precise injection with chunk names.
+      // So here we only handle 'serve'.
 
-      // Инъекция скриптов плагинов (Inspector, Network...)
-      const appScript =
-        appPlugins.length > 0
-          ? `<script type="module">import "/@id/${VIRTUAL_APP_ID}";</script>`
-          : '';
+      if (config.command === 'serve') {
+        const appPlugins = plugins.filter((p) => p.appPath);
 
-      // Нормализуем путь оверлея для Windows
-      const normalizedOverlayPath = overlayEntryPath.replace(/\\/g, '/');
+        // In Dev mode use virtual IDs and FS paths
+        const appScript =
+          appPlugins.length > 0
+            ? `<script type="module">import "/@id/${VIRTUAL_APP_ID}";</script>`
+            : '';
 
-      // Инъекция Оверлея (Кнопка + Контейнер)
-      // ВАЖНО: Передаем конфигурацию (BASE URL) через глобальную переменную,
-      // так как <script type="module"> не имеет document.currentScript
-      const loaderScript = `
-        <script>
-          window.__UDEVTOOLS_CONFIG__ = {
-            base: '${base}'
-          };
-        </script>
-        <script type="module" src="/@fs/${normalizedOverlayPath}"></script>
-      `;
+        // Normalize overlay path for Windows
+        const normalizedOverlayPath = normalizePath(overlayEntryPath);
 
-      return `${html}${appScript}${loaderScript}`;
+        // Inject Overlay (Button + Container)
+        // IMPORTANT: Pass configuration (BASE URL) via global variable,
+        // as <script type="module"> doesn't have document.currentScript
+        // FIX: Use Object.assign to avoid overwriting data from Electron preload
+        const loaderScript = `
+          <script>
+            window.__UDEVTOOLS_CONFIG__ = Object.assign(
+              window.__UDEVTOOLS_CONFIG__ || {}, 
+              { base: '${base}' }
+            );
+          </script>
+          <script type="module" src="/@fs/${normalizedOverlayPath}"></script>
+        `;
+
+        return `${html}${appScript}${loaderScript}`;
+      }
+
+      // In build mode return html as-is, modification will be in generateBundle
+      return html;
     },
   };
 
-  // Если есть дополнительные Vite плагины, возвращаем массив
+  // If there are additional Vite plugins, return array
+  const allPlugins: PluginOption[] = [mainPlugin];
   if (vitePluginsFromDevTools.length > 0) {
-    return [mainPlugin, ...vitePluginsFromDevTools];
+    allPlugins.push(...vitePluginsFromDevTools.filter((p): p is PluginOption => p != null));
   }
 
-  return mainPlugin;
+  return allPlugins;
 }

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Universal DevTools Kit SDK",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/*",
+    "plugins/*"
+  ],
+  "exclude": [
+    "**/vite/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/test/**",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/playground/**",
+    "**/docs/**",
+    "docs/api/**",
+    "packages/kit/src/react.ts",
+    "packages/kit/src/solid.ts",
+    "packages/kit/vite.config.ts"
+  ],
+  "skipErrorChecking": true,
+  "out": ".docs-api",
+  "plugin": [
+    "typedoc-plugin-vue",
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-dt-links",
+    "typedoc-plugin-zod"
+  ],
+  "useTsLinkResolution": true,
+  "warnOnUnstableDtLink": true,
+  "tsconfig": "packages/core/tsconfig.json",
+  "blockTags": [
+    "@example",
+    "@remarks",
+    "@param",
+    "@returns",
+    "@throws",
+    "@see",
+    "@since",
+    "@default",
+    "@deprecated"
+  ],
+  "hideGenerator": true,
+  "preserveAnchorCasing": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "parametersFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table"
+}

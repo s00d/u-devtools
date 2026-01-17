@@ -2,38 +2,38 @@ import type { AppBridge } from './bridge-app';
 
 export interface OverlayContext {
   /**
-   * Открыть основное окно DevTools
+   * Open the main DevTools window
    */
   open: () => void;
 
   /**
-   * Закрыть основное окно DevTools
+   * Close the main DevTools window
    */
   close: () => void;
 
   /**
-   * Переключить состояние окна
+   * Toggle window state
    */
   toggle: () => void;
 
   /**
-   * Текущее состояние
+   * Current state
    */
   isOpen: boolean;
 
   /**
-   * Переключить на плагин по имени
+   * Switch to plugin by name
    */
   switchPlugin: (pluginName: string) => void;
 
   /**
-   * Переключить таб внутри плагина по имени таба
+   * Switch tab within plugin by tab name
    */
   switchTab: (pluginName: string, tabName: string) => void;
 
   /**
-   * Создать временный мост для отправки сообщения.
-   * Полезно, если у вас нет доступа к глобальному мосту плагина в данной области видимости.
+   * Create a temporary bridge for sending messages.
+   * Useful if you don't have access to the plugin's global bridge in this scope.
    */
   createBridge: (namespace: string) => AppBridge;
 }
@@ -41,12 +41,12 @@ export interface OverlayContext {
 export interface OverlayMenuItem {
   id: string;
   label: string;
-  icon?: string; // Имя иконки (Heroicons) - для обратной совместимости
-  iconSvg?: string; // SVG как текст
-  iconUrl?: string; // URL к иконке
+  icon?: string; // Icon name (Heroicons) - for backward compatibility
+  iconSvg?: string; // SVG as text
+  iconUrl?: string; // URL to icon
   order?: number;
   /**
-   * Обработчики событий (принимают контекст)
+   * Event handlers (receive context)
    */
   onClick?: (ctx: OverlayContext, event: MouseEvent) => void;
   onDoubleClick?: (ctx: OverlayContext, event: MouseEvent) => void;
@@ -61,72 +61,43 @@ export interface OverlayMenuItem {
   onBlur?: (ctx: OverlayContext, event: FocusEvent) => void;
 }
 
-export const OVERLAY_EVENT = 'u-devtools:register-menu-item';
-
 declare global {
   interface Window {
     __UDEVTOOLS_MENU_ITEMS__?: OverlayMenuItem[];
   }
 }
 
-/**
- * Функция для регистрации кнопки в оверлее (вызывается из app.ts плагина)
- */
-export function registerMenuItem(item: OverlayMenuItem) {
-  if (typeof window === 'undefined') return;
-
-  // Инициализируем глобальный массив, если его нет
-  if (!window.__UDEVTOOLS_MENU_ITEMS__) {
-    window.__UDEVTOOLS_MENU_ITEMS__ = [];
-  }
-
-  // Сохраняем элемент в глобальный массив (для случаев, когда overlay еще не загружен)
-  const existingIdx = window.__UDEVTOOLS_MENU_ITEMS__.findIndex((i) => i.id === item.id);
-  if (existingIdx !== -1) {
-    window.__UDEVTOOLS_MENU_ITEMS__[existingIdx] = item;
-  } else {
-    window.__UDEVTOOLS_MENU_ITEMS__.push(item);
-  }
-
-  // Отправляем событие, которое поймает Vue-приложение оверлея (для обратной совместимости)
-  window.dispatchEvent(
-    new CustomEvent(OVERLAY_EVENT, {
-      detail: item,
-    })
-  );
-}
-
 export class DevToolsControl {
   private channel: BroadcastChannel;
 
   constructor() {
-    // Единый канал для управления состоянием
+    // Single channel for state management
     this.channel = new BroadcastChannel('u-devtools:control');
   }
 
   /**
-   * Открыть DevTools
+   * Open DevTools
    */
   open() {
     this.channel.postMessage({ action: 'open' });
   }
 
   /**
-   * Закрыть DevTools
+   * Close DevTools
    */
   close() {
     this.channel.postMessage({ action: 'close' });
   }
 
   /**
-   * Переключить состояние
+   * Toggle state
    */
   toggle() {
     this.channel.postMessage({ action: 'toggle' });
   }
 
   /**
-   * Получить текущее состояние (асинхронно)
+   * Get current state (asynchronously)
    */
   isOpen(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -138,10 +109,10 @@ export class DevToolsControl {
       };
 
       this.channel.addEventListener('message', handler);
-      // Запрашиваем состояние
+      // Request state
       this.channel.postMessage({ action: 'get-state' });
 
-      // Таймаут на случай, если девтулс не загружен
+      // Timeout in case DevTools is not loaded
       setTimeout(() => {
         this.channel.removeEventListener('message', handler);
         resolve(false);
@@ -150,7 +121,7 @@ export class DevToolsControl {
   }
 
   /**
-   * Подписаться на изменение состояния
+   * Subscribe to state changes
    */
   onStateChange(cb: (isOpen: boolean) => void) {
     const handler = (e: MessageEvent) => {
@@ -163,14 +134,14 @@ export class DevToolsControl {
   }
 
   /**
-   * Переключить на плагин по имени
+   * Switch to plugin by name
    */
   switchPlugin(pluginName: string) {
     this.channel.postMessage({ action: 'switch-plugin', pluginName });
   }
 
   /**
-   * Переключить таб внутри плагина по имени таба
+   * Switch tab within plugin by tab name
    */
   switchTab(pluginName: string, tabName: string) {
     this.channel.postMessage({ action: 'switch-tab', pluginName, tabName });
@@ -181,5 +152,5 @@ export class DevToolsControl {
   }
 }
 
-// Экспортируем синглтон для удобства
+// Export singleton for convenience
 export const devtools = new DevToolsControl();

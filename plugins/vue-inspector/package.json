@@ -1,25 +1,30 @@
 {
   "name": "@u-devtools/plugin-vue-inspector",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Vue Inspector plugin for Universal DevTools",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
     },
     "./app": {
-      "types": "./dist/app.d.ts",
-      "import": "./dist/app.js"
+      "types": "./src/app.ts",
+      "import": "./src/app.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "u-devtools-plugin",
@@ -38,37 +43,51 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
       },
       "./app": {
         "types": "./dist/app.d.ts",
         "import": "./dist/app.js"
-      }
+      },
+      "./server": {
+        "types": "./dist/server.d.ts",
+        "import": "./dist/server.js"
+      },
+      "./client": {
+        "import": "./dist/client.js"
+      },
+      "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build -c vite.config.standalone.ts",
+    "build:standalone": "vite build -c vite.config.standalone.ts",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@u-devtools/core": "workspace:*",
+    "@u-devtools/kit": "workspace:*",
+    "@u-devtools/overlay": "workspace:*",
     "@u-devtools/ui": "workspace:*",
     "@u-devtools/utils": "workspace:*",
-    "@u-devtools/kit": "workspace:*",
-    "@vue/devtools-core": "^8.0.5",
-    "@vue/devtools-kit": "^8.0.5",
-    "vite-plugin-vue-inspector": "^5.3.2",
-    "vue": "^3.5.26"
+    "@vue/devtools-core": "catalog:",
+    "@vue/devtools-kit": "catalog:",
+    "vite-plugin-vue-inspector": "catalog:",
+    "vue": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^20.19.27",
-    "typescript": "^5.9.3"
+    "@types/node": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

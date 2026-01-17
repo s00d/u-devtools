@@ -1,4 +1,5 @@
 import type { StorageDriver, StorageEntry } from './types';
+import { StorageSavePayloadSchema, StorageRemovePayloadSchema } from '../schemas';
 
 export class WebStorageDriver implements StorageDriver {
   private storage: Storage;
@@ -18,7 +19,7 @@ export class WebStorageDriver implements StorageDriver {
       if (key) {
         let value = this.storage.getItem(key);
         try {
-          // Пытаемся автоматически распарсить JSON
+          // Try to automatically parse JSON
           if (value) value = JSON.parse(value);
         } catch {
           /* ignore */
@@ -30,13 +31,21 @@ export class WebStorageDriver implements StorageDriver {
   }
 
   save(payload: { key: string; value: unknown }) {
-    const { key, value } = payload as { key: string; value: unknown };
+    const validationResult = StorageSavePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { key, value } = validationResult.data;
     const strValue = typeof value === 'string' ? value : JSON.stringify(value);
     this.storage.setItem(key, strValue);
   }
 
   remove(payload: { key: string }) {
-    const { key } = payload as { key: string };
+    const validationResult = StorageRemovePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { key } = validationResult.data;
     this.storage.removeItem(key);
   }
 

@@ -1,22 +1,24 @@
-import { definePlugin } from '@u-devtools/kit';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 import type { PluginOption } from 'vite';
 import VueInspector from 'vite-plugin-vue-inspector';
-import { setupServer } from './server';
 
-export const vueInspectorPlugin = () =>
+const vueInspectorPlugin = () =>
   definePlugin({
-    name: 'Vue Inspector',
+    name: 'vue-inspector',
     root: import.meta.url,
     client: './client',
     app: './app',
-    setupServer,
+    server: './server',
     vitePlugins: [
       () =>
         VueInspector({
           toggleComboKey: '',
           toggleButtonVisibility: 'never',
-          // launchEditor будет установлен через переменную окружения в setupServer
+          // launchEditor will be set via environment variable in setupServer
           appendTo: 'manually',
         }) as PluginOption,
     ],
   });
+
+export const plugin = vueInspectorPlugin;
+export { vueInspectorPlugin };

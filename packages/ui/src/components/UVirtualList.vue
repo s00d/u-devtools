@@ -6,7 +6,7 @@ export interface VirtualListProps<T = unknown> {
   items: T[];
   itemHeight?: number;
   overscan?: number;
-  keyField?: string | ((item: T) => string | number);
+  keyField?: string | ((item: unknown) => string | number);
 }
 
 const props = withDefaults(defineProps<VirtualListProps>(), {

@@ -3,6 +3,11 @@ import { dialogState } from '../modules/dialog';
 import { UButton, UModal, UInput } from '@u-devtools/ui';
 import { ref, watch } from 'vue';
 
+// Disable attribute inheritance for fragment root
+defineOptions({
+  inheritAttrs: false,
+});
+
 const promptValue = ref('');
 
 // Обработка confirm диалога

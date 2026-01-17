@@ -1,18 +1,20 @@
-import { definePlugin } from '@u-devtools/kit';
-import { setupServer } from './server.js';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-// Метаданные определяем статически (из package.json во время сборки)
+// Metadata defined statically (from package.json during build)
 const meta = {
   name: '@u-devtools/plugin-terminal',
   version: '0.1.0',
   description: 'Terminal plugin for running npm scripts from DevTools',
 };
 
-export const terminalPlugin = () =>
+const terminalPlugin = () =>
   definePlugin({
-    name: 'Terminal',
+    name: 'terminal',
     root: import.meta.url,
     client: './client',
     meta,
-    setupServer: (rpc, ctx) => setupServer(rpc, ctx),
+    server: './server',
   });
+
+export const plugin = terminalPlugin;
+export { terminalPlugin };

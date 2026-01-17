@@ -10,12 +10,12 @@ import {
   UButton,
   UVirtualList,
 } from '@u-devtools/ui';
-import type { ClientApi } from '@u-devtools/core';
+import { useApi } from '../context';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
 
-// Получаем настройку редактора из глобальных настроек (General settings)
-// Настройки General хранятся с префиксом 'general:'
+// Get editor setting from global settings (General settings)
+// General settings are stored with 'general:' prefix
 const editor = computed(() => {
   try {
     const saved = localStorage.getItem('u-devtools-global-settings');
@@ -31,16 +31,16 @@ const editor = computed(() => {
 
 const openInEditor = async (file: string, line = 1, column = 1) => {
   try {
-    await props.api.rpc.call('sys:openFile', {
+    await api.rpc.call('sys:openFile', {
       file,
       line,
       column,
       editor: editor.value,
     });
-    props.api.notify(`Opening ${file} in ${editor.value}`, 'success');
+    api.notify(`Opening ${file} in ${editor.value}`, 'success');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    props.api.notify(`Failed to open file: ${message}`, 'error');
+    api.notify(`Failed to open file: ${message}`, 'error');
   }
 };
 
@@ -65,9 +65,9 @@ const loadingDetails = ref(false);
 
 const loadModules = async () => {
   try {
-    modules.value = await props.api.rpc.call('vite:modules:list', searchQuery.value || '');
+    modules.value = await api.rpc.call('vite:modules:list', searchQuery.value || '');
   } catch (e) {
-    props.api.notify(`Failed to load modules: ${e}`, 'error');
+    api.notify(`Failed to load modules: ${e}`, 'error');
   }
 };
 
@@ -80,9 +80,9 @@ const selectModule = async (mod: Module) => {
   selectedModule.value = mod;
   loadingDetails.value = true;
   try {
-    moduleDetails.value = await props.api.rpc.call('vite:modules:read', mod.id);
+    moduleDetails.value = await api.rpc.call('vite:modules:read', mod.id);
   } catch (e) {
-    props.api.notify('Failed to load module details', 'error');
+    api.notify('Failed to load module details', 'error');
     moduleDetails.value = null;
   } finally {
     loadingDetails.value = false;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { UJsonTree, ULoading } from '@u-devtools/ui';
-import type { ClientApi } from '@u-devtools/core';
+import { useApi } from '../context';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
 
 const configData = ref<Record<string, unknown>>({});
 const loading = ref(false);
@@ -11,9 +11,9 @@ const loading = ref(false);
 const loadConfig = async () => {
   loading.value = true;
   try {
-    configData.value = await props.api.rpc.call('vite:config');
+    configData.value = await api.rpc.call('vite:config');
   } catch (e) {
-    props.api.notify(`Failed to load config: ${e}`, 'error');
+    api.notify(`Failed to load config: ${e}`, 'error');
   } finally {
     loading.value = false;
   }

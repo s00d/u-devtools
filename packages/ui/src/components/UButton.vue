@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { tv } from 'tailwind-variants';
 import UIcon from './UIcon.vue';
 
 const props = withDefaults(
@@ -8,6 +9,8 @@ const props = withDefaults(
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     icon?: string;
     loading?: boolean;
+    label?: string; // Text content as prop (alternative to slot)
+    text?: string; // Alias for label
   }>(),
   {
     size: 'md',
@@ -29,33 +32,34 @@ const iconSize = computed(() => {
   return sizes[props.size];
 });
 
-const variantClasses = computed(() => {
-  if (props.variant === 'primary') {
-    return 'bg-indigo-600 text-white shadow-[0_4px_12px_-2px_rgba(79,70,229,0.4)] hover:bg-indigo-700 hover:shadow-[0_6px_16px_-2px_rgba(79,70,229,0.6)]';
-  } else if (props.variant === 'secondary') {
-    return 'bg-zinc-800 text-gray-200 border border-zinc-800 hover:bg-zinc-700';
-  } else if (props.variant === 'ghost') {
-    return 'text-gray-400 bg-transparent hover:text-gray-200 hover:bg-white/5';
-  } else if (props.variant === 'danger') {
-    return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
-  } else {
-    return 'border border-zinc-800 bg-zinc-800 text-gray-200 hover:bg-zinc-700';
-  }
+const button = tv({
+  base: 'relative flex items-center justify-center transition-all duration-200 font-medium select-none overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed',
+  variants: {
+    variant: {
+      primary: 'bg-indigo-600 text-white shadow-[0_4px_12px_-2px_rgba(79,70,229,0.4)] hover:bg-indigo-700 hover:shadow-[0_6px_16px_-2px_rgba(79,70,229,0.6)]',
+      secondary: 'bg-zinc-800 text-gray-200 border border-zinc-800 hover:bg-zinc-700',
+      ghost: 'text-gray-400 bg-transparent hover:text-gray-200 hover:bg-white/5',
+      danger: 'bg-red-500/10 text-red-500 hover:bg-red-500/20',
+      default: 'border border-zinc-800 bg-zinc-800 text-gray-200 hover:bg-zinc-700',
+    },
+    size: {
+      xs: 'px-2 py-1 text-[10px] gap-1 rounded-md',
+      sm: 'px-3 py-1.5 text-xs gap-1.5 rounded-md',
+      md: 'px-4 py-2 text-sm gap-2 rounded-lg',
+      lg: 'px-5 py-2.5 text-base gap-2.5 rounded-xl',
+      xl: 'px-6 py-3 text-lg gap-3 rounded-xl',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'md',
+  },
 });
 </script>
 
 <template>
   <button
-    class="relative flex items-center justify-center transition-all duration-200 font-medium select-none overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
-    :class="[
-      // Размеры
-      size === 'xs' ? 'px-2 py-1 text-[10px] gap-1 rounded-md' :
-      size === 'sm' ? 'px-3 py-1.5 text-xs gap-1.5 rounded-md' :
-      size === 'md' ? 'px-4 py-2 text-sm gap-2 rounded-lg' :
-      size === 'lg' ? 'px-5 py-2.5 text-base gap-2.5 rounded-xl' :
-      'px-6 py-3 text-lg gap-3 rounded-xl',
-      variantClasses,
-    ]"
+    :class="button({ variant: variant || 'default', size })"
     @click="$emit('click', $event)"
   >
     <!-- Добавляем легкий блик для primary -->
@@ -63,6 +67,6 @@ const variantClasses = computed(() => {
     
     <UIcon v-if="loading" name="ArrowPath" :class="[iconSize, 'animate-spin']" />
     <UIcon v-else-if="icon" :name="icon" :class="iconSize" />
-    <slot />
+    <slot>{{ label || text }}</slot>
   </button>
 </template>

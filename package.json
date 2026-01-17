@@ -1,6 +1,6 @@
 {
   "name": "u-devtools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Universal DevTools Kit - DevTools-as-a-Service framework",
   "private": true,
   "type": "module",
@@ -14,26 +14,35 @@
     "build": "pnpm --filter './packages/*' --filter './plugins/*' --parallel run build",
     "dev": "pnpm --filter './playground' run dev",
     "dev:playground": "pnpm --filter './playground' run dev",
-    "create:plugin": "cd packages/create && pnpm hygen plugin new",
+    "create:plugin": "node scripts/create-plugin.mjs",
+    "create:package": "node scripts/create-package.mjs",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "typecheck": "pnpm -r run typecheck",
+    "typecheck": "pnpm -r --parallel run typecheck & pnpm -r --parallel run typecheck:vue & wait",
     "test": "vitest run",
     "test:watch": "vitest",
     "changeset": "changeset",
     "version": "changeset version",
-    "version:check": "beachball check",
-    "version:change": "beachball change",
-    "version:bump": "beachball bump",
-    "version:auto:apply": "beachball bump --yes",
-    "version:bump:all": "node scripts/bump-all.mjs",
+    "version:bump:all": "node scripts/bump-all.mjs patch",
+    "version:bump:all:minor": "node scripts/bump-all.mjs minor",
+    "version:bump:all:major": "node scripts/bump-all.mjs major",
+    "changelog": "npx changelogen-monorepo",
+    "changelog:release": "npx changelogen-monorepo --release",
+    "changelog:publish": "npx changelogen-monorepo --publish",
+    "changelog:push": "npx changelogen-monorepo --push",
+    "changelog:release:push": "npx changelogen-monorepo --release --push",
     "release": "pnpm build && changeset publish",
     "publish:all": "pnpm -r publish",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
     "prepublishOnly": "pnpm run check && pnpm run test && pnpm run build",
-    "playground:build": "pnpm run build && pnpm --filter './playground' run build && pnpm --filter './playground' run preview"
+    "playground:build": "pnpm run build && pnpm --filter './playground' run build && pnpm --filter './playground' run preview",
+    "docs:generate": "rm -rf .docs-api docs/api && typedoc && mv .docs-api docs/api",
+    "docs:dev": "pnpm docs:generate && pnpm --filter docs dev",
+    "docs:build": "pnpm docs:generate && pnpm --filter docs build",
+    "docs:preview": "pnpm --filter docs preview",
+    "docs:watch": "typedoc --watch"
   },
   "keywords": [
     "devtools",
@@ -44,28 +53,34 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@biomejs/biome": "^2.3.10",
-    "@changesets/cli": "^2.29.8",
-    "beachball": "^2.40.0",
-    "@tailwindcss/vite": "^4.1.18",
-    "@vitejs/plugin-vue": "^6.0.3",
-    "@vitest/ui": "^4.0.16",
-    "@vueuse/core": "^14.1.0",
-    "tailwindcss": "^4.1.18",
-    "tsx": "^4.19.2",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.0.16"
+    "@biomejs/biome": "catalog:",
+    "@changesets/cli": "catalog:",
+    "@u-devtools/ui": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vitest/ui": "catalog:",
+    "@vueuse/core": "catalog:",
+    "commander": "catalog:",
+    "magicast": "catalog:",
+    "tsx": "catalog:",
+    "typedoc": "^0.28.16",
+    "typedoc-plugin-dt-links": "^2.0.37",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typedoc-plugin-vue": "^1.5.1",
+    "typedoc-plugin-zod": "^1.4.3",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:",
+    "vitest": "catalog:",
+    "vue-tsc": "catalog:"
   },
   "pnpm": {
     "overrides": {
-      "typescript": "^5.9.3"
+      "typescript": "catalog:"
     }
   },
   "dependencies": {
-    "@heroicons/vue": "^2.2.0",
-    "vue-json-pretty": "^2.6.0"
+    "@heroicons/vue": "catalog:",
+    "vue-json-pretty": "catalog:"
   },
   "packageManager": "pnpm@9.15.9"
 }

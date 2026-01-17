@@ -1,10 +1,13 @@
 import { reactive, watch } from 'vue';
 import type { PluginClientInstance, SettingsApi } from '@u-devtools/core';
 import { safeJsonParse, safeJsonStringify } from '@u-devtools/utils';
+import { validatePluginSettingsSchema, validateSettingValue } from '@u-devtools/core';
 
 // Глобальное состояние настроек
 const globalState = reactive<Record<string, unknown>>({});
 const STORAGE_KEY = 'u-devtools-global-settings';
+// Store plugins for validation
+let registeredPlugins: PluginClientInstance[] = [];
 
 // 1. Инициализация (Загрузка из LS)
 const saved = localStorage.getItem(STORAGE_KEY);
@@ -33,10 +36,20 @@ watch(
  * Вызывается при старте приложения.
  */
 export function initDefaultSettings(plugins: PluginClientInstance[]) {
+  // Store plugins for validation
+  registeredPlugins = plugins;
+  
   plugins.forEach((plugin) => {
     if (!plugin.settings) return;
 
-    Object.entries(plugin.settings).forEach(([key, schema]) => {
+    // Validate plugin settings schema
+    const validatedSchema = validatePluginSettingsSchema(plugin.settings);
+    if (!validatedSchema) {
+      console.warn(`[Settings] Invalid settings schema for plugin "${plugin.name}"`);
+      return;
+    }
+
+    Object.entries(validatedSchema).forEach(([key, schema]) => {
       const fullKey = `${plugin.name}:${key}`;
       // Если значения нет в сторе, ставим дефолт
       if (globalState[fullKey] === undefined && schema.default !== undefined) {
@@ -60,6 +73,17 @@ export function createSettingsApi(pluginName: string): SettingsApi {
 
     set(key: string, value: unknown) {
       const fullKey = `${pluginName}:${key}`;
+      
+      // Find plugin and validate value against schema if available
+      const plugin = registeredPlugins.find((p) => p.name === pluginName);
+      if (plugin?.settings?.[key]) {
+        const schema = plugin.settings[key];
+        if (!validateSettingValue(value, schema as any)) {
+          console.warn(`[Settings] Invalid value for setting "${key}" in plugin "${pluginName}":`, value);
+          return;
+        }
+      }
+      
       globalState[fullKey] = value;
     },
 

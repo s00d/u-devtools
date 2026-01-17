@@ -1,17 +1,75 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue';
-import { useDark } from '@vueuse/core';
+import { useDark, useClipboard } from '@vueuse/core';
 import { useDevToolsState } from '../../composables/useDevToolsState';
 import { createSettingsApi } from '../../modules/settings';
-import { createApiForPlugin } from '../../modules/clientApi';
-import { UForm, UIcon, UButton } from '@u-devtools/ui';
+import { createApiForPlugin, RPC_URL_KEY, systemApi } from '../../modules/clientApi';
+import { UForm, UIcon, UButton, UInput, UBadge } from '@u-devtools/ui';
 import type { PluginSettingsSchema } from '@u-devtools/core';
 import PluginRenderer from '../PluginRenderer.vue';
 
 const { showSettings, plugins } = useDevToolsState();
 const activeSettingsTab = ref('General');
+const { copy } = useClipboard();
 
-// --- ОБЩИЕ НАСТРОЙКИ ---
+// --- Connection Settings State ---
+const customRpcUrl = ref('');
+const copiedRpcUrl = ref(false);
+
+// Compute default values
+const defaultRpcUrl = computed(() => {
+  const win = window as any;
+  // 1. Check global config (Electron/Tauri preload)
+  if (win.__UDEVTOOLS_CONFIG__?.wsUrl) {
+    return win.__UDEVTOOLS_CONFIG__.wsUrl;
+  }
+  // 2. Auto-detection (standard Vite plugin path)
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  return `${protocol}//${host}/__u-devtools-ws`;
+});
+
+// Update data when opening or changing settings
+onMounted(() => {
+  // Priority: global config (Electron persisted), then localStorage
+  const globalConfig = (window as any).__UDEVTOOLS_CONFIG__;
+  customRpcUrl.value = globalConfig?.customRpcUrl || localStorage.getItem(RPC_URL_KEY) || '';
+});
+
+const saveConnection = async () => {
+  const newValue = customRpcUrl.value.trim();
+  
+  // 1. Save to LocalStorage (client cache)
+  if (newValue) {
+    localStorage.setItem(RPC_URL_KEY, newValue);
+  } else {
+    localStorage.removeItem(RPC_URL_KEY);
+  }
+
+  // 2. SEND TO SERVER VIA RPC (Universal method)
+  try {
+    // Send request to save config
+    // Server (Electron or Vite) will decide where to write it (file or memory)
+    await systemApi.rpc.call('sys:saveConfig', { customRpcUrl: newValue });
+    console.log('[Settings] Config saved to server');
+  } catch (e) {
+    console.warn('[Settings] Failed to save config to server (RPC method might not be implemented):', e);
+  }
+  
+  // Reload to apply settings
+  window.location.reload();
+};
+
+const copyRpcUrl = async () => {
+  const urlToCopy = customRpcUrl.value || defaultRpcUrl.value;
+  await copy(urlToCopy);
+  copiedRpcUrl.value = true;
+  setTimeout(() => {
+    copiedRpcUrl.value = false;
+  }, 2000);
+};
+
+// --- GENERAL SETTINGS ---
 const generalSettingsSchema: PluginSettingsSchema = {
   scale: {
     label: 'UI Scale',
@@ -77,7 +135,7 @@ const generalSettingsSchema: PluginSettingsSchema = {
   },
 };
 
-// Инициализируем дефолты для General
+// Initialize defaults for General
 const generalApi = createSettingsApi('general');
 const defaults = {
   scale: '1',
@@ -93,7 +151,7 @@ Object.entries(defaults).forEach(([k, v]) => {
   }
 });
 
-// VueUse хук для управления классом .dark на html (всегда темная тема)
+// VueUse hook for managing .dark class on html (always dark theme)
 const isDark = useDark({
   selector: 'html',
   storageKey: null,
@@ -102,14 +160,14 @@ const isDark = useDark({
   valueLight: '',
 });
 
-// Всегда устанавливаем темную тему
+// Always set dark theme
 onMounted(() => {
   isDark.value = true;
 });
 
-// --- ПРИМЕНЕНИЕ НАСТРОЕК ---
+// --- APPLY SETTINGS ---
 
-// 1. Масштаб и Прозрачность (через CSS переменные)
+// 1. Scale and Opacity (via CSS variables)
 const currentScale = computed(() => generalApi.get('scale', '1'));
 const currentOpacity = computed(() => generalApi.get('opacity', '1'));
 
@@ -136,9 +194,9 @@ watch(
   { immediate: true }
 );
 
-// 3. Notifications (проверяется в useNotifications)
+// 3. Notifications (checked in useNotifications)
 
-// --- СБРОС НАСТРОЕК ---
+// --- RESET SETTINGS ---
 const resetAllSettings = () => {
   if (
     !confirm('Are you sure you want to reset all DevTools settings? This will reload the page.')
@@ -146,7 +204,7 @@ const resetAllSettings = () => {
     return;
   }
 
-  // Удаляем все настройки из localStorage
+  // Remove all settings from localStorage
   const keys = Object.keys(localStorage);
   keys.forEach((key) => {
     if (key.startsWith('u-devtools-')) {
@@ -154,12 +212,17 @@ const resetAllSettings = () => {
     }
   });
 
-  // Перезагружаем страницу
+  // Reload page
   window.location.reload();
 };
 
 watch(showSettings, (val) => {
-  if (val) activeSettingsTab.value = 'General';
+  if (val) {
+    activeSettingsTab.value = 'General';
+    // Priority: global config (Electron persisted), then localStorage
+    const globalConfig = (window as any).__UDEVTOOLS_CONFIG__;
+    customRpcUrl.value = globalConfig?.customRpcUrl || localStorage.getItem(RPC_URL_KEY) || '';
+  }
 });
 </script>
 
@@ -205,15 +268,66 @@ watch(showSettings, (val) => {
           </button>
         </div>
         <div class="flex-1 overflow-y-auto p-6">
-          <div v-if="activeSettingsTab === 'General'">
-            <UForm 
-              :schema="generalSettingsSchema" 
-              :model-value="generalApi.all" 
-              @update:model-value="(vals) => Object.entries(vals).forEach(([k,v]) => generalApi.set(k, v))" 
-            />
+          <div v-if="activeSettingsTab === 'General'" class="space-y-8">
+            
+            <!-- Connection Settings -->
+            <div>
+              <h3 class="text-sm font-bold text-indigo-400 mb-4 uppercase tracking-wider">Remote Connection</h3>
+              <div class="bg-black/20 border border-white/5 rounded-lg p-4 space-y-4">
+                
+                <!-- RPC WebSocket URL -->
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-sm text-gray-200 font-medium">RPC WebSocket URL</label>
+                    <UButton 
+                      variant="ghost" 
+                      size="xs" 
+                      :icon="copiedRpcUrl ? 'Check' : 'Clipboard'"
+                      :class="{ 'text-green-400': copiedRpcUrl }"
+                      @click="copyRpcUrl"
+                    />
+                  </div>
+                  
+                  <div class="flex gap-2 items-center bg-black/40 p-2 rounded border border-white/5 mb-1">
+                    <code class="flex-1 text-xs text-zinc-400 font-mono break-all">
+                      Default: {{ defaultRpcUrl }}
+                    </code>
+                  </div>
+                  
+                  <UInput 
+                    v-model="customRpcUrl" 
+                    :placeholder="`Override (default: ${defaultRpcUrl})`" 
+                    class="w-full"
+                  />
+                  <p class="text-xs text-zinc-500">
+                    WebSocket URL for RPC communication. Used for all RPC calls (sys:getPlugins, etc.).
+                    Leave empty to use default.
+                  </p>
+                </div>
+
+                <UButton 
+                  variant="primary" 
+                  icon="ArrowPath" 
+                  @click="saveConnection"
+                  class="w-full mt-4"
+                >
+                  Apply & Reload
+                </UButton>
+              </div>
+            </div>
+
+            <!-- Interface Settings -->
+            <div>
+              <h3 class="text-sm font-bold text-indigo-400 mb-4 uppercase tracking-wider">Interface</h3>
+              <UForm 
+                :schema="generalSettingsSchema" 
+                :model-value="generalApi.all" 
+                @update:model-value="(vals) => Object.entries(vals).forEach(([k,v]) => generalApi.set(k, v))" 
+              />
+            </div>
             
             <!-- Danger Zone: Factory Reset -->
-            <div class="mt-8 pt-6 border-t border-white/5">
+            <div class="pt-6 border-t border-white/5">
               <h3 class="text-sm font-bold text-red-400 mb-2">Danger Zone</h3>
               <div class="flex items-center justify-between">
                 <p class="text-xs text-zinc-400">Reset all settings (general and plugins) to default.</p>
@@ -228,6 +342,7 @@ watch(showSettings, (val) => {
               <!-- Custom renderSettings if provided by plugin -->
               <PluginRenderer
                 v-if="plugin.renderSettings"
+                :plugin-name="plugin.name"
                 :api="createApiForPlugin(plugin.name)"
                 :renderer="plugin.renderSettings"
               />

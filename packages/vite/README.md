@@ -1,5 +1,10 @@
 # @u-devtools/vite
 
+[![npm version](https://img.shields.io/npm/v/@u-devtools/vite/latest?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/vite)
+[![npm downloads](https://img.shields.io/npm/dw/@u-devtools/vite?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/vite)
+[![License](https://img.shields.io/npm/l/@u-devtools/vite?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/vite)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 Vite plugin for Universal DevTools Kit. Automatically injects DevTools into your Vite application.
 
 ## Installation
@@ -58,10 +63,6 @@ export default defineConfig({
 - `base?: string` - Base path for DevTools UI (default: `'/__devtools'`)
 - `plugins?: DevToolsPlugin[]` - Array of plugins to load
 - `enabled?: boolean` - Enable or disable DevTools (default: `true`)
-
-## Documentation
-
-For complete documentation, see the [main README](https://github.com/s00d/u-devtools).
 
 ## License
 

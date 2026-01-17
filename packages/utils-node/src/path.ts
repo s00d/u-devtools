@@ -1,4 +1,19 @@
 import path from 'node:path';
+import os from 'node:os';
+
+/**
+ * Normalizes a file path to use forward slashes (/) for cross-platform compatibility.
+ * This is especially important for Windows paths that use backslashes (\).
+ * Useful when injecting paths into HTML, virtual modules, or URLs.
+ *
+ * @param filePath - The file path to normalize
+ * @returns The normalized path with forward slashes
+ */
+export function normalizePath(filePath: string): string {
+  return path.posix.normalize(
+    os.platform() === 'win32' ? filePath.split(path.sep).join(path.posix.sep) : filePath
+  );
+}
 
 /**
  * Safely resolves a file path relative to a root directory.

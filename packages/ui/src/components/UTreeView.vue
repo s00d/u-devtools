@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { tv } from 'tailwind-variants';
 import UIcon from './UIcon.vue';
 import UTreeViewNode from './UTreeViewNode.vue';
-
-export interface TreeNode {
-  id: string | number;
-  label: string;
-  children?: TreeNode[];
-  data?: Record<string, unknown>; // Дополнительные данные для кастомного рендеринга
-  isExpanded?: boolean;
-  isSelected?: boolean;
-  isCurrent?: boolean;
-  icon?: string;
-  [key: string]: unknown; // Для гибкости
-}
+import type { TreeNode } from '../types';
 
 const props = withDefaults(
   defineProps<{
@@ -79,6 +69,19 @@ const handleNodeClick = (node: TreeNode, event: MouseEvent) => {
     emit('nodeSelect', node);
   }
 };
+
+const treeNode = tv({
+  base: 'rounded transition-colors cursor-pointer',
+  variants: {
+    selected: {
+      true: 'ring-1 ring-indigo-500/50 bg-indigo-500/15',
+      false: 'hover:bg-zinc-800/50',
+    },
+  },
+  defaultVariants: {
+    selected: false,
+  },
+});
 </script>
 
 <template>
@@ -100,10 +103,7 @@ const handleNodeClick = (node: TreeNode, event: MouseEvent) => {
           <slot name="node" :node="node" :depth="0" :is-expanded="isNodeExpanded(node)" :toggle-expand="toggleExpand" :handle-click="handleNodeClick">
             <!-- Default node renderer -->
             <div
-              class="rounded transition-colors cursor-pointer"
-              :class="node.isCurrent || node.isSelected 
-                ? 'ring-1 ring-indigo-500/50 bg-indigo-500/15' 
-                : 'hover:bg-zinc-800/50'"
+              :class="treeNode({ selected: node.isCurrent || node.isSelected })"
               @click="handleNodeClick(node, $event)"
             >
               <div class="py-1.5 px-2 flex items-center gap-2">

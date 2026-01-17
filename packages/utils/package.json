@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/utils",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "type": "module",
   "main": "./src/index.ts",
   "publishConfig": {
@@ -13,13 +13,15 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.es.js",
         "require": "./dist/index.cjs.js"
-      }
+      },
+      "./package.json": "./package.json"
     }
   },
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "devtools",
@@ -40,6 +42,7 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "vite": "catalog:",
+    "typescript": "catalog:"
   }
 }

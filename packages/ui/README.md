@@ -1,5 +1,10 @@
 # @u-devtools/ui
 
+[![npm version](https://img.shields.io/npm/v/@u-devtools/ui/latest?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/ui)
+[![npm downloads](https://img.shields.io/npm/dw/@u-devtools/ui?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/ui)
+[![License](https://img.shields.io/npm/l/@u-devtools/ui?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/ui)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 Universal UI component library for DevTools plugins.
 
 ## Components

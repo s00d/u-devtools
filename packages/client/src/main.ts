@@ -1,10 +1,24 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import router from './router';
+import { syncStateWithRoute } from './composables/useDevToolsState';
 
 // 1. Магический импорт Vite: ?inline возвращает CSS как строку текста
 import style from './style.css?inline';
 
+// Синхронизация состояния для обратной совместимости
+router.afterEach((to) => {
+  if (to.name === 'plugin') {
+    syncStateWithRoute(to.params.pluginName as string);
+  } else if (to.name === 'about') {
+    syncStateWithRoute('internal:about');
+  } else if (to.name === 'marketplace') {
+    syncStateWithRoute('internal:plugins');
+  }
+});
+
 const app = createApp(App);
+app.use(router);
 
 // 2. Вставляем стили при запуске
 function injectStyles() {

@@ -1,15 +1,58 @@
 {
   "name": "@u-devtools/kit",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "SDK for creating Universal DevTools plugins",
   "type": "module",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./web-components": {
+      "types": "./src/web-components.ts",
+      "import": "./src/web-components.ts"
+    },
+    "./define-plugin": {
+      "types": "./src/define-plugin.ts",
+      "import": "./src/define-plugin.ts"
+    },
+    "./vue": {
+      "types": "./src/vue.ts",
+      "import": "./src/vue.ts"
+    },
+    "./react": {
+      "types": "./src/react.ts",
+      "import": "./src/react.ts"
+    },
+    "./solid": {
+      "types": "./src/solid.ts",
+      "import": "./src/solid.ts"
+    },
+    "./svelte": {
+      "types": "./src/svelte.ts",
+      "import": "./src/svelte.ts"
+    },
+    "./lit": {
+      "types": "./src/lit.ts",
+      "import": "./src/lit.ts"
+    },
+    "./vanilla": {
+      "types": "./src/vanilla.ts",
+      "import": "./src/vanilla.ts"
+    },
+    "./context": {
+      "types": "./src/context.ts",
+      "import": "./src/context.ts"
+    }
+  },
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public",
@@ -21,12 +64,64 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.es.js",
         "require": "./dist/index.cjs.js"
-      }
+      },
+      "./web-components": {
+        "types": "./dist/web-components.d.ts",
+        "import": "./dist/web-components.js",
+        "require": "./dist/web-components.cjs.js"
+      },
+      "./define-plugin": {
+        "types": "./dist/define-plugin.d.ts",
+        "import": "./dist/define-plugin.es.js",
+        "require": "./dist/define-plugin.cjs.js"
+      },
+      "./vue": {
+        "types": "./dist/vue.d.ts",
+        "import": "./dist/vue.js",
+        "require": "./dist/vue.cjs.js"
+      },
+      "./react": {
+        "types": "./dist/react.d.ts",
+        "import": "./dist/react.js",
+        "require": "./dist/react.cjs.js"
+      },
+      "./solid": {
+        "types": "./dist/solid.d.ts",
+        "import": "./dist/solid.js",
+        "require": "./dist/solid.cjs.js"
+      },
+      "./svelte": {
+        "types": "./dist/svelte.d.ts",
+        "import": "./dist/svelte.js",
+        "require": "./dist/svelte.cjs.js"
+      },
+      "./lit": {
+        "types": "./dist/lit.d.ts",
+        "import": "./dist/lit.js",
+        "require": "./dist/lit.cjs.js"
+      },
+      "./vanilla": {
+        "types": "./dist/vanilla.d.ts",
+        "import": "./dist/vanilla.js",
+        "require": "./dist/vanilla.cjs.js"
+      },
+      "./context": {
+        "types": "./dist/context.d.ts",
+        "import": "./dist/context.js",
+        "require": "./dist/context.cjs.js"
+      },
+      "./toast": {
+        "types": "./dist/toast.d.ts",
+        "import": "./dist/toast.js",
+        "require": "./dist/toast.cjs.js"
+      },
+      "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "vite build",
+    "build": "rimraf dist && vite build",
     "typecheck": "tsc --noEmit",
+    "typecheck:vue": "vue-tsc --noEmit --skipLibCheck",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [
@@ -43,12 +138,51 @@
     "directory": "packages/kit"
   },
   "dependencies": {
-    "@u-devtools/core": "workspace:*",
     "@u-devtools/bridge": "workspace:*",
-    "vue": "^3.4.0"
+    "@u-devtools/core": "workspace:*",
+    "@u-devtools/ui": "workspace:*",
+    "@vueuse/core": "catalog:"
+  },
+  "peerDependencies": {
+    "vue": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "svelte": "catalog:",
+    "solid-js": "catalog:",
+    "lit": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "lit": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@types/node": "^20.19.27",
-    "typescript": "^5.9.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "lit": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "solid-js": "catalog:",
+    "svelte": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vue": "catalog:",
+    "vue-tsc": "catalog:"
   }
 }

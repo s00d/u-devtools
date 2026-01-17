@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, onErrorCaptured } from 'vue';
 import type { ClientApi, UnmountFn } from '@u-devtools/core';
+import { AppBridge } from '@u-devtools/core';
 import { UIcon } from '@u-devtools/ui';
 
 const props = defineProps<{
   api: ClientApi;
-  renderer?: (el: HTMLElement, api: ClientApi) => UnmountFn | Promise<UnmountFn> | undefined;
+  pluginName: string;
+  renderer?: (el: HTMLElement, api: ClientApi, options: { bridge: AppBridge<any> }) => UnmountFn | Promise<UnmountFn> | undefined;
 }>();
 
 const container = ref<HTMLElement | null>(null);
 const error = ref<Error | null>(null);
 let cleanup: UnmountFn | undefined;
+let bridge: AppBridge<any> | undefined; // Храним ссылку на мост
 
 const mount = () => {
   error.value = null;
@@ -24,13 +27,23 @@ const mount = () => {
     cleanup = undefined;
   }
 
+  // Закрываем старый мост при перемонтировании
+  if (bridge) {
+    bridge.close();
+    bridge = undefined;
+  }
+
   if (!container.value) return;
   container.value.innerHTML = '';
 
   if (props.renderer) {
     try {
-      const result = props.renderer(container.value, props.api);
+      // Создаем AppBridge на основе имени плагина
+      // AppBridge автоматически нормализует имя к lowercase для namespace
+      bridge = new AppBridge(props.pluginName);
       
+      const result = props.renderer(container.value, props.api, { bridge: bridge });
+
       // Поддерживаем как синхронные, так и асинхронные renderMain
       if (result instanceof Promise) {
         result
@@ -111,6 +124,11 @@ onBeforeUnmount(() => {
     } catch (e) {
       console.error('Error during unmount cleanup:', e);
     }
+  }
+  // Закрываем мост при размонтировании компонента
+  if (bridge) {
+    bridge.close();
+    bridge = undefined;
   }
 });
 </script>

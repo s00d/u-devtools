@@ -19,15 +19,12 @@ export default createViteConfig({
     server: 'src/server.ts',
   },
   dir: __dirname,
+  clearScreen: false,
   useVue: false,
   additionalPlugins: [svelte()],
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/**/*.svelte'],
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../../packages/core/src',
-    '@u-devtools/kit': '../../packages/kit/src',
   },
   external: ['node:path', 'node:url'],
 });

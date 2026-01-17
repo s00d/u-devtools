@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import type { ClientApi } from '@u-devtools/core';
+import { useApi } from '../context';
 import { USplitter, UButton, UIcon, UInput, UModal, ULoading, UEmpty } from '@u-devtools/ui';
+import { normalizePath } from '@u-devtools/utils';
 import { flattenTranslations, unflattenTranslations } from '../util/i18nUtils';
-import type { TranslationContent, LocaleData, TreeNode, ModuleOptions } from '../types';
-import { Translator, type DriverType } from '../util/Translator';
+import type { TranslationContent, LocaleData, TreeNode, ModuleOptions, DriverType } from '../types';
 import FileTreeView from './FileTreeView.vue';
 
 const props = defineProps<{
-  api: ClientApi;
   onRegisterRefresh?: (fn: () => void) => void;
 }>();
+
+const api = useApi();
 
 // State
 const isLoading = ref(true);
@@ -28,17 +29,17 @@ const fileInput = ref<HTMLInputElement | null>(null);
 
 // Translation settings (from plugin settings)
 const selectedDriver = computed(() =>
-  props.api.settings.get<DriverType>('translationDriver', 'disabled')
+  api.settings.get<DriverType>('translationDriver', 'disabled')
 );
-const apiToken = computed(() => props.api.settings.get<string>('translationApiToken', ''));
+const apiToken = computed(() => api.settings.get<string>('translationApiToken', ''));
 const driverOptions = computed(() => ({
-  folderId: props.api.settings.get<string>('translationFolderId', ''),
-  formality: props.api.settings.get<string>('translationFormality', 'default'),
-  model: props.api.settings.get<string>('translationModel', 'gpt-3.5-turbo'),
+  folderId: api.settings.get<string>('translationFolderId', ''),
+  formality: api.settings.get<string>('translationFormality', 'default'),
+  model: api.settings.get<string>('translationModel', 'gpt-3.5-turbo'),
 }));
 
 // Settings
-const itemsPerPage = computed(() => props.api.settings.get<number>('itemsPerPage', 30));
+const itemsPerPage = computed(() => api.settings.get<number>('itemsPerPage', 30));
 
 // Computed
 const flattenedContent = computed(() => flattenTranslations(localContent.value));
@@ -76,9 +77,10 @@ const tree = computed<TreeNode[]>(() => {
   if (filePaths.length === 0) return [];
 
   const commonPrefix = findCommonPrefix(filePaths);
+  // Используем пустую строку вместо '/' для root, чтобы пути не начинались со слеша
   const root: TreeNode = {
     name: extractName(commonPrefix) || '/',
-    fullPath: commonPrefix || '/',
+    fullPath: commonPrefix || '',
     isFile: false,
     children: [],
   };
@@ -96,9 +98,13 @@ const tree = computed<TreeNode[]>(() => {
 
       let child = current.children.find((node) => node.name === part);
       if (!child) {
+        // Формируем fullPath без начального слеша, чтобы соответствовать ключам в locales.value
+        const childFullPath = current.fullPath
+          ? `${current.fullPath}/${part}`
+          : part;
         child = {
           name: part,
-          fullPath: `${current.fullPath}/${part}`.replace(/\/+/g, '/'),
+          fullPath: childFullPath,
           isFile,
           children: [],
         };
@@ -164,15 +170,27 @@ function extractName(path: string): string {
 }
 
 function handleFileSelected(fullPath: string) {
-  const normalizedPath = fullPath.replace(/^\/+/, '').replace(/\\/g, '/');
-  selectedFile.value = fullPath;
+  // Нормализуем путь: убираем начальные слеши
+  const normalizedPath = normalizePath(fullPath).replace(/^\/+/, '');
+  
+  // Сохраняем нормализованный путь без начального слеша для сравнения в дереве
+  selectedFile.value = normalizedPath;
 
+  // Ищем контент по нормализованному пути (ключи в locales.value без начального слеша)
   let content = locales.value[normalizedPath];
+  
+  // Если не нашли, пробуем варианты с разными форматами
   if (!content) {
-    content = locales.value[fullPath];
+    // Пробуем с начальным слешем
+    content = locales.value[`/${normalizedPath}`];
   }
   if (!content && fullPath.startsWith('/')) {
+    // Пробуем без начального слеша (если fullPath начинался со слеша)
     content = locales.value[fullPath.slice(1)];
+  }
+  // Пробуем исходный путь как есть
+  if (!content) {
+    content = locales.value[fullPath];
   }
 
   if (content) {
@@ -189,7 +207,7 @@ function getDefaultLocaleTranslation(): TranslationContent {
   const defaultLocale = configs.value.defaultLocale || 'en';
   if (!defaultLocale) return {};
 
-  const normalizedSelected = selectedFile.value.replace(/^\/+/, '').replace(/\\/g, '/');
+  const normalizedSelected = normalizePath(selectedFile.value).replace(/^\/+/, '');
   const currentFileName = normalizedSelected.split('/').pop() ?? '';
   const defaultFileName = currentFileName.replace(/^[^.]*\./, `${defaultLocale}.`);
 
@@ -213,8 +231,8 @@ async function loadData() {
   isLoading.value = true;
   try {
     const [localesData, configsData] = await Promise.all([
-      props.api.rpc.call<LocaleData>('i18n:getLocalesAndTranslations'),
-      props.api.rpc.call<ModuleOptions>('i18n:getConfigs'),
+      api.rpc.call<LocaleData>('i18n:getLocalesAndTranslations'),
+      api.rpc.call<ModuleOptions>('i18n:getConfigs'),
     ]);
 
     locales.value = localesData;
@@ -225,7 +243,7 @@ async function loadData() {
       localContent.value = { ...locales.value[selectedFile.value] };
     }
   } catch (e) {
-    props.api.notify(`Failed to load data: ${e}`, 'error');
+    api.notify(`Failed to load data: ${e}`, 'error');
   } finally {
     isLoading.value = false;
   }
@@ -235,16 +253,16 @@ async function handleSave() {
   if (!selectedFile.value) return;
   isSaving.value = true;
   try {
-    await props.api.rpc.call('i18n:saveTranslation', {
+    await api.rpc.call('i18n:saveTranslation', {
       filePath: selectedFile.value,
       content: localContent.value,
     });
     selectedFileContent.value = { ...localContent.value };
     locales.value[selectedFile.value] = { ...localContent.value };
-    props.api.notify('Saved successfully!', 'success');
+    api.notify('Saved successfully!', 'success');
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
-    props.api.notify(`Error saving: ${error}`, 'error');
+    api.notify(`Error saving: ${error}`, 'error');
   } finally {
     isSaving.value = false;
   }
@@ -272,7 +290,7 @@ function importTranslations(event: Event) {
         try {
           localContent.value = JSON.parse(e.target?.result as string);
         } catch {
-          props.api.notify('Invalid JSON file', 'error');
+          api.notify('Invalid JSON file', 'error');
         }
       };
       reader.readAsText(file);
@@ -289,7 +307,7 @@ function handleInputChange(key: string, value: string) {
 // Translation functions
 async function translateKey(key: string) {
   if (selectedDriver.value === 'disabled' || !apiToken.value) {
-    props.api.notify(
+    api.notify(
       'Translation service is not configured. Please configure it in Settings.',
       'error'
     );
@@ -298,7 +316,7 @@ async function translateKey(key: string) {
 
   const defaultText = defaultLocaleFlatContent.value[key];
   if (!defaultText) {
-    props.api.notify('No default value found for this key', 'error');
+    api.notify('No default value found for this key', 'error');
     return;
   }
 
@@ -307,24 +325,27 @@ async function translateKey(key: string) {
     const fileName = selectedFile.value.split('/').pop() || '';
     const toLang = fileName.replace('.json', '').split('.').pop() || 'en';
 
-    const translator = new Translator({
-      apiKey: apiToken.value,
+    // Call server-side translation RPC
+    const translated = await api.rpc.call<string>('i18n:translate', {
+      text: defaultText,
+      fromLang,
+      toLang,
       driver: selectedDriver.value,
+      apiKey: apiToken.value,
       options: driverOptions.value,
     });
 
-    const translated = await translator.translate(defaultText, fromLang, toLang);
     handleInputChange(key, translated);
-    props.api.notify('Translation completed', 'success');
+    api.notify('Translation completed', 'success');
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
-    props.api.notify(`Translation error: ${error}`, 'error');
+    api.notify(`Translation error: ${error}`, 'error');
   }
 }
 
 async function translateMissingKeys() {
   if (selectedDriver.value === 'disabled' || !apiToken.value) {
-    props.api.notify(
+    api.notify(
       'Translation service is not configured. Please configure it in Settings.',
       'error'
     );
@@ -338,7 +359,7 @@ async function translateMissingKeys() {
   );
 
   if (missingKeys.length === 0) {
-    props.api.notify('No missing translations', 'info');
+    api.notify('No missing translations', 'info');
     return;
   }
 
@@ -352,18 +373,21 @@ async function translateMissingKeys() {
     const fileName = selectedFile.value.split('/').pop() || '';
     const toLang = fileName.replace('.json', '').split('.').pop() || 'en';
 
-    const translator = new Translator({
-      apiKey: apiToken.value,
-      driver: selectedDriver.value,
-      options: driverOptions.value,
-    });
-
     const flat = { ...currentFlat };
     for (const key of missingKeys) {
       const text = defaultFlat[key];
       if (text) {
         try {
-          flat[key] = await translator.translate(text, fromLang, toLang);
+          // Call server-side translation RPC
+          const translated = await api.rpc.call<string>('i18n:translate', {
+            text,
+            fromLang,
+            toLang,
+            driver: selectedDriver.value,
+            apiKey: apiToken.value,
+            options: driverOptions.value,
+          });
+          flat[key] = translated;
         } catch (e) {
           console.error(`Failed to translate key ${key}:`, e);
         }
@@ -371,10 +395,10 @@ async function translateMissingKeys() {
     }
 
     localContent.value = unflattenTranslations(flat);
-    props.api.notify(`Translated ${missingKeys.length} keys`, 'success');
+    api.notify(`Translated ${missingKeys.length} keys`, 'success');
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
-    props.api.notify(`Translation error: ${error}`, 'error');
+    api.notify(`Translation error: ${error}`, 'error');
   } finally {
     isTranslating.value = false;
   }
@@ -390,7 +414,7 @@ onMounted(() => {
   }
 
   // Subscribe to locale updates
-  unsubscribe = props.api.rpc.on('i18n:localesUpdate', (data: unknown) => {
+  unsubscribe = api.rpc.on('i18n:localesUpdate', (data: unknown) => {
     locales.value = data as LocaleData;
     if (selectedFile.value && locales.value[selectedFile.value]) {
       selectedFileContent.value = { ...locales.value[selectedFile.value] };
@@ -405,7 +429,7 @@ onUnmounted(() => {
 
 watch(selectedFileContent, (newContent) => {
   if (newContent) {
-    localContent.value = { ...newContent };
+    localContent.value = { ...newContent } as TranslationContent;
   }
 });
 </script>
@@ -414,7 +438,20 @@ watch(selectedFileContent, (newContent) => {
   <div class="h-full flex flex-col bg-gray-900 text-gray-200 overflow-hidden">
     <ULoading v-if="isLoading" fullscreen />
 
-    <USplitter v-else :default-size="280" :min="150">
+    <template v-else>
+      <!-- Toolbar -->
+      <div class="border-b border-gray-800 bg-gray-800">
+        <div class="p-3 flex justify-between items-center">
+          <div class="flex items-center gap-4">
+            <h2 class="font-bold text-white flex items-center gap-2">
+              <UIcon name="Language" class="w-5 h-5" />
+              i18n
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <USplitter :default-size="280" :min="150">
       <template #left>
         <!-- Locales List -->
         <FileTreeView
@@ -566,7 +603,8 @@ watch(selectedFileContent, (newContent) => {
           />
         </div>
       </template>
-    </USplitter>
+      </USplitter>
+    </template>
 
     <!-- Statistics Modal -->
     <UModal :visible="isStatisticsModalVisible" title="Statistics" @close="isStatisticsModalVisible = false">

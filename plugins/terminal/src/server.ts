@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-// Храним текущую директорию между командами
+// Store current directory between commands
 let currentCwd = '';
 
 export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
@@ -13,12 +13,12 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
     const cmd = payload as string;
     if (!cmd.trim()) return;
 
-    // Обработка смены директории (cd)
+    // Handle directory change (cd)
     if (cmd.trim().startsWith('cd ')) {
       const target = cmd.trim().substring(3).trim();
       const newPath = path.resolve(currentCwd, target);
 
-      // Проверяем существование папки
+      // Check if directory exists
       try {
         const stat = await fs.stat(newPath);
         if (stat.isDirectory()) {
@@ -33,11 +33,11 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
       return;
     }
 
-    // Эхо команды
+    // Echo command
     rpc.broadcast('term:data', `\n$ ${cmd}\n`);
 
     try {
-      // shell: true позволяет использовать пайпы, редиректы и алиасы ОС
+      // shell: true allows using pipes, redirects and OS aliases
       const child = spawn(cmd, {
         cwd: currentCwd,
         shell: true,

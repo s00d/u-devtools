@@ -1,5 +1,10 @@
 import type { StorageDriver } from './types';
 import { openDB } from 'idb';
+import {
+  IndexedDBSavePayloadSchema,
+  IndexedDBRemovePayloadSchema,
+  IndexedDBClearPayloadSchema,
+} from '../schemas';
 
 export class IndexedDBDriver implements StorageDriver {
   type = 'indexeddb';
@@ -21,7 +26,7 @@ export class IndexedDBDriver implements StorageDriver {
         const stores = [];
 
         for (const storeName of db.objectStoreNames) {
-          // Лимитируем 50 записей для производительности
+          // Limit 50 records for performance
           const records = await db.getAll(storeName, undefined, 50);
           const keys = await db.getAllKeys(storeName, undefined, 50);
 
@@ -42,27 +47,34 @@ export class IndexedDBDriver implements StorageDriver {
   }
 
   async save(payload: { db: string; store: string; key: unknown; value: unknown }) {
-    const {
-      db: dbName,
-      store,
-      key,
-      value,
-    } = payload as { db: string; store: string; key: unknown; value: unknown };
+    const validationResult = IndexedDBSavePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { db: dbName, store, key, value } = validationResult.data;
     const database = await openDB(dbName);
-    // Используем put для upsert (вставка или обновление)
+    // Use put for upsert (insert or update)
     await database.put(store, value, key as IDBValidKey);
     database.close();
   }
 
   async remove(payload: { db: string; store: string; key: unknown }) {
-    const { db: dbName, store, key } = payload as { db: string; store: string; key: unknown };
+    const validationResult = IndexedDBRemovePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { db: dbName, store, key } = validationResult.data;
     const database = await openDB(dbName);
     await database.delete(store, key as IDBValidKey);
     database.close();
   }
 
   async clear(payload: { db: string; store: string }) {
-    const { db: dbName, store } = payload as { db: string; store: string };
+    const validationResult = IndexedDBClearPayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { db: dbName, store } = validationResult.data;
     const database = await openDB(dbName);
     await database.clear(store);
     database.close();

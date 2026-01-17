@@ -1,15 +1,15 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
 import type { RouteInfo } from '../types';
 
 /**
  * Composable for Vue Router functionality
  */
 export function useRouterInfo() {
+  const bridge = useBridge();
+  
   const routerInfo = ref<RouteInfo | null>(null);
   const isLoading = ref(false);
-
-  const bridge = new AppBridge('vue-inspector');
 
   // Computed properties
   const currentRoute = computed(() => {
@@ -50,7 +50,7 @@ export function useRouterInfo() {
 
   // --- Listeners ---
 
-  bridge.on('inspector:routerInfo', (info: RouteInfo) => {
+  bridge.on('inspector:routerInfo', (info: RouteInfo | null) => {
     routerInfo.value = info;
     isLoading.value = false;
   });

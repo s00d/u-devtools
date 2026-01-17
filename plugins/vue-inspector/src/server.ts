@@ -1,5 +1,11 @@
 import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
 import type { ViteDevServer } from 'vite';
+import {
+  GetComponentStatePayloadSchema,
+  GetPiniaTreePayloadSchema,
+  GetPiniaStatePayloadSchema,
+  GetTimelineEventsPayloadSchema,
+} from './schemas';
 
 /**
  * Server-side RPC handlers for Vue Inspector plugin
@@ -26,21 +32,33 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
 
   // Component state
   rpc.handle('vue-inspector:getComponentState', async (payload: unknown) => {
-    const { id } = payload as { id: string };
+    const validationResult = GetComponentStatePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { id } = validationResult.data;
     console.log(`[Vue Inspector] getComponentState called on server: id="${id}"`);
     return null;
   });
 
   // Pinia tree
   rpc.handle('vue-inspector:getPiniaTree', async (payload: unknown) => {
-    const { filter = '' } = payload as { filter?: string };
+    const validationResult = GetPiniaTreePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { filter } = validationResult.data;
     console.log(`[Vue Inspector] getPiniaTree called on server: filter="${filter}"`);
     return [];
   });
 
   // Pinia state
   rpc.handle('vue-inspector:getPiniaState', async (payload: unknown) => {
-    const { nodeId } = payload as { nodeId: string };
+    const validationResult = GetPiniaStatePayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { nodeId } = validationResult.data;
     console.log(`[Vue Inspector] getPiniaState called on server: nodeId="${nodeId}"`);
     return {};
   });
@@ -69,7 +87,11 @@ export function setupServer(rpc: RpcServerInterface, ctx: ServerContext) {
 
   // Timeline events
   rpc.handle('vue-inspector:getTimelineEvents', async (payload: unknown) => {
-    const { layerId } = payload as { layerId?: string };
+    const validationResult = GetTimelineEventsPayloadSchema.safeParse(payload);
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.issues.map((e) => e.message).join(', ')}`);
+    }
+    const { layerId } = validationResult.data;
     console.log(
       `[Vue Inspector] getTimelineEvents called on server: layerId="${layerId || 'none'}"`
     );

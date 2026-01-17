@@ -1,5 +1,10 @@
 # @u-devtools/plugin-vite-inspector
 
+[![npm version](https://img.shields.io/npm/v/@u-devtools/plugin-vite-inspector/latest?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-vite-inspector)
+[![npm downloads](https://img.shields.io/npm/dw/@u-devtools/plugin-vite-inspector?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-vite-inspector)
+[![License](https://img.shields.io/npm/l/@u-devtools/plugin-vite-inspector?style=for-the-badge)](https://www.npmjs.com/package/@u-devtools/plugin-vite-inspector)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 Vite Inspector plugin for Universal DevTools. Deep dive into Vite configuration, plugins, environment variables, and server management.
 
 ## Installation

@@ -4,80 +4,249 @@ to: <%= projectName %>/src/client.tsx
 import type { PluginClientInstance, ClientApi } from '@u-devtools/core';
 import { createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
+import { defineVueElements } from '@u-devtools/kit/web-components';
+import { useVueRef } from './hooks/useVueRef';
+import { setupDevTools } from './context';
+import { createToast } from '@u-devtools/overlay';
+import {
+  UButton,
+  UCard,
+  UInput,
+  USelect,
+  UBadge,
+  UIcon,
+  UTabs,
+  UTabButtons,
+  UModal,
+  UCodeBlock,
+  UJsonTree,
+  UKeyValue,
+  UStat,
+  UTable,
+  ULoading,
+  UEmpty,
+  UForm,
+} from '@u-devtools/ui';
+import { BasicComponents } from './views/BasicComponents';
+import { LayoutComponents } from './views/LayoutComponents';
+import { DataDisplay } from './views/DataDisplay';
+import { StateComponents } from './views/StateComponents';
+import { Forms } from './views/Forms';
 
-<%
-  const pluginKebab = packageName
-    .replace(/^@[^/]+\//, '')
-    .replace(/^plugin-/, '')
-    .replace(/@u-devtools\/plugin-/, '');
--%>
+// Register Vue components as Web Components
+defineVueElements([
+  {
+    tagName: 'u-button',
+    component: UButton,
+    options: {
+      attributes: ['label', 'variant', 'icon', 'size', 'disabled'],
+      emits: ['click'],
+    },
+  },
+  {
+    tagName: 'u-card',
+    component: UCard,
+    options: {
+      attributes: ['title', 'subtitle'],
+    },
+  },
+  {
+    tagName: 'u-badge',
+    component: UBadge,
+    options: {
+      attributes: ['label', 'color', 'variant'],
+    },
+  },
+  {
+    tagName: 'u-input',
+    component: UInput,
+    options: {
+      attributes: ['placeholder', 'icon', 'size', 'modelValue'],
+      emits: ['update:modelValue'],
+    },
+  },
+  {
+    tagName: 'u-select',
+    component: USelect,
+    options: {
+      attributes: ['modelValue', 'options'],
+      emits: ['update:modelValue'],
+    },
+  },
+  {
+    tagName: 'u-icon',
+    component: UIcon,
+    options: {
+      attributes: ['name', 'size', 'solid'],
+    },
+  },
+  {
+    tagName: 'u-tabs',
+    component: UTabs,
+    options: {
+      attributes: ['items', 'modelValue', 'maxVisible'],
+      emits: ['update:modelValue'],
+    },
+  },
+  {
+    tagName: 'u-tab-buttons',
+    component: UTabButtons,
+    options: {
+      attributes: ['items', 'modelValue'],
+      emits: ['update:modelValue'],
+    },
+  },
+  {
+    tagName: 'u-modal',
+    component: UModal,
+    options: {
+      attributes: ['visible', 'title'],
+      emits: ['close'],
+    },
+  },
+  {
+    tagName: 'u-code-block',
+    component: UCodeBlock,
+    options: {
+      attributes: ['code', 'language'],
+    },
+  },
+  {
+    tagName: 'u-json-tree',
+    component: UJsonTree,
+    options: {
+      attributes: [],
+    },
+  },
+  {
+    tagName: 'u-key-value',
+    component: UKeyValue,
+    options: {
+      attributes: ['label', 'value'],
+    },
+  },
+  {
+    tagName: 'u-stat',
+    component: UStat,
+    options: {
+      attributes: ['label', 'value', 'color'],
+    },
+  },
+  {
+    tagName: 'u-table',
+    component: UTable,
+    options: {
+      attributes: [],
+    },
+  },
+  {
+    tagName: 'u-loading',
+    component: ULoading,
+    options: {
+      attributes: ['text'],
+    },
+  },
+  {
+    tagName: 'u-empty',
+    component: UEmpty,
+    options: {
+      attributes: ['icon', 'title', 'description'],
+    },
+  },
+  {
+    tagName: 'u-form',
+    component: UForm,
+    options: {
+      attributes: [],
+      emits: ['update:modelValue'],
+    },
+  },
+]);
 
-const SolidPanel = (props: { api: ClientApi }) => {
-  const [count, setCount] = createSignal(0);
-  const [serverData, setServerData] = createSignal('');
+const TAB_ITEMS = ['Basic', 'Layout', 'Data', 'State', 'Forms'];
 
-  const callServer = async () => {
-    try {
-      const res = await props.api.rpc.call<string>('<%= pluginKebab %>:hello');
-      setServerData(res);
-      props.api.notify('Hello from Solid!', 'success');
-    } catch (e) {
-      props.api.notify('RPC call failed', 'error');
+// SolidJS Component using Web Components
+const SolidPanel = ({ api }: { api: ClientApi }) => {
+  const [activeTab, setActiveTab] = createSignal('Basic');
+
+  // Use useVueRef for complex props and events
+  const tabsRef = useVueRef(() => ({
+    items: TAB_ITEMS,
+    modelValue: activeTab(),
+    'onUpdate:modelValue': (val: string) => setActiveTab(val),
+    maxVisible: 5,
+  }));
+
+  const resetBtnRef = useVueRef({
+    onClick: () => {
+      setActiveTab('Basic');
+    },
+  });
+
+  const renderContent = () => {
+    switch (activeTab()) {
+      case 'Basic':
+        return <BasicComponents />;
+      case 'Layout':
+        return <LayoutComponents />;
+      case 'Data':
+        return <DataDisplay />;
+      case 'State':
+        return <StateComponents />;
+      case 'Forms':
+        return <Forms />;
+      default:
+        return <BasicComponents />;
     }
   };
 
   return (
-    <div class="p-6 text-gray-200">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded bg-[#2c4f7c] flex items-center justify-center text-white font-bold border border-[#446b9e]">
-          So
-        </div>
-        <h1 class="text-2xl font-bold"><%= pluginName %></h1>
-      </div>
-
-      <div class="space-y-4">
-        <div class="p-4 bg-gray-800 rounded border border-gray-700">
-          <h3 class="font-bold text-[#446b9e] mb-2">Signal Counter</h3>
-          <div class="text-3xl font-mono mb-2">{count()}</div>
-          <button
-            class="px-3 py-1 bg-[#2c4f7c] rounded hover:bg-[#3d5d8a] transition w-full"
-            onClick={() => setCount((c) => c + 1)}
-          >
-            Increment
-          </button>
-        </div>
-
-        <div class="p-4 bg-gray-800 rounded border border-gray-700">
-          <h3 class="font-bold text-green-400 mb-2">Server RPC</h3>
-          <button
-            class="px-4 py-2 bg-[#2c4f7c]/20 text-[#446b9e] border border-[#446b9e]/50 rounded hover:bg-[#2c4f7c]/30 transition"
-            onClick={callServer}
-          >
-            Call Node.js
-          </button>
-          {serverData() && (
-            <div class="mt-2 p-2 bg-black/30 rounded font-mono text-sm">
-              Server: {serverData()}
+    <div class="h-full flex flex-col bg-gray-900 text-gray-200">
+      {/* Toolbar */}
+      <div class="border-b border-gray-800 bg-gray-800">
+        <div class="p-3 flex justify-between items-center">
+          <div class="flex items-center gap-4">
+            <h2 class="font-bold text-white flex items-center gap-2">
+              <u-icon name="CodeBracket" class="w-5 h-5" />
+              <%= pluginName %>
+            </h2>
+            <div class="flex items-center gap-2">
+              <div class="h-4 w-px bg-gray-700"></div>
+              <u-tabs ref={tabsRef} />
             </div>
-          )}
+          </div>
+          <div class="flex items-center gap-2">
+            <u-button
+              ref={resetBtnRef}
+              label="Reset"
+              variant="ghost"
+              size="sm"
+              icon="ArrowPath"
+            />
+          </div>
         </div>
       </div>
+
+      <div class="flex-1 overflow-auto p-6">{renderContent()}</div>
     </div>
   );
 };
 
 const plugin: PluginClientInstance = {
   name: '<%= pluginName %>',
-  icon: 'CircleStack',
+  icon: 'CodeBracket',
 
-  renderMain(container, api) {
+  renderMain(container, api, { bridge }) {
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge, toast: createToast() });
+    
     const dispose = render(() => <SolidPanel api={api} />, container);
 
     return () => {
       dispose();
+      bridge.close();
     };
   },
 };
 
 export default plugin;
-

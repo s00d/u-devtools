@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { UButton, UInput, UBadge, ULoading, UIcon } from '@u-devtools/ui';
-import type { ClientApi } from '@u-devtools/core';
+import { useApi } from '../context';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
 
 const resolveInput = ref('');
 const resolveResult = ref<{
@@ -17,11 +17,11 @@ const debugResolve = async () => {
   if (!resolveInput.value.trim()) return;
   resolving.value = true;
   try {
-    resolveResult.value = await props.api.rpc.call('vite:resolve', {
+    resolveResult.value = await api.rpc.call('vite:resolve', {
       id: resolveInput.value.trim(),
     });
   } catch (e) {
-    props.api.notify(`Resolve failed: ${e}`, 'error');
+    api.notify(`Resolve failed: ${e}`, 'error');
   } finally {
     resolving.value = false;
   }

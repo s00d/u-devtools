@@ -13,11 +13,8 @@ export default createViteConfig({
   formats: ['es'],
   fileName: 'index',
   dtsOptions: {
-    insertTypesEntry: true,
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../core/src',
-    '@u-devtools/bridge': '../bridge/src',
+    rollupTypes: true,
+    copyDtsFiles: false,
   },
   external: ['launch-editor', 'node:fs', 'node:https', 'node:child_process', 'node:util'],
 });

@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import { AppBridge } from '@u-devtools/core';
-import type { ClientApi } from '@u-devtools/core';
-import { UButton, UInput, UTable, UIcon, UModal, UEmpty, UBadge, USelect } from '@u-devtools/ui';
+import {
+  UButton,
+  UInput,
+  UIcon,
+  UModal,
+  UEmpty,
+  UBadge,
+  USelect,
+  UVirtualList,
+} from '@u-devtools/ui';
 
 interface StorageItem {
   key: string | number;
   value: unknown;
-  httpOnly?: boolean; // Для cookies
+  httpOnly?: boolean; // For cookies
 }
 
 interface IDBStore {
@@ -37,8 +44,10 @@ interface StorageData {
   opfs: Array<{ name: string; entries: StorageItem[] }>;
 }
 
-const props = defineProps<{ api: ClientApi }>();
-const bridge = new AppBridge('storage');
+import { useBridge, useApi } from '../context';
+
+const bridge = useBridge();
+const api = useApi();
 
 // --- State ---
 const storageData = ref<StorageData>({
@@ -51,7 +60,7 @@ const storageData = ref<StorageData>({
 });
 const activeType = ref<'local' | 'session' | 'cookie' | 'indexeddb' | 'cache' | 'opfs'>('local');
 
-// Для иерархических хранилищ
+// For hierarchical storages
 const activeDb = ref('');
 const activeStore = ref('');
 
@@ -91,12 +100,12 @@ const filteredList = computed(() => {
   return list.filter((item: StorageItem) => String(item.key).toLowerCase().includes(q));
 });
 
-// Проверка, является ли элемент HttpOnly cookie
+// Check if element is HttpOnly cookie
 const isHttpOnlyCookie = (row: unknown): boolean => {
   return activeType.value === 'cookie' && (row as StorageItem).httpOnly === true;
 };
 
-// Автоматически выбираем первый кэш при переключении на cache
+// Automatically select first cache when switching to cache
 watch(activeType, (newType) => {
   if (newType === 'cache' && storageData.value.cache.length > 0 && !activeDb.value) {
     activeDb.value = storageData.value.cache[0].name;
@@ -107,7 +116,7 @@ watch(activeType, (newType) => {
 });
 
 // --- Actions ---
-const refresh = () => bridge.send('refresh', {});
+const refresh = () => bridge.send('refresh');
 
 const save = () => {
   let val = editingItem.value.value;
@@ -164,23 +173,104 @@ const openEdit = (item: StorageItem) => {
 };
 
 onMounted(() => {
-  bridge.on<StorageData>('data', (d) => {
-    storageData.value = d;
+  bridge.on('data', (d) => {
+    // Приводим тип из протокола к StorageData (протокол имеет stores?:, а StorageData требует stores:)
+    const protocolData = d as {
+      local: Array<{ key: string; value: unknown }>;
+      session: Array<{ key: string; value: unknown }>;
+      cookie: Array<{ key: string; value: string; httpOnly: boolean }>;
+      indexeddb: Array<{
+        name: string;
+        version?: number;
+        stores?: Array<{ name: string; entries: Array<{ key: unknown; value: unknown }> }>;
+        error?: string;
+      }>;
+      cache: unknown[];
+      opfs: unknown[];
+    };
+    storageData.value = {
+      local: protocolData.local,
+      session: protocolData.session,
+      cookie: protocolData.cookie,
+      indexeddb: protocolData.indexeddb.map((db) => ({
+        name: db.name,
+        version: db.version,
+        stores: (db.stores || []).map((store) => ({
+          name: store.name,
+          entries: store.entries.map((entry) => ({
+            key: entry.key as string | number,
+            value: entry.value,
+          })),
+        })),
+        error: db.error,
+      })),
+      cache: protocolData.cache as CacheEntry[],
+      opfs: protocolData.opfs as Array<{ name: string; entries: StorageItem[] }>,
+    };
   });
-  bridge.on<string>('error', (e) => {
-    props.api.notify(e, 'error');
+  bridge.on('error', (e: string) => {
+    api.notify(e, 'error');
   });
+  // Load data only on panel mount
   refresh();
 });
 
-onUnmounted(() => bridge.close());
+onUnmounted(() => {
+  // Только отписываемся от событий.
+  // НЕ вызываем bridge.close() здесь! Это убьет плагин до перезагрузки страницы.
+});
 </script>
 
 <template>
-  <div class="flex h-full w-full bg-gray-900 text-gray-200">
+  <div class="flex h-full w-full flex-col bg-gray-900 text-gray-200">
+    <!-- Toolbar -->
+    <div class="border-b border-gray-800 bg-gray-800">
+      <div class="p-3 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <h2 class="font-bold text-white flex items-center gap-2">
+            <UIcon name="CircleStack" class="w-5 h-5" />
+            Storage
+          </h2>
+          <div class="flex items-center gap-2">
+            <div class="h-4 w-px bg-gray-700"></div>
+            <span class="text-sm text-gray-300">
+              <span v-if="activeType === 'indexeddb'">{{ activeDb }} / {{ activeStore }}</span>
+              <span v-else-if="activeType === 'local'">Local Storage</span>
+              <span v-else-if="activeType === 'session'">Session Storage</span>
+              <span v-else-if="activeType === 'cookie'">Cookies</span>
+              <span v-else-if="activeType === 'cache'">Cache Storage</span>
+              <span v-else-if="activeType === 'opfs'">File System</span>
+              <span v-else>{{ activeType }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <USelect
+            v-if="activeType === 'cache' && storageData.cache.length > 0"
+            v-model="activeDb"
+            :options="storageData.cache.map(c => ({ label: c.name, value: c.name }))"
+            class="w-48"
+            size="sm"
+          />
+          <UInput v-model="filter" placeholder="Filter..." class="w-40" size="sm" />
+          <UButton variant="ghost" size="sm" icon="ArrowPath" @click="refresh" />
+          <UButton variant="danger" size="sm" icon="Trash" @click="clearAll">Clear</UButton>
+          <UButton
+            v-if="activeType !== 'cache' && activeType !== 'opfs'"
+            variant="primary"
+            size="sm"
+            icon="Plus"
+            @click="openAdd"
+          >
+            Add
+          </UButton>
+        </div>
+      </div>
+    </div>
 
-    <!-- Sidebar (Navigation) -->
-    <div class="w-64 border-r border-gray-700 flex flex-col bg-gray-800 overflow-y-auto">
+    <div class="flex flex-1 min-h-0 overflow-hidden">
+      <!-- Sidebar (Navigation) -->
+      <div class="w-64 border-r border-gray-700 flex flex-col bg-gray-800 overflow-y-auto">
       <div class="p-3 text-xs font-bold text-gray-400 uppercase">Storage Types</div>
 
       <!-- Flat Storages -->
@@ -247,101 +337,82 @@ onUnmounted(() => bridge.close());
       </button>
     </div>
 
-    <!-- Main View -->
-    <div class="flex-1 flex flex-col min-w-0">
-      <!-- Toolbar -->
-      <div class="p-3 border-b border-gray-700 flex justify-between items-center bg-gray-800">
-        <div class="flex items-center gap-2">
-          <h2 class="font-bold text-lg text-white">
-            <span v-if="activeType === 'indexeddb'">{{ activeDb }} / {{ activeStore }}</span>
-            <span v-else-if="activeType === 'local'">Local Storage</span>
-            <span v-else-if="activeType === 'session'">Session Storage</span>
-            <span v-else-if="activeType === 'cookie'">Cookies</span>
-            <span v-else-if="activeType === 'cache'">Cache Storage</span>
-            <span v-else-if="activeType === 'opfs'">File System</span>
-            <span v-else>{{ activeType }}</span>
-          </h2>
-          <UButton variant="ghost" size="sm" icon="ArrowPath" @click="refresh" />
+      <!-- Main View -->
+      <div class="flex-1 flex flex-col min-w-0">
+        <!-- Table Header -->
+        <div class="px-4 py-2 border-b border-gray-700 bg-gray-800 grid grid-cols-[25%_50%_80px] gap-4 text-xs font-semibold text-gray-400">
+          <div>Key</div>
+          <div>Value</div>
+          <div class="text-right"></div>
         </div>
-        <div class="flex gap-2 items-center">
-          <USelect
-            v-if="activeType === 'cache' && storageData.cache.length > 0"
-            v-model="activeDb"
-            :options="storageData.cache.map(c => ({ label: c.name, value: c.name }))"
-            class="w-48"
-          />
-          <UInput v-model="filter" placeholder="Filter..." class="w-40" />
-          <UButton variant="danger" size="sm" icon="Trash" @click="clearAll">Clear</UButton>
-          <UButton
-            v-if="activeType !== 'cache' && activeType !== 'opfs'"
-            variant="primary"
-            size="sm"
-            icon="Plus"
-            @click="openAdd"
+        
+        <!-- Virtual List -->
+        <div class="flex-1 min-h-0 bg-gray-900/50">
+          <UVirtualList
+            v-if="filteredList.length > 0"
+            :items="filteredList"
+            :item-height="80"
+            :key-field="(item: unknown) => (item as StorageItem).key"
+            class="h-full"
           >
-            Add
-          </UButton>
+            <template #default="{ item }">
+              <div class="px-4 py-3 border-b border-gray-800 hover:bg-gray-800/50 transition-colors grid grid-cols-[25%_50%_80px] gap-4 items-start">
+                <!-- Key Column -->
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="font-mono text-sm font-bold text-indigo-400 break-all">{{ (item as StorageItem).key }}</span>
+                  <UBadge
+                    v-if="isHttpOnlyCookie(item as StorageItem)"
+                    color="yellow"
+                    size="xs"
+                    title="HttpOnly (Server side)"
+                  >
+                    HTTP
+                  </UBadge>
+                </div>
+                
+                <!-- Value Column -->
+                <div
+                  @dblclick.stop="openEdit(item as StorageItem)"
+                  class="text-xs font-mono text-gray-300 cursor-pointer hover:text-indigo-400 transition-colors group relative w-full"
+                  :title="typeof (item as StorageItem).value === 'object' ? JSON.stringify((item as StorageItem).value, null, 2) : String((item as StorageItem).value)"
+                >
+                  <div class="max-h-20 overflow-hidden wrap-break-word">
+                    <span v-if="typeof (item as StorageItem).value === 'object'" class="whitespace-pre-wrap break-all">{{ JSON.stringify((item as StorageItem).value, null, 2) }}</span>
+                    <span v-else class="break-all">{{ String((item as StorageItem).value) }}</span>
+                  </div>
+                  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-gray-800/90 rounded text-[10px] text-indigo-400 pointer-events-none z-10">
+                    Double-click to edit
+                  </div>
+                </div>
+                
+                <!-- Actions Column -->
+                <div class="flex justify-end gap-1">
+                  <button
+                    v-if="activeType !== 'cache' && activeType !== 'opfs'"
+                    @click="openEdit(item as StorageItem)"
+                    class="p-1 text-gray-400 hover:text-indigo-400"
+                  >
+                    <UIcon name="Pencil" class="w-4 h-4"/>
+                  </button>
+                  <button
+                    @click="remove((item as StorageItem).key)"
+                    class="p-1 text-gray-400 hover:text-red-400"
+                  >
+                    <UIcon name="Trash" class="w-4 h-4"/>
+                  </button>
+                </div>
+              </div>
+            </template>
+            <template #empty>
+              <div class="p-4">
+                <UEmpty icon="CircleStack" title="Storage is empty" description="No items found in this storage" />
+              </div>
+            </template>
+          </UVirtualList>
+          <div v-else class="p-4">
+            <UEmpty icon="CircleStack" title="Storage is empty" description="No items found in this storage" />
+          </div>
         </div>
-      </div>
-
-      <!-- Table -->
-      <div class="flex-1 overflow-auto p-4 bg-gray-900/50">
-        <UTable
-          v-if="filteredList.length > 0"
-          :rows="filteredList"
-          :columns="[
-            {key:'key', label:'Key', width:'25%'},
-            {key:'value', label:'Value', width:'50%'},
-            {key:'actions', label:'', width:'80px'}
-          ]"
-        >
-          <template #cell-key="{ val, row }">
-            <div class="flex items-center gap-2">
-              <span class="font-mono text-sm font-bold text-indigo-400 break-all">{{ val }}</span>
-              <UBadge
-                v-if="isHttpOnlyCookie(row)"
-                color="yellow"
-                size="xs"
-                title="HttpOnly (Server side)"
-              >
-                HTTP
-              </UBadge>
-            </div>
-          </template>
-          <template #cell-value="{ val, row }">
-            <div
-              @dblclick.stop="openEdit(row as StorageItem)"
-              class="text-xs font-mono text-gray-300 cursor-pointer hover:text-indigo-400 transition-colors group relative w-full"
-              :title="typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)"
-            >
-              <div class="max-h-20 overflow-hidden break-words">
-                <span v-if="typeof val === 'object'" class="whitespace-pre-wrap break-all">{{ JSON.stringify(val, null, 2) }}</span>
-                <span v-else class="break-all">{{ String(val) }}</span>
-              </div>
-              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-gray-800/90 rounded text-[10px] text-indigo-400 pointer-events-none z-10">
-                Double-click to edit
-              </div>
-            </div>
-          </template>
-          <template #cell-actions="{ row }">
-            <div class="flex justify-end gap-1">
-              <button
-                v-if="activeType !== 'cache' && activeType !== 'opfs'"
-                @click="openEdit(row as StorageItem)"
-                class="p-1 text-gray-400 hover:text-indigo-400"
-              >
-                <UIcon name="Pencil" class="w-4 h-4"/>
-              </button>
-              <button
-                @click="remove((row as StorageItem).key)"
-                class="p-1 text-gray-400 hover:text-red-400"
-              >
-                <UIcon name="Trash" class="w-4 h-4"/>
-              </button>
-            </div>
-          </template>
-        </UTable>
-        <UEmpty v-else icon="CircleStack" title="Storage is empty" description="No items found in this storage" />
       </div>
     </div>
 

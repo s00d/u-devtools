@@ -1,13 +1,32 @@
 <script setup lang="ts">
-import { UBadge, UIcon } from '@u-devtools/ui';
+import { UBadge, UIcon, UButton } from '@u-devtools/ui';
+
+interface UDevToolsConfig {
+  base?: string;
+}
+
+declare global {
+  interface Window {
+    __UDEVTOOLS_CONFIG__?: UDevToolsConfig;
+  }
+}
 
 // Версия пакета
 const VERSION = '0.1.0';
 
+// Получаем base URL из конфига
+const base = window.__UDEVTOOLS_CONFIG__?.base || '/__devtools';
+
+// Функция для открытия DevTools в новой вкладке
+const openInNewTab = () => {
+  const url = `${window.location.origin}${base}/index.html`;
+  window.open(url, '_blank');
+};
+
 const links = [
-  { label: 'GitHub', url: 'https://github.com/your-repo/u-devtools', icon: 'CodeBracket' },
-  { label: 'Documentation', url: '#', icon: 'BookOpen' },
-  { label: 'Report Issue', url: '#', icon: 'BugAnt' },
+  { label: 'GitHub', url: 'https://github.com/s00d/u-devtools', icon: 'CodeBracketSquare' },
+  { label: 'Documentation', url: 'https://github.com/s00d/u-devtools#readme', icon: 'BookOpen' },
+  { label: 'Report Issue', url: 'https://github.com/s00d/u-devtools/issues', icon: 'BugAnt' },
 ];
 </script>
 
@@ -49,6 +68,17 @@ const links = [
           </div>
           <span class="font-medium text-zinc-200">{{ link.label }}</span>
         </a>
+      </div>
+
+      <!-- Open in New Tab Button -->
+      <div class="flex justify-center">
+        <UButton
+          variant="secondary"
+          icon="ArrowTopRightOnSquare"
+          @click="openInNewTab"
+        >
+          Open DevTools in New Tab
+        </UButton>
       </div>
 
       <!-- Footer -->

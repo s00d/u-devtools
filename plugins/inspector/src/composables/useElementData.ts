@@ -1,8 +1,8 @@
 import { ref, onMounted } from 'vue';
-import type { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
 
 export interface ElementInfo {
-  udtId: string; // Уникальный ID для надежной связи
+  udtId: string; // Unique ID for reliable connection
   tagName: string;
   id: string;
   classes: string[];
@@ -54,13 +54,15 @@ export interface ElementInfo {
 /**
  * Composable for working with element data (get, update styles/attributes)
  */
-export function useElementData(bridge: AppBridge) {
+
+export function useElementData() {
+  const bridge = useBridge();
   const data = ref<ElementInfo | null>(null);
   const newAttrKey = ref('');
   const newAttrValue = ref('');
   const newClass = ref('');
 
-  // Получаем текущий ID
+  // Get current ID
   const id = () => data.value?.udtId;
 
   // --- Style Updates ---
@@ -108,7 +110,7 @@ export function useElementData(bridge: AppBridge) {
 
   // --- Listeners ---
   onMounted(() => {
-    bridge.on<ElementInfo>('element-picked', (d: ElementInfo) => {
+    bridge.on('element-picked', (d) => {
       data.value = d;
     });
   });

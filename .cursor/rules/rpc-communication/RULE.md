@@ -12,7 +12,11 @@ alwaysApply: false
 
 ```typescript
 // In client.ts or Vue component
-const result = await api.rpc.call('plugin:method', { data: 'value' });
+try {
+  const result = await api.rpc.call('plugin:method', { data: 'value' });
+} catch (error) {
+  api.notify(`Error: ${error}`, 'error');
+}
 
 // Subscribe to events
 const unsubscribe = api.rpc.on('plugin:event', (data) => {
@@ -24,7 +28,9 @@ const unsubscribe = api.rpc.on('plugin:event', (data) => {
 
 ```typescript
 // In server.ts setupServer
-rpc.handle('plugin:method', async (payload) => {
+// IMPORTANT: payload type is always unknown, use type assertion
+rpc.handle('plugin:method', async (payload: unknown) => {
+  const data = payload as { key: string };
   return { result: 'data' };
 });
 
@@ -44,6 +50,9 @@ const bridge = new AppBridge('plugin-name');
 bridge.on('event', (data) => {
   console.log(data);
 });
+
+// Cleanup
+bridge.close();
 ```
 
 ## Error Handling
@@ -64,3 +73,8 @@ try {
 - Events: `{plugin-name}:{event}` (e.g., `network:request-start`)
 - Use kebab-case for consistency
 
+## Type Safety
+
+- Server RPC handlers receive `payload: unknown` - always use type assertions
+- Client RPC calls should specify expected return types when possible
+- Use TypeScript interfaces for payload and response types

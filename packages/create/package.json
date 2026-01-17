@@ -1,6 +1,6 @@
 {
   "name": "create-u-devtools",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "CLI tool to scaffold Universal DevTools plugins",
   "type": "module",
   "bin": {
@@ -10,9 +10,11 @@
   "files": [
     "dist",
     "_templates",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
+    "access": "public",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -20,7 +22,8 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
-      }
+      },
+      "./package.json": "./package.json"
     }
   },
   "scripts": {
@@ -44,12 +47,13 @@
     "directory": "packages/create"
   },
   "dependencies": {
-    "hygen": "^6.2.11"
+    "hygen": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^20.19.27",
-    "enquirer": "^2.3.6",
-    "execa": "^5.1.1",
-    "typescript": "^5.9.3"
+    "vite": "catalog:",
+    "@types/node": "catalog:",
+    "enquirer": "catalog:",
+    "execa": "catalog:",
+    "typescript": "catalog:"
   }
 }

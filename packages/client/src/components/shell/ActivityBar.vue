@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { useRouter, useRoute } from 'vue-router';
 import { useDevToolsState } from '../../composables/useDevToolsState';
+import { createApiForPlugin } from '../../modules/clientApi';
+import type { GeneralMenuItem } from '@u-devtools/core';
 import { UIcon } from '@u-devtools/ui';
 
-const { plugins, activePluginId, isSidebarExpanded, isManagerActive, showSettings, closeDevTools } =
-  useDevToolsState();
+const router = useRouter();
+const route = useRoute();
+const { plugins, isSidebarExpanded, showSettings, closeDevTools } = useDevToolsState();
 
-// Состояние меню настроек
+// Settings menu state
 const isMenuOpen = ref(false);
 const menuRef = ref<HTMLElement | null>(null);
 
-// Закрываем меню при клике снаружи
+// Close menu on outside click
 onClickOutside(menuRef, () => {
   isMenuOpen.value = false;
 });
@@ -23,8 +27,32 @@ const toggleMenu = () => {
 const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
   isMenuOpen.value = false;
   if (action === 'settings') showSettings.value = true;
-  if (action === 'about') activePluginId.value = 'internal:about';
-  if (action === 'extensions') activePluginId.value = 'internal:plugins';
+  if (action === 'about') router.push('/about');
+  if (action === 'extensions') router.push('/plugins/Plugins');
+};
+
+// Calculate list of custom menu items from all plugins
+const customMenuItems = computed(() => {
+  return plugins.value.flatMap((plugin) => {
+    if (!plugin.generalMenuItems) return [];
+    return plugin.generalMenuItems.map((item) => ({
+      ...item,
+      pluginName: plugin.name, // Save plugin name for API context
+    }));
+  });
+});
+
+// Функция запуска действия плагина
+const handleCustomItemClick = (item: GeneralMenuItem & { pluginName: string }) => {
+  isMenuOpen.value = false;
+  // Create API specifically for this plugin so it has access to its storage etc.
+  const api = createApiForPlugin(item.pluginName);
+  try {
+    item.action(api);
+  } catch (e) {
+    console.error(`Error in general menu action for ${item.pluginName}:`, e);
+    api.notify('Action failed', 'error');
+  }
 };
 </script>
 
@@ -39,7 +67,7 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
         class="h-12 flex items-center border-b border-zinc-800 relative"
         :class="isSidebarExpanded ? 'px-4' : 'justify-center'"
       >
-        <!-- Логотип с градиентом -->
+        <!-- Logo with gradient -->
         <div v-if="!isSidebarExpanded" class="w-8 h-8 rounded bg-gradient-to-br from-zinc-900 to-zinc-800 border border-white/10 flex items-center justify-center shadow-sm">
           <UIcon name="WrenchScrewdriver" class="w-4 h-4 text-indigo-400" />
         </div>
@@ -58,25 +86,27 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
 
     <!-- 2. Plugins List -->
     <div class="flex-1 overflow-y-auto py-3 px-2 space-y-1 scrollbar-hide">
-      <button
-        v-for="p in plugins"
-        :key="p.name"
-        @click="activePluginId = p.name"
-        class="w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-all duration-200 group relative border"
-        :class="[
-          activePluginId === p.name
-            ? 'shadow-sm bg-zinc-800 text-indigo-400 border-white/5'
-            : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-zinc-800/50',
-          !isSidebarExpanded ? 'justify-center' : ''
-        ]"
-      >
-        <UIcon :name="p.icon" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
-        
-        <span v-if="isSidebarExpanded" class="text-sm font-medium truncate">{{ p.name }}</span>
-        
-        <!-- Active Indicator (Left dot) -->
-        <div v-if="activePluginId === p.name && !isSidebarExpanded" class="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-3 bg-indigo-500 rounded-r-full"></div>
-      </button>
+      <template v-for="p in plugins" :key="p.name">
+        <router-link
+          v-if="!p.hideFromMenu"
+          :to="{ name: 'plugin', params: { pluginName: p.name } }"
+          class="w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-all duration-200 group relative border"
+          :class="[
+            route.params.pluginName === p.name
+              ? 'shadow-sm bg-zinc-800 text-indigo-400 border-white/5'
+              : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-zinc-800/50',
+            !isSidebarExpanded ? 'justify-center' : ''
+          ]"
+        >
+          <UIcon v-if="p.icon" :name="p.icon" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110" />
+          <div v-else class="w-5 h-5 flex-shrink-0" />
+          
+          <span v-if="isSidebarExpanded" class="text-sm font-medium truncate">{{ p.name }}</span>
+          
+          <!-- Active Indicator (Left dot) -->
+          <div v-if="route.params.pluginName === p.name && !isSidebarExpanded" class="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-3 bg-indigo-500 rounded-r-full"></div>
+        </router-link>
+      </template>
     </div>
 
     <!-- 3. Bottom Actions -->
@@ -105,21 +135,26 @@ const handleMenuItemClick = (action: 'settings' | 'about' | 'extensions') => {
           class="absolute bottom-full mb-2 rounded-lg shadow-2xl overflow-hidden min-w-[180px] z-50 flex flex-col py-1 bg-zinc-950/70 backdrop-blur-xl border border-zinc-800"
           :class="isSidebarExpanded ? 'left-2' : 'left-full ml-2'"
         >
+          <!-- Custom items from plugins (before settings) -->
+          <template v-if="customMenuItems.length > 0">
+            <button 
+              v-for="(item, idx) in customMenuItems"
+              :key="item.pluginName + idx"
+              @click="handleCustomItemClick(item)"
+              class="flex items-center gap-2 px-4 py-2 text-sm text-left w-full transition-colors text-gray-400 hover:bg-zinc-800 hover:text-gray-200"
+            >
+              <UIcon v-if="item.icon" :name="item.icon" class="w-4 h-4" />
+              <div v-else class="w-4 h-4" />
+              {{ item.label }}
+            </button>
+            <div class="h-px my-1 mx-2 bg-zinc-900"></div>
+          </template>
+
           <button 
             @click="handleMenuItemClick('settings')"
             class="flex items-center gap-2 px-4 py-2 text-sm text-left w-full transition-colors text-gray-400 hover:bg-zinc-800 hover:text-gray-200"
           >
             <UIcon name="AdjustmentsHorizontal" class="w-4 h-4" /> Settings
-          </button>
-          
-          <button 
-            @click="handleMenuItemClick('extensions')"
-            class="flex items-center gap-2 px-4 py-2 text-sm text-left w-full transition-colors"
-            :class="isManagerActive 
-              ? 'bg-zinc-800 text-gray-200'
-              : 'text-gray-400 hover:bg-zinc-800 hover:text-gray-200'"
-          >
-            <UIcon name="Squares2X2" class="w-4 h-4" /> Extensions
           </button>
           
           <div class="h-px my-1 mx-2 bg-zinc-900"></div>

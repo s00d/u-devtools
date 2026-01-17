@@ -1,0 +1,28 @@
+import { createDevToolsContext } from '@u-devtools/kit';
+import type { AppBridge, ClientApi } from '@u-devtools/core';
+import type { VueInspectorProtocol } from './types';
+import type { Toast } from '@u-devtools/overlay';
+
+// 1. Создаем "сырой" контекст
+const { setupDevTools, useBridge: useRawBridge, useToast: useRawToast, useApi: useRawApi } = createDevToolsContext();
+
+// 2. Экспортируем setup как есть (он используется в client.ts)
+export { setupDevTools };
+
+// 3. Экспортируем отдельные типизированные хуки
+export function useBridge(): AppBridge<VueInspectorProtocol> {
+  return useRawBridge() as AppBridge<VueInspectorProtocol>;
+}
+
+export function useToast(): Toast {
+  return useRawToast();
+}
+
+export function useApi(): ClientApi {
+  const api = useRawApi();
+  if (!api) {
+    throw new Error('[u-devtools] API not available in vue-inspector context');
+  }
+  return api;
+}
+

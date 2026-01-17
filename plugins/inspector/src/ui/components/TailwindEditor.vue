@@ -10,23 +10,23 @@ const emit = defineEmits<(e: 'update', classes: string[]) => void>();
 
 const customClass = ref('');
 
-// Хелпер для проверки наличия
+// Helper to check presence
 const has = (cls: string) => props.classes.includes(cls);
 
-// Хелпер для переключения
+// Helper to toggle
 const toggleClass = (cls: string, groupRegex?: RegExp) => {
   let newClasses = [...props.classes];
 
   if (groupRegex) {
-    // Удаляем конфликтующие классы (например, если ставим p-4, убираем p-2)
+    // Remove conflicting classes (e.g., if setting p-4, remove p-2)
     newClasses = newClasses.filter((c) => !groupRegex.test(c));
   }
 
   if (!has(cls)) {
     newClasses.push(cls);
   } else if (!groupRegex) {
-    // Если это просто toggle (без группы), то удаляем, если он уже был
-    // Если это группа (как display), то мы уже удалили все regex-ом, и добавили новый
+    // If it's just toggle (without group), remove if it was already there
+    // If it's a group (like display), we already removed all with regex and added new one
     newClasses = newClasses.filter((c) => c !== cls);
   }
 
@@ -36,7 +36,7 @@ const toggleClass = (cls: string, groupRegex?: RegExp) => {
 const addCustomClass = () => {
   if (!customClass.value.trim()) return;
   const newClasses = [...props.classes, ...customClass.value.trim().split(' ')];
-  // Убираем дубликаты
+  // Remove duplicates
   emit('update', [...new Set(newClasses)]);
   customClass.value = '';
 };

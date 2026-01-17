@@ -12,11 +12,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "jsx": "preserve",
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@u-devtools/core": ["../core/src"]
-    }
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

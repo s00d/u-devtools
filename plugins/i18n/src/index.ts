@@ -1,8 +1,6 @@
-import { definePlugin } from '@u-devtools/kit';
-import type { RpcServerInterface, ServerContext } from '@u-devtools/core';
-import { setupServer } from './server.js';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-// Метаданные определяем статически (из package.json во время сборки)
+// Metadata defined statically (from package.json during build)
 const meta = {
   name: '@u-devtools/plugin-i18n',
   version: '0.1.0',
@@ -14,11 +12,23 @@ export interface I18nPluginOptions {
   defaultLocale?: string;
 }
 
-export const i18nPlugin = (options: I18nPluginOptions) =>
-  definePlugin({
+// Store options globally for server.ts to access
+let pluginOptions: I18nPluginOptions | null = null;
+
+export function getI18nOptions(): I18nPluginOptions | null {
+  return pluginOptions;
+}
+
+const i18nPlugin = (options: I18nPluginOptions) => {
+  pluginOptions = options;
+  return definePlugin({
     name: 'i18n',
     root: import.meta.url,
     client: './client',
     meta,
-    setupServer: (rpc: RpcServerInterface, ctx: ServerContext) => setupServer(rpc, ctx, options),
+    server: './server',
   });
+};
+
+export const plugin = i18nPlugin;
+export { i18nPlugin };

@@ -3,6 +3,11 @@ to: <%= projectName %>/README.md
 ---
 # <%= packageName %>
 
+[![npm version](https://img.shields.io/npm/v/<%= packageName %>/latest?style=for-the-badge)](https://www.npmjs.com/package/<%= packageName %>)
+[![npm downloads](https://img.shields.io/npm/dw/<%= packageName %>?style=for-the-badge)](https://www.npmjs.com/package/<%= packageName %>)
+[![License](https://img.shields.io/npm/l/<%= packageName %>?style=for-the-badge)](https://www.npmjs.com/package/<%= packageName %>)
+[![Donate](https://img.shields.io/badge/Donate-Donationalerts-ff4081?style=for-the-badge)](https://www.donationalerts.com/r/s00d88)
+
 <%= description %>
 
 This plugin is built with **Svelte 5** and demonstrates Svelte integration with Universal DevTools.

@@ -1,25 +1,18 @@
-import { AppBridge } from '@u-devtools/core';
-
-const bridge = new AppBridge('console');
+import { defineApp } from '@u-devtools/kit';
+import type { AppBridge } from '@u-devtools/core';
+import { setupDevTools } from './context';
+import type { ConsoleProtocol, ConsoleLog } from './types';
 
 type LogLevel = 'log' | 'warn' | 'error' | 'info' | 'debug';
 
-interface ConsoleLog {
-  id: string;
-  level: LogLevel;
-  message: string;
-  args: unknown[];
-  timestamp: number;
-}
-
-// Сохраняем оригинальные функции ДО переопределения
+// Save original functions BEFORE overriding
 const originalLog = console.log;
 const originalWarn = console.warn;
 const originalError = console.error;
 const originalInfo = console.info;
 const originalDebug = console.debug;
 
-// Маппинг оригинальных функций
+// Mapping of original functions
 const originals: Record<LogLevel, typeof console.log> = {
   log: originalLog,
   warn: originalWarn,
@@ -28,7 +21,7 @@ const originals: Record<LogLevel, typeof console.log> = {
   debug: originalDebug,
 };
 
-function createLogHandler(level: LogLevel) {
+function createLogHandler(level: LogLevel, bridge: AppBridge<ConsoleProtocol>) {
   return (...args: unknown[]) => {
     const log: ConsoleLog = {
       id: Math.random().toString(36).slice(2),
@@ -49,17 +42,11 @@ function createLogHandler(level: LogLevel) {
 
     bridge.send('console-log', log);
 
-    // Вызываем оригинальную функцию из сохраненного маппинга
+    // Call original function from saved mapping
     const original = originals[level];
     original.apply(console, args);
   };
 }
-
-console.log = createLogHandler('log');
-console.warn = createLogHandler('warn');
-console.error = createLogHandler('error');
-console.info = createLogHandler('info');
-console.debug = createLogHandler('debug');
 
 // Restore on unload (optional, for cleanup)
 if (typeof window !== 'undefined') {
@@ -72,17 +59,26 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// --- CLEANUP (ВАЖНО!) ---
-const hot = (import.meta as { hot?: { dispose: (fn: () => void) => void } }).hot;
-if (hot) {
-  hot.dispose(() => {
-    // Восстанавливаем консоль
-    console.log = originalLog;
-    console.warn = originalWarn;
-    console.error = originalError;
-    console.info = originalInfo;
-    console.debug = originalDebug;
+export default defineApp({
+  component: undefined,
+  setup({ bridge, onCleanup }) {
+    const typedBridge = bridge as AppBridge<ConsoleProtocol>;
+    setupDevTools({ bridge: typedBridge });
+    // Перехватываем console методы после установки bridge
+    console.log = createLogHandler('log', typedBridge);
+    console.warn = createLogHandler('warn', typedBridge);
+    console.error = createLogHandler('error', typedBridge);
+    console.info = createLogHandler('info', typedBridge);
+    console.debug = createLogHandler('debug', typedBridge);
 
-    bridge.close();
-  });
-}
+    // Очистка при удалении плагина
+    onCleanup(() => {
+      // Restore console
+      console.log = originalLog;
+      console.warn = originalWarn;
+      console.error = originalError;
+      console.info = originalInfo;
+      console.debug = originalDebug;
+    });
+  },
+});

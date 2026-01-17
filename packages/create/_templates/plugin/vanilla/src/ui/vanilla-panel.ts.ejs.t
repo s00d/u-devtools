@@ -2,119 +2,101 @@
 to: <%= projectName %>/src/ui/vanilla-panel.ts
 ---
 import type { ClientApi } from '@u-devtools/core';
+import { renderBasicComponents } from '../views/BasicComponents';
+import { renderLayoutComponents } from '../views/LayoutComponents';
+import { renderDataDisplay } from '../views/DataDisplay';
+import { renderStateComponents } from '../views/StateComponents';
+import { renderForms } from '../views/Forms';
 
-<%
-  const pluginKebab = packageName
-    .replace(/^@[^/]+\//, '')
-    .replace(/^plugin-/, '')
-    .replace(/@u-devtools\/plugin-/, '');
--%>
+const TAB_ITEMS = ['Basic', 'Layout', 'Data', 'State', 'Forms'];
 
 export function createVanillaPanel(container: HTMLElement, api: ClientApi) {
-  let count = 0;
-  let serverResponse = '';
+  // Setup main container
+  container.innerHTML = `
+    <div class="h-full flex flex-col bg-gray-900 text-gray-200">
+      <div class="border-b border-gray-800 bg-gray-800">
+        <div class="p-3 flex justify-between items-center">
+          <div class="flex items-center gap-4">
+            <h2 class="font-bold text-white flex items-center gap-2">
+              <u-icon name="CodeBracket" class="w-5 h-5"></u-icon>
+              <%= pluginName %>
+            </h2>
+            <div class="flex items-center gap-2">
+              <div class="h-4 w-px bg-gray-700"></div>
+              <div id="tabs-container"></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <u-button id="reset-button" label="Reset" variant="ghost" size="sm" icon="ArrowPath"></u-button>
+          </div>
+        </div>
+      </div>
+      <div id="content-area" class="flex-1 overflow-auto p-6"></div>
+    </div>
+  `;
 
-  // Создаем DOM структуру
-  const root = document.createElement('div');
-  root.className = 'p-6 text-gray-200';
+  const tabsContainerEl = container.querySelector('#tabs-container') as HTMLElement;
+  const resetButtonEl = container.querySelector('#reset-button') as HTMLElement;
+  const contentAreaEl = container.querySelector('#content-area') as HTMLElement;
 
-  // Header
-  const header = document.createElement('div');
-  header.className = 'flex items-center gap-3 mb-6';
+  // State
+  let activeTab = 'Basic';
 
-  const icon = document.createElement('div');
-  icon.className = 'w-10 h-10 rounded bg-[#f59e0b] flex items-center justify-center text-black font-bold';
-  icon.textContent = 'JS';
-
-  const title = document.createElement('h1');
-  title.className = 'text-2xl font-bold';
-  title.textContent = '<%= pluginName %>';
-
-  header.appendChild(icon);
-  header.appendChild(title);
-  root.appendChild(header);
-
-  // Counter section
-  const counterSection = document.createElement('div');
-  counterSection.className = 'p-4 bg-gray-800 rounded border border-gray-700 mb-4';
-
-  const counterTitle = document.createElement('h3');
-  counterTitle.className = 'font-bold text-[#f59e0b] mb-2';
-  counterTitle.textContent = 'Interactive Counter';
-
-  const counterControls = document.createElement('div');
-  counterControls.className = 'flex gap-2 items-center';
-
-  const decrementBtn = document.createElement('button');
-  decrementBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition';
-  decrementBtn.textContent = '-';
-
-  const countDisplay = document.createElement('span');
-  countDisplay.className = 'font-mono text-xl w-8 text-center';
-  countDisplay.textContent = '0';
-
-  const incrementBtn = document.createElement('button');
-  incrementBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600 transition';
-  incrementBtn.textContent = '+';
-
-  const updateCount = () => {
-    countDisplay.textContent = String(count);
+  // Setup tabs using .props for complex data
+  const tabsEl = document.createElement('u-tabs');
+  tabsContainerEl.appendChild(tabsEl);
+  (tabsEl as any).props = {
+    items: TAB_ITEMS,
+    modelValue: activeTab,
+    maxVisible: 5,
+    'onUpdate:modelValue': (val: string) => {
+      activeTab = val;
+      renderContent();
+      (tabsEl as any).props = { ...(tabsEl as any).props, modelValue: activeTab };
+    },
   };
 
-  decrementBtn.addEventListener('click', () => {
-    count--;
-    updateCount();
-  });
-
-  incrementBtn.addEventListener('click', () => {
-    count++;
-    updateCount();
-  });
-
-  counterControls.appendChild(decrementBtn);
-  counterControls.appendChild(countDisplay);
-  counterControls.appendChild(incrementBtn);
-
-  counterSection.appendChild(counterTitle);
-  counterSection.appendChild(counterControls);
-  root.appendChild(counterSection);
-
-  // RPC section
-  const rpcSection = document.createElement('div');
-  rpcSection.className = 'p-4 bg-gray-800 rounded border border-gray-700';
-
-  const rpcTitle = document.createElement('h3');
-  rpcTitle.className = 'font-bold text-green-400 mb-2';
-  rpcTitle.textContent = 'Server RPC';
-
-  const rpcButton = document.createElement('button');
-  rpcButton.className = 'px-4 py-2 bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/50 rounded hover:bg-[#f59e0b]/30 transition';
-  rpcButton.textContent = 'Call Node.js';
-
-  const responseDiv = document.createElement('div');
-  responseDiv.className = 'mt-2 p-2 bg-black/30 rounded font-mono text-sm hidden';
-
-  rpcButton.addEventListener('click', async () => {
-    try {
-      serverResponse = await api.rpc.call<string>('<%= pluginKebab %>:hello');
-      responseDiv.textContent = `Server: ${serverResponse}`;
-      responseDiv.classList.remove('hidden');
-      api.notify('Hello from Vanilla JS!', 'success');
-    } catch (e) {
-      api.notify('RPC call failed', 'error');
+  // Setup reset button (only listen to CustomEvent from Vue, not native DOM events)
+  resetButtonEl.addEventListener('click', (e: Event) => {
+    // Only handle CustomEvent from Vue emit, ignore native DOM events
+    if (e instanceof CustomEvent && (e as any)._isVueEvent) {
+      activeTab = 'Basic';
+      renderContent();
+      (tabsEl as any).props = { ...(tabsEl as any).props, modelValue: activeTab };
     }
   });
 
-  rpcSection.appendChild(rpcTitle);
-  rpcSection.appendChild(rpcButton);
-  rpcSection.appendChild(responseDiv);
-  root.appendChild(rpcSection);
+  // Render content based on active tab
+  function renderContent() {
+    // Clear content area (this removes all event listeners automatically)
+    contentAreaEl.innerHTML = '';
 
-  container.appendChild(root);
+    switch (activeTab) {
+      case 'Basic':
+        renderBasicComponents(contentAreaEl);
+        break;
+      case 'Layout':
+        renderLayoutComponents(contentAreaEl);
+        break;
+      case 'Data':
+        renderDataDisplay(contentAreaEl);
+        break;
+      case 'State':
+        renderStateComponents(contentAreaEl);
+        break;
+      case 'Forms':
+        renderForms(contentAreaEl);
+        break;
+      default:
+        renderBasicComponents(contentAreaEl);
+    }
+  }
+
+  // Initial render
+  renderContent();
 
   // Cleanup function
   return () => {
-    root.remove();
+    container.innerHTML = '';
   };
 }
-

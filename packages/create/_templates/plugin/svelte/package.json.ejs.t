@@ -5,29 +5,43 @@ to: <%= projectName %>/package.json
   "name": "<%= packageName %>",
   "version": "0.0.0",
   "description": "<%= description %>",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.cjs.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.js",
-    "module": "./dist/index.js",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
+      },
+      "./client": {
+        "import": "./dist/client.js"
       },
       "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build -c vite.config.standalone.ts",
+    "build:standalone": "vite build -c vite.config.standalone.ts",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json",
     "prepublishOnly": "pnpm build"
   },
@@ -38,8 +52,16 @@ to: <%= projectName %>/package.json
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s00d/u-devtools.git",
+    "directory": "plugins/<%= projectName %>"
+  },
   "dependencies": {
     "@u-devtools/core": "latest",
+    "@u-devtools/overlay": "latest",
+    "@u-devtools/ui": "latest",
+    "@u-devtools/utils": "latest",
     "@u-devtools/kit": "latest",
     "svelte": "^5.46.1"
   },

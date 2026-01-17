@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { tv } from 'tailwind-variants';
 import { UButton, UInput, UIcon } from '../index';
 
 interface SettingSchemaDef {
@@ -20,6 +22,23 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: unknown[]];
 }>();
+
+const arrayInputGrid = tv({
+  base: 'flex-1 grid gap-2',
+  variants: {
+    columns: {
+      1: 'grid-cols-1',
+      2: 'grid-cols-2',
+    },
+  },
+  defaultVariants: {
+    columns: 1,
+  },
+});
+
+const schemaKeysCount = computed(() => {
+  return Object.keys(props.itemSchema || {}).length;
+});
 
 const addItem = () => {
   const newItem = props.itemType ? '' : {};
@@ -83,8 +102,7 @@ const updatePrimitiveItem = (index: number, value: unknown) => {
         <!-- Object Array -->
         <div
           v-else
-          class="flex-1 grid gap-2"
-          :class="Object.keys(itemSchema || {}).length > 1 ? 'grid-cols-2' : 'grid-cols-1'"
+          :class="arrayInputGrid({ columns: schemaKeysCount > 1 ? 2 : 1 })"
         >
           <div v-for="(fieldDef, fieldKey) in itemSchema" :key="String(fieldKey)">
             <UInput

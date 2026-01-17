@@ -1,10 +1,36 @@
-import { defineConfig, type PluginOption } from 'vite';
+import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
-import { resolve } from 'node:path';
-import { cleanTimestampFiles } from './clean-timestamp-plugin';
+import { join, resolve } from 'node:path';
+import { readdirSync, unlinkSync } from 'node:fs';
 
-interface ConfigOptions {
+function cleanTimestampFiles(dir: string): Plugin {
+  return {
+    name: 'clean-timestamp-files',
+    buildStart() {
+      try {
+        const files = readdirSync(dir);
+        files.forEach((file) => {
+          if (file.includes('.timestamp-') && file.endsWith('.mjs')) {
+            try {
+              unlinkSync(join(dir, file));
+            } catch (_e) {
+              // Ignore deletion errors
+            }
+          }
+        });
+      } catch (_e) {
+        // Ignore directory read errors
+      }
+    },
+  };
+}
+
+/**
+ * Configuration options for createViteConfig
+ * @internal
+ */
+export interface ConfigOptions {
   entry: string | Record<string, string>;
   name: string;
   dir: string;
@@ -24,6 +50,40 @@ interface ConfigOptions {
   cssCodeSplit?: boolean;
 }
 
+/**
+ * Creates a Vite configuration optimized for building DevTools packages.
+ * 
+ * This function generates a Vite config with proper TypeScript declaration file generation,
+ * preserving JSDoc comments in .d.ts files for better IDE autocomplete.
+ * 
+ * @param options - Configuration options for the Vite build
+ * @param options.entry - Entry point(s) for the library (string or record of entry points)
+ * @param options.name - Library name (used for UMD builds)
+ * @param options.dir - Package directory (usually __dirname)
+ * @param options.external - Array of module IDs to externalize
+ * @param options.clearScreen - Whether to clear screen on build (default: false)
+ * @param options.useVue - Whether to include Vue plugin (default: true)
+ * @param options.formats - Output formats: 'es' and/or 'cjs' (default: ['es', 'cjs'])
+ * @param options.fileName - Custom file naming function or string
+ * @param options.dtsOptions - Options for TypeScript declaration file generation
+ * @param options.additionalPlugins - Additional Vite plugins to include
+ * @param options.resolveAlias - Path aliases for module resolution
+ * @param options.cssCodeSplit - Whether to enable CSS code splitting
+ * @returns Vite configuration object
+ * 
+ * @example
+ * ```ts
+ * import { createViteConfig } from '@u-devtools/core/vite.config.base';
+ * 
+ * export default createViteConfig({
+ *   name: 'MyPackage',
+ *   entry: 'src/index.ts',
+ *   dir: __dirname,
+ * });
+ * ```
+ * 
+ * @public
+ */
 export function createViteConfig({
   entry,
   name,
@@ -51,6 +111,10 @@ export function createViteConfig({
       exclude: dtsOptions.exclude,
       copyDtsFiles: dtsOptions.copyDtsFiles,
       tsconfigPath: resolve(dir, 'tsconfig.json'),
+      outDir: resolve(dir, 'dist'),
+      compilerOptions: {
+        removeComments: false, // Explicitly preserve JSDoc comments
+      },
     })
   );
 
@@ -72,9 +136,9 @@ export function createViteConfig({
   return defineConfig({
     clearScreen,
     plugins,
-    // ВАЖНО: Это предотвращает замену import.meta.hot на false при сборке
-    // Теперь код в dist будет содержать проверку if (import.meta.hot)
-    // и HMR будет работать даже в собранной версии
+    // IMPORTANT: This prevents replacing import.meta.hot with false during build
+    // Now code in dist will contain check if (import.meta.hot)
+    // and HMR will work even in built version
     define: {
       'import.meta.hot': 'import.meta.hot',
     },

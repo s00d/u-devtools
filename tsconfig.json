@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "removeComments": false,
     // ПРИМЕЧАНИЕ: paths используются только для IDE (Go to Definition, автодополнение)
     // Vite резолвит модули через package.json автоматически
     "paths": {

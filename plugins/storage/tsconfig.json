@@ -12,12 +12,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "jsx": "preserve",
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@u-devtools/core": ["../../packages/core/src"],
-      "@u-devtools/ui": ["../../packages/ui/src"]
-    }
+    "types": ["vite/client"],
   },
   "include": ["src/**/*", "src/**/*.vue"],
   "exclude": ["node_modules", "dist"]

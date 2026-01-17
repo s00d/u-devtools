@@ -1,10 +1,12 @@
-import { definePlugin } from '@u-devtools/kit';
-import { setupServer } from './server.js';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-export const packageInspectorPlugin = () =>
+const packageInspectorPlugin = () =>
   definePlugin({
-    name: 'Package Inspector',
+    name: 'package-inspector',
     root: import.meta.url,
     client: './client',
-    setupServer: (rpc, ctx) => setupServer(rpc, ctx),
+    server: './server',
   });
+
+export const plugin = packageInspectorPlugin;
+export { packageInspectorPlugin };

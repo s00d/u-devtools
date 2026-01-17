@@ -1,0 +1,68 @@
+name: docs
+
+permissions:
+  contents: write
+
+on:
+  # trigger deployment on every push to main branch, but only if docs folder has changes
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'  # ограничиваем только изменениями в папке docs
+      - 'packages/**'  # изменения в пакетах могут влиять на API документацию
+      - 'plugins/**'  # изменения в плагинах могут влиять на документацию
+      - 'typedoc.json'  # изменения в конфигурации TypeDoc
+      - 'package.json'  # изменения в зависимостях
+  # trigger deployment when a new release is published
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # fetch all commits to get last updated time or other git log info
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # choose node.js version to use
+          node-version: 20
+          # cache deps for pnpm
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # Build packages, generate API docs, and build VitePress site
+      - name: Build documentation
+        run: pnpm run docs:build
+
+      - name: Add nojekyll
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+        run: |-
+          > docs/.vitepress/dist/.nojekyll
+
+      # please check out the docs of the workflow for more details
+      # @see https://github.com/crazy-max/ghaction-github-pages
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          # deploy to gh-pages branch
+          target_branch: gh-pages
+          # deploy the default output dir of VitePress
+          build_dir: docs/.vitepress/dist
+        env:
+          # @see https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

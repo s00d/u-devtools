@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { ClientApi } from '@u-devtools/core';
-import { UTabButtons } from '@u-devtools/ui';
+import { computed } from 'vue';
+import { useApi } from '../context';
+import { UTabs, UButton, UIcon, UPluginLayout } from '@u-devtools/ui';
 import { useVirtualRouter } from '../composables/useVirtualRouter';
 import ComponentsTab from './tabs/ComponentsTab.vue';
 import PiniaTab from './tabs/PiniaTab.vue';
@@ -9,7 +9,7 @@ import RouterTab from './tabs/RouterTab.vue';
 import TimelineTab from './tabs/TimelineTab.vue';
 import type { VirtualRoute } from '../types';
 
-const props = defineProps<{ api: ClientApi }>();
+const api = useApi();
 
 const routes: VirtualRoute[] = [
   {
@@ -42,29 +42,32 @@ const router = useVirtualRouter(routes, '/components');
 
 const tabNames = computed(() => routes.map((r) => r.name));
 const currentRoute = computed(() => router.currentRoute.value);
+const currentTabName = computed(() => currentRoute.value?.name || 'Components');
+
+const handleTabChange = (name: string) => {
+  const route = routes.find((r) => r.name === name);
+  if (route) router.push(route.path);
+};
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-gray-900">
-    <!-- Tabs -->
-    <div class="flex-none border-b border-gray-700 bg-gray-800">
-      <UTabButtons
-        :items="tabNames"
-        :model-value="currentRoute?.name || 'Components'"
-        @update:model-value="(name) => {
-          const route = routes.find(r => r.name === name);
-          if (route) router.push(route.path);
-        }"
-      />
-    </div>
+  <UPluginLayout title="Vue Inspector" icon="Cube">
+    <template #toolbar-left>
+      <div class="flex items-center gap-2">
+        <div class="h-4 w-px bg-gray-700"></div>
+        <UTabs
+          :items="tabNames"
+          :model-value="currentTabName"
+          :max-visible="5"
+          @update:model-value="handleTabChange"
+        />
+      </div>
+    </template>
 
     <!-- Tab Content -->
-    <div class="flex-1 overflow-hidden">
-      <component
-        v-if="router.currentComponent.value"
-        :is="router.currentComponent.value"
-        :api="api"
-      />
-    </div>
-  </div>
+    <component
+      v-if="router.currentComponent.value"
+      :is="router.currentComponent.value"
+    />
+  </UPluginLayout>
 </template>

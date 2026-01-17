@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { tv } from 'tailwind-variants';
 
 interface Option {
   label: string;
   value: string;
 }
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue?: string;
     options?: Option[];
@@ -25,24 +25,26 @@ defineEmits<{
   change: [event: Event];
 }>();
 
-const sizeClasses = computed(() => {
-  const sizes = {
-    xs: 'px-2 py-0.5 text-xs',
-    sm: 'px-2.5 py-1 text-xs',
-    md: 'px-3 py-1.5 text-sm',
-    lg: 'px-4 py-2 text-base',
-    xl: 'px-5 py-2.5 text-lg',
-  };
-  return sizes[props.size];
+const select = tv({
+  base: 'w-full border border-gray-600 rounded focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 bg-gray-800 text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed',
+  variants: {
+    size: {
+      xs: 'px-2 py-0.5 text-xs',
+      sm: 'px-2.5 py-1 text-xs',
+      md: 'px-3 py-1.5 text-sm',
+      lg: 'px-4 py-2 text-base',
+      xl: 'px-5 py-2.5 text-lg',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
 });
 </script>
 
 <template>
   <select
-    :class="[
-      'w-full border border-gray-600 rounded focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 bg-gray-800 text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed',
-      sizeClasses,
-    ]"
+    :class="select({ size })"
     :value="modelValue"
     :disabled="disabled"
     @change="

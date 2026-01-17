@@ -1,11 +1,13 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { AppBridge } from '@u-devtools/core';
+import { useBridge } from '../context';
 import type { CustomInspectorNode, CustomInspectorState } from '../types';
 
 /**
  * Composable for Pinia stores functionality
  */
 export function usePiniaStores() {
+  const bridge = useBridge();
+  
   const storesTree = ref<CustomInspectorNode[]>([]);
   const selectedStoreId = ref<string>('');
   const storeState = ref<Record<string, CustomInspectorState[]>>({});
@@ -14,8 +16,6 @@ export function usePiniaStores() {
   const expandedNodes = ref<Set<string>>(new Set());
   const expandedStateNodes = ref<Set<string>>(new Set());
   const isLoading = ref(false);
-
-  const bridge = new AppBridge('vue-inspector');
 
   // Filtered stores tree
   const filteredStoresTree = computed(() => {
@@ -136,7 +136,10 @@ export function usePiniaStores() {
     value: unknown;
   }) => {
     try {
-      bridge.send('inspector:editPiniaState', payload);
+      bridge.send('inspector:editPiniaState', {
+        ...payload,
+        path: payload.path.join('.'),
+      });
     } catch (_e) {
       // Ignore if bridge is closed
     }

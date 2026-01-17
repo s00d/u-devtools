@@ -1,7 +1,7 @@
 ---
 to: <%= projectName %>/vite.config.ts
 ---
-import { createViteConfig } from '@u-devtools/core/vite.config.base';
+import { createViteConfig } from '@u-devtools/core/vite/vite.config.base';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -13,19 +13,14 @@ export default createViteConfig({
     index: 'src/index.ts',
     client: 'src/client.ts',
     app: 'src/app.ts',
+    server: 'src/server.ts',
   },
   dir: __dirname,
   clearScreen: false,
   useVue: true,
-  formats: ['es'],
-  fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
   dtsOptions: {
     insertTypesEntry: true,
-    exclude: ['src/ui/**/*.vue'],
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../../packages/core/src',
-    '@u-devtools/ui': '../../packages/ui/src',
+    exclude: ['src/ui/**/*.vue', 'src/views/**/*.vue'],
   },
 });
 

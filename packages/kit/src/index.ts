@@ -1,81 +1,81 @@
-import type { DevToolsPlugin, RpcServerInterface, ServerContext } from '@u-devtools/core';
-import type { PluginOption } from 'vite';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve, basename } from 'node:path';
+import type { AppBridge, OverlayContext } from '@u-devtools/core';
+import type { Component } from 'vue';
 
-export interface DefinePluginOptions {
-  name: string;
+// Re-export Web Component utilities (browser-safe, no Node.js dependencies)
+export { defineVueElement, defineVueElements, type DefineElementOptions } from './web-components';
+
+// Re-export context factory (framework-agnostic, Module Scope Singleton)
+export { createDevToolsContext, type DevToolsContext } from './context';
+
+// Re-export vanilla adapter (pure JS, no framework dependencies)
+// For framework-specific adapters, import from:
+// '@u-devtools/kit/vue', '@u-devtools/kit/react', '@u-devtools/kit/solid', 
+// '@u-devtools/kit/svelte', '@u-devtools/kit/lit'
+export * from './vanilla';
+
+// Toast interface is defined in context.ts
+// For implementation, import createToast from '@u-devtools/overlay'
+export type { Toast } from './context';
+
+// definePlugin is NOT exported from index.ts to avoid bundling Node.js APIs (node:url, node:path) in browser builds
+// Import directly from '@u-devtools/kit/define-plugin' in server-side code (Vite plugin context)
+// Example: import { definePlugin } from '@u-devtools/kit/define-plugin';
+
+// App Plugin Definition
+export interface AppContext {
+  bridge: AppBridge<any>;
   /**
-   * Обязательно передавайте import.meta.url, чтобы мы могли вычислить пути
+   * ClientApi is only available in client context.
+   * In app context (overlay), api is not provided as it runs on the page.
+   * For app plugins, use module context (Module Singleton) to store the bridge.
    */
-  root: string;
-
+  api?: never;
   /**
-   * Относительный путь к клиентскому файлу (без расширения или с ним)
-   * @example './client'
+   * Registers a cleanup function that will be called when the plugin is removed
+   * (e.g., during HMR or overlay unmounting).
    */
-  client?: string;
+  onCleanup: (fn: () => void) => void;
+}
 
+export interface AppPluginDefinition {
   /**
-   * Относительный путь к файлу приложения (без расширения или с ним)
-   * @example './app'
+   * Vue component that will be rendered in the plugins layer (on top of the page)
    */
-  app?: string;
-
-  meta?: DevToolsPlugin['meta'];
-
-  setupServer?: (rpc: RpcServerInterface, ctx: ServerContext) => void;
-
-  vitePlugins?: (() => PluginOption | PluginOption[])[];
-
+  component?: Component;
+  
   /**
-   * Принудительно использовать продакшн-пути (dist/file.js) даже в dev-режиме.
-   * Полезно для отладки собранной версии плагина.
-   * @default false
+   * Setup function (executed once on startup)
+   * Here you can attach global listeners or register menu items
    */
-  useDist?: boolean;
+  setup?: (context: AppContext) => void | Promise<void>;
+  
+  /**
+   * Declarative menu (required for plugins with UI in overlay)
+   */
+  menu?: {
+    id: string;
+    label: string;
+    icon: string;
+    order?: number;
+    action?: string | ((ctx: OverlayContext) => void);
+  };
+  
+  /**
+   * Declarative commands
+   */
+  commands?: Array<{
+    id: string;
+    label: string;
+    icon?: string;
+    shortcut?: string[];
+    action: (ctx: AppContext) => void | Promise<void>;
+  }>;
 }
 
 /**
- * Умная фабрика для создания плагинов.
- * Автоматически разруливает пути для Dev (.ts) и Prod (.js) режимов.
+ * Declarative definition of a plugin part that works in the page context
  */
-export function definePlugin(options: DefinePluginOptions): DevToolsPlugin {
-  const { root, client, app, useDist, ...rest } = options;
-
-  // Конвертируем URL файла в путь файловой системы
-  const __filename = fileURLToPath(root);
-  const __dirname = dirname(__filename);
-
-  // Определяем режим по расширению текущего файла (index.ts или index.js)
-  const isDev = __filename.endsWith('.ts');
-
-  // Если включен useDist, мы принудительно используем .js, иначе как обычно
-  const targetExt = (isDev && !useDist) ? '.ts' : '.js';
-
-  // Хелпер для формирования абсолютного пути
-  const resolvePath = (relativePath: string) => {
-    // Убираем расширение, если пользователь его случайно написал
-    const cleanPath = relativePath.replace(/\.(ts|js)$/, '');
-
-    let baseDir = __dirname;
-
-    // МАГИЯ: Если мы в dev (src/*.ts), но хотим dist:
-    // Пытаемся выйти из папки 'src' и зайти в 'dist'
-    if (isDev && useDist) {
-      // Проверяем, что мы действительно в папке src
-      if (basename(baseDir) === 'src') {
-        // Поднимаемся на уровень вверх и идем в dist
-        baseDir = resolve(baseDir, '../dist');
-      }
-    }
-
-    return resolve(baseDir, cleanPath + targetExt);
-  };
-
-  return {
-    ...rest,
-    clientPath: client ? resolvePath(client) : undefined,
-    appPath: app ? resolvePath(app) : undefined,
-  };
+export function defineApp(def: AppPluginDefinition) {
+  return def;
 }
+

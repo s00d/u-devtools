@@ -52,9 +52,15 @@ export function useDevToolsState() {
     // Обрабатываем команды open/close/toggle и отправляем state-changed
     controlChannel = new BroadcastChannel('u-devtools:control');
     controlChannel.addEventListener('message', (e) => {
-      const { action, type } = e.data || {};
+      const { action, type, source } = e.data || {};
 
-      // Игнорируем сообщения state-changed, чтобы избежать циклов
+      // Игнорируем свои же сообщения, чтобы избежать бесконечного цикла
+      if (source === 'overlay') {
+        return;
+      }
+
+      // Игнорируем сообщения state-changed и state-response от других источников
+      // (они обрабатываются через devtools.onStateChange)
       if (type === 'u-devtools:state-changed' || type === 'u-devtools:state-response') {
         return;
       }
@@ -66,14 +72,22 @@ export function useDevToolsState() {
         state.value.isOpen = true;
         // Отправляем уведомление об изменении состояния только если оно изменилось
         if (!wasOpen) {
-          controlChannel.postMessage({ type: 'u-devtools:state-changed', isOpen: true });
+          controlChannel.postMessage({
+            type: 'u-devtools:state-changed',
+            isOpen: true,
+            source: 'overlay',
+          });
         }
       } else if (action === 'close') {
         const wasOpen = state.value.isOpen;
         state.value.isOpen = false;
         // Отправляем уведомление об изменении состояния только если оно изменилось
         if (wasOpen) {
-          controlChannel.postMessage({ type: 'u-devtools:state-changed', isOpen: false });
+          controlChannel.postMessage({
+            type: 'u-devtools:state-changed',
+            isOpen: false,
+            source: 'overlay',
+          });
         }
       } else if (action === 'toggle') {
         const wasOpen = state.value.isOpen;
@@ -83,6 +97,7 @@ export function useDevToolsState() {
           controlChannel.postMessage({
             type: 'u-devtools:state-changed',
             isOpen: state.value.isOpen,
+            source: 'overlay',
           });
         }
       } else if (action === 'get-state') {
@@ -90,6 +105,7 @@ export function useDevToolsState() {
         controlChannel.postMessage({
           type: 'u-devtools:state-response',
           isOpen: state.value.isOpen,
+          source: 'overlay',
         });
       }
     });

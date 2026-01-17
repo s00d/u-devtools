@@ -1,5 +1,8 @@
-import type { PluginClientInstance } from '@u-devtools/core';
-import { createApp } from 'vue';
+import type { PluginClientInstance, AppBridge } from '@u-devtools/core';
+import { createApp, h } from 'vue';
+import { createToast } from '@u-devtools/overlay';
+import { setupDevTools } from './context';
+import type { NetworkProtocol } from './types';
 import NetworkPanel from './ui/NetworkPanel.vue';
 
 const clearSignal = { value: () => {} };
@@ -8,7 +11,7 @@ const plugin: PluginClientInstance = {
   name: 'Network',
   icon: 'GlobeAlt',
 
-  // --- ДОБАВЛЯЕМ НАСТРОЙКИ ---
+  // --- ADD SETTINGS ---
   settings: {
     preserveLog: {
       label: 'Preserve Log',
@@ -34,15 +37,24 @@ const plugin: PluginClientInstance = {
     },
   ],
 
-  renderMain(el, api) {
-    const app = createApp(NetworkPanel, {
-      api, // Передаем API, чтобы компонент мог читать настройки
+  renderMain(el, api, { bridge }) {
+    // Приводим тип bridge к нужному протоколу
+    const typedBridge = bridge as AppBridge<NetworkProtocol>;
+    
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge: typedBridge, toast: createToast() });
+    
+    const app = createApp(() => h(NetworkPanel, {
       onRegisterClear: (fn: () => void) => {
         clearSignal.value = fn;
       },
-    });
+    }));
+    
     app.mount(el);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      typedBridge.close();
+    };
   },
 };
 

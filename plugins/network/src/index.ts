@@ -1,17 +1,21 @@
-import { definePlugin } from '@u-devtools/kit';
+import { definePlugin } from '@u-devtools/kit/define-plugin';
 
-// Метаданные определяем статически (из package.json во время сборки)
+// Metadata defined statically (from package.json during build)
 const meta = {
   name: '@u-devtools/plugin-network',
   version: '0.1.0',
   description: 'Network logger plugin for Universal DevTools',
 };
 
-export const networkPlugin = () =>
+const networkPlugin = () =>
   definePlugin({
-    name: 'Network',
+    name: 'network',
     root: import.meta.url,
     client: './client',
     app: './app',
+    server: null, // No server file
     meta,
   });
+
+export const plugin = networkPlugin;
+export { networkPlugin };

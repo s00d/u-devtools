@@ -12,13 +12,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "jsx": "preserve",
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@u-devtools/core": ["../../packages/core/src"],
-      "@u-devtools/ui": ["../../packages/ui/src"],
-      "@u-devtools/kit": ["../../packages/kit/src"]
-    }
+    "types": ["vite/client"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

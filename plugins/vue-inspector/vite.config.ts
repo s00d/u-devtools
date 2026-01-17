@@ -10,21 +10,16 @@ export default createViteConfig({
     index: 'src/index.ts',
     client: 'src/client.ts',
     app: 'src/app.ts',
+    server: 'src/server.ts',
   },
   dir: __dirname,
   clearScreen: false,
   useVue: true,
-  formats: ['es'],
-  fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
   dtsOptions: {
     insertTypesEntry: true,
     exclude: ['src/ui/**/*.vue'],
     rollupTypes: true,
     copyDtsFiles: false,
-  },
-  resolveAlias: {
-    '@u-devtools/core': '../../packages/core/src',
-    '@u-devtools/ui': '../../packages/ui/src',
   },
   external: ['@u-devtools/kit', 'vite-plugin-vue-inspector'],
 });

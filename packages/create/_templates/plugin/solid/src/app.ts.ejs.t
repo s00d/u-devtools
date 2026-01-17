@@ -1,8 +1,10 @@
 ---
 to: <%= projectName %>/src/app.ts
 ---
-<% if (features.includes('app-bridge')) { -%>
-import { AppBridge<% if (features.includes('overlay')) { %>, registerMenuItem<% } %> } from '@u-devtools/core';
+import { defineApp } from '@u-devtools/kit';
+<% if (features.includes('overlay')) { -%>
+import { registerMenuItem } from '@u-devtools/core';
+<% } -%>
 
 <%
   const pluginKebab = packageName
@@ -11,45 +13,43 @@ import { AppBridge<% if (features.includes('overlay')) { %>, registerMenuItem<% 
     .replace(/@u-devtools\/plugin-/, '');
 -%>
 
-const bridge = new AppBridge('<%= pluginKebab %>');
+export default defineApp({
+  component: undefined,
 
-console.log('<%= pluginName %> loaded in app context');
+  // Initialization logic
+  setup({ bridge, onCleanup }) {
+    console.log('<%= pluginName %> loaded in app context');
 
-// Example: Send data to Client
-bridge.send('<%= pluginKebab %>:ready', { message: 'App script loaded' });
+    // Example: Send data to Client
+    bridge.send('<%= pluginKebab %>:ready', { message: 'App script loaded' });
 
-// Example: Listen for events from Client
-bridge.on('<%= pluginKebab %>:action', (data: unknown) => {
-  console.log('Received action from Client:', data);
-  // You can perform DOM operations, network interception, etc. here
-});
+    // Example: Listen for events from Client
+    bridge.on('<%= pluginKebab %>:action', (data: unknown) => {
+      console.log('Received action from Client:', data);
+      // You can perform DOM operations, network interception, etc. here
+    });
 
-<% if (features.includes('overlay')) { -%>
-// Example: Register overlay menu item
-registerMenuItem({
-  id: '<%= pluginKebab %>:quick-action',
-  label: 'Quick Action',
-  icon: 'Bolt',
-  order: 10,
-  onClick: (ctx) => {
-    if (!ctx.isOpen) {
-      ctx.open();
-    }
-    ctx.switchPlugin('<%= pluginName %>');
-    bridge.send('<%= pluginKebab %>:quick-action', { timestamp: Date.now() });
+    <% if (features.includes('overlay')) { -%>
+    // Example: Register overlay menu item
+    registerMenuItem({
+      id: '<%= pluginKebab %>:quick-action',
+      label: 'Quick Action',
+      icon: 'Bolt',
+      order: 10,
+      onClick: (ctx) => {
+        if (!ctx.isOpen) {
+          ctx.open();
+        }
+        ctx.switchPlugin('<%= pluginName %>');
+        bridge.send('<%= pluginKebab %>:quick-action', { timestamp: Date.now() });
+      },
+    });
+    <% } -%>
+
+    // Cleanup when plugin is removed
+    onCleanup(() => {
+      console.log('<%= pluginName %> cleanup');
+      // Here you can remove event listeners, timers, etc.
+    });
   },
 });
-<% } -%>
-
-// HMR cleanup (REQUIRED)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hot = (import.meta as any).hot;
-if (hot?.dispose) {
-  hot.dispose(() => {
-    bridge.close();
-  });
-}
-<% } else { -%>
-// App context script (empty - app-bridge feature not selected)
-<% } -%>
-

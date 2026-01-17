@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue';
+import { tv } from 'tailwind-variants';
 import UIcon from './UIcon.vue';
 
 const props = withDefaults(
@@ -37,20 +38,52 @@ const emit = defineEmits<{
 
 const slots = useSlots();
 
-const sizeClasses = computed(() => {
-  const sizes = {
-    xs: 'px-2 py-0.5 text-xs',
-    sm: 'px-2.5 py-1 text-xs',
-    md: 'px-3 py-1.5 text-sm',
-    lg: 'px-4 py-2 text-base',
-    xl: 'px-5 py-2.5 text-lg',
-  };
-  return sizes[props.size];
+const input = tv({
+  base: 'w-full border border-transparent rounded-lg transition-all duration-200 bg-black/20 text-gray-200 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500/50 focus:bg-black/40 hover:bg-black/40 disabled:opacity-50 disabled:cursor-not-allowed',
+  variants: {
+    size: {
+      xs: 'px-2 py-0.5 text-xs',
+      sm: 'px-2.5 py-1 text-xs',
+      md: 'px-3 py-1.5 text-sm',
+      lg: 'px-4 py-2 text-base',
+      xl: 'px-5 py-2.5 text-lg',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
 });
 
-const inputPaddingClasses = computed(() => {
-  // Padding управляется через классы в template (pl-8/pr-8 для prefix/suffix)
-  return '';
+const prependAppend = tv({
+  base: 'flex items-center border border-white/10 bg-black/30 text-gray-200',
+  variants: {
+    size: {
+      xs: 'text-xs',
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-base',
+      xl: 'text-lg',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+});
+
+const inputIcon = tv({
+  base: 'text-gray-400',
+  variants: {
+    size: {
+      xs: 'w-4 h-4',
+      sm: 'w-4 h-4',
+      md: 'w-4 h-4',
+      lg: 'w-5 h-5',
+      xl: 'w-5 h-5',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
 });
 
 const hasPrefix = computed(() => props.prefix || props.prefixIcon || !!slots.prefix);
@@ -64,28 +97,6 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
   emit('keydown', e);
 };
-
-const prependSizeClasses = computed(() => {
-  const sizes = {
-    xs: 'text-xs',
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base',
-    xl: 'text-lg',
-  };
-  return sizes[props.size];
-});
-
-const appendSizeClasses = computed(() => {
-  const sizes = {
-    xs: 'text-xs',
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base',
-    xl: 'text-lg',
-  };
-  return sizes[props.size];
-});
 
 const inputBorderRadiusClasses = computed(() => {
   const classes: string[] = [];
@@ -112,8 +123,7 @@ const inputBorderRadiusClasses = computed(() => {
       <!-- Prepend (внешний текст слева) -->
     <div
       v-if="hasPrepend"
-      class="flex items-center px-3 border border-r-0 rounded-l border-white/10 bg-black/30 text-gray-200"
-      :class="prependSizeClasses"
+      :class="[prependAppend({ size }), 'px-3 border-r-0 rounded-l']"
     >
       <slot name="prepend">
         {{ prepend }}
@@ -132,7 +142,7 @@ const inputBorderRadiusClasses = computed(() => {
         }"
       >
         <slot name="prefix">
-          <UIcon v-if="prefixIcon" :name="prefixIcon" :class="size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5'" />
+          <UIcon v-if="prefixIcon" :name="prefixIcon" :class="inputIcon({ size })" />
           <span v-else-if="prefix" class="text-xs">{{ prefix }}</span>
         </slot>
       </div>
@@ -145,13 +155,7 @@ const inputBorderRadiusClasses = computed(() => {
         :disabled="disabled"
         :readonly="readonly"
         :class="[
-          'w-full border border-transparent rounded-lg transition-all duration-200',
-          'bg-black/20 text-gray-200',
-          'focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500/50 focus:bg-black/40',
-          'hover:bg-black/40',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          sizeClasses,
-          inputPaddingClasses,
+          input({ size }),
           inputBorderRadiusClasses,
           hasPrefix ? (!hasPrepend ? 'pl-8' : 'pl-10') : '',
           hasSuffix ? (!hasAppend ? 'pr-8' : 'pr-10') : '',
@@ -171,7 +175,7 @@ const inputBorderRadiusClasses = computed(() => {
         }"
       >
         <slot name="suffix">
-          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="[size === 'xs' || size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5', 'text-gray-400']" />
+          <UIcon v-if="suffixIcon" :name="suffixIcon" :class="inputIcon({ size })" />
           <span v-else-if="suffix" class="text-xs text-gray-400">{{ suffix }}</span>
         </slot>
       </div>
@@ -180,8 +184,7 @@ const inputBorderRadiusClasses = computed(() => {
     <!-- Append (внешний текст справа) -->
     <div
       v-if="hasAppend"
-      class="flex items-center px-3 border border-l-0 rounded-r border-white/10 bg-black/30 text-gray-200"
-      :class="appendSizeClasses"
+      :class="[prependAppend({ size }), 'px-3 border-l-0 rounded-r']"
     >
       <slot name="append">
         {{ append }}

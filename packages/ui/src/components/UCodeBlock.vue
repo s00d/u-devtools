@@ -22,7 +22,7 @@ const isInitializing = ref(false);
 const isHighlighting = ref(false);
 const slotContent = ref('');
 
-// Нормализация имени языка для Shiki
+// Normalize language name for Shiki
 const normalizedLanguage = computed(() => {
   if (!props.language) return 'text';
 
@@ -58,7 +58,7 @@ const normalizedLanguage = computed(() => {
     diff: 'diff',
     docker: 'dockerfile',
     dockerfile: 'dockerfile',
-    svg: 'xml', // SVG использует XML подсветку
+    svg: 'xml', // SVG uses XML highlighting
   };
 
   return aliases[lang] || lang;
@@ -68,14 +68,14 @@ const needsHighlighting = computed(() => {
   return props.language && props.language !== 'text' && normalizedLanguage.value !== 'text';
 });
 
-// Отслеживание содержимого слота
+// Track slot content
 watchEffect(() => {
   if (slotCodeRef.value) {
     slotContent.value = slotCodeRef.value.textContent || '';
   }
 });
 
-// Инициализация highlighter
+// Initialize highlighter
 const initHighlighter = async () => {
   if (highlighter.value || isInitializing.value) return;
 
@@ -134,12 +134,12 @@ const highlight = async () => {
   isHighlighting.value = true;
   await nextTick();
 
-  // Получаем код из prop или из слота
+  // Get code from prop or from slot
   let code = '';
   if (props.code) {
     code = props.code;
   } else {
-    // Обновляем содержимое слота перед чтением
+    // Update slot content before reading
     if (slotCodeRef.value) {
       slotContent.value = slotCodeRef.value.textContent || '';
     }
@@ -154,12 +154,12 @@ const highlight = async () => {
 
   const lang = normalizedLanguage.value;
 
-  // Если highlighter не инициализирован, инициализируем его
+  // If highlighter is not initialized, initialize it
   if (!highlighter.value) {
     await initHighlighter();
   }
 
-  // Если язык text или highlighter все еще не готов, показываем обычный текст
+  // If language is text or highlighter is still not ready, show plain text
   if (lang === 'text' || !highlighter.value) {
     highlightedCode.value = code;
     isHighlighting.value = false;
@@ -167,7 +167,7 @@ const highlight = async () => {
   }
 
   try {
-    // Проверяем, что язык загружен
+    // Check that language is loaded
     const loadedLangs = highlighter.value.getLoadedLanguages();
     if (!loadedLangs.includes(lang)) {
       console.warn(`[UCodeBlock] Language "${lang}" is not loaded. Available:`, loadedLangs);
@@ -180,8 +180,14 @@ const highlight = async () => {
       lang,
       theme: props.theme,
     });
-    // Убираем language-text класс, который Shiki может добавить, и заменяем на правильный
-    highlightedCode.value = html.replace(/language-text/g, `language-${lang}`);
+    // Remove language-text class that Shiki may add, and replace with correct one
+    // Also remove white background from inline styles
+    highlightedCode.value = html
+      .replace(/language-text/g, `language-${lang}`)
+      .replace(/background[:\s]+#fff[^;]*;?/gi, '')
+      .replace(/background[:\s]+white[^;]*;?/gi, '')
+      .replace(/background[:\s]+rgb\(255,\s*255,\s*255\)[^;]*;?/gi, '')
+      .replace(/background[:\s]+rgba\(255,\s*255,\s*255[^)]*\)[^;]*;?/gi, '');
   } catch (e) {
     console.warn(`[UCodeBlock] Failed to highlight code for language "${lang}":`, e);
     highlightedCode.value = code;
@@ -196,7 +202,7 @@ const showHighlighted = computed(
 );
 
 onMounted(async () => {
-  // Ждем, чтобы slot успел отрендериться
+  // Wait for slot to render
   await nextTick();
   if (needsHighlighting.value) {
     await initHighlighter();
@@ -204,7 +210,7 @@ onMounted(async () => {
   await highlight();
 });
 
-// Отслеживаем изменения в props и содержимом слота
+// Track changes in props and slot content
 watch(
   () => [props.language, props.code, props.theme, slotContent.value],
   async () => {
@@ -252,7 +258,8 @@ watch(
     <!-- Highlighted code -->
     <div
       v-else-if="showHighlighted"
-      class="p-4 overflow-auto flex-1 min-h-0 [&_pre]:bg-transparent [&_pre]:m-0 [&_pre]:p-0 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed [&_pre]:overflow-visible [&_code]:block [&_code]:w-full [&_code]:bg-transparent [&_code]:p-0 [&_code]:m-0 [&_code]:font-inherit [&_code]:text-inherit [&_code]:leading-inherit"
+      class="p-4 overflow-auto flex-1 min-h-0 [&_pre]:bg-transparent! [&_pre]:m-0 [&_pre]:p-0 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed [&_pre]:overflow-visible [&_code]:block [&_code]:w-full [&_code]:bg-transparent! [&_code]:p-0 [&_code]:m-0 [&_code]:font-inherit [&_code]:text-inherit [&_code]:leading-inherit [&_*]:bg-transparent! [&_*]:!bg-transparent"
+      style="background: transparent !important;"
       v-html="highlightedCode"
     />
     

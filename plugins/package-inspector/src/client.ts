@@ -1,15 +1,23 @@
-import type { PluginClientInstance } from '@u-devtools/core';
+import type { PluginClientInstance, AppBridge } from '@u-devtools/core';
 import { createApp } from 'vue';
+import { createToast } from '@u-devtools/overlay';
+import { setupDevTools } from './context';
 import PackagePanel from './ui/PackagePanel.vue';
 
 const plugin: PluginClientInstance = {
   name: 'Package Inspector',
   icon: 'Cube',
 
-  renderMain(container, api) {
-    const app = createApp(PackagePanel, { api });
+  renderMain(container, api, { bridge }) {
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge, toast: createToast() });
+    
+    const app = createApp(PackagePanel);
     app.mount(container);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      bridge.close();
+    };
   },
 };
 

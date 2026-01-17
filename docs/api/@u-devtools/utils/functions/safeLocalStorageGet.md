@@ -1,0 +1,32 @@
+[**Universal DevTools Kit SDK**](../../../README.md)
+
+***
+
+[Universal DevTools Kit SDK](../../../packages.md) / [@u-devtools/utils](../README.md) / safeLocalStorageGet
+
+# Function: safeLocalStorageGet()
+
+> **safeLocalStorageGet**\<`T`\>(`key`, `defaultValue`): `T`
+
+Defined in: [json.ts:38](https://github.com/s00d/u-devtools/blob/4fad699ef961c28a06cb020d0eeb977e28429dd0/packages/utils/src/json.ts#L38)
+
+Safely parses a JSON string from localStorage.
+
+## Type Parameters
+
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` | `unknown` |
+
+## Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `key` | `string` | localStorage key |
+| `defaultValue` | `T` | Default value to return if key doesn't exist or parsing fails |
+
+## Returns
+
+`T`
+
+Parsed object or default value

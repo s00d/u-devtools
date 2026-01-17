@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { tv } from 'tailwind-variants';
 import * as OutlineIcons from '@heroicons/vue/24/outline';
 import * as SolidIcons from '@heroicons/vue/24/solid';
 
@@ -10,6 +11,11 @@ const props = defineProps<{
 }>();
 
 const iconComponent = computed(() => {
+  // Проверяем, что name передан и не пустой
+  if (!props.name || typeof props.name !== 'string') {
+    return OutlineIcons.QuestionMarkCircleIcon;
+  }
+
   // Нормализуем имя: 'home' -> 'HomeIcon', 'HomeIcon' -> 'HomeIcon'
   let normalizedName = props.name;
 
@@ -26,18 +32,22 @@ const iconComponent = computed(() => {
   return source[normalizedName] || OutlineIcons.QuestionMarkCircleIcon;
 });
 
+const icon = tv({
+  base: 'inline-block flex-shrink-0',
+});
+
 const sizeClass = computed(() => {
-  if (!props.size) return 'w-5 h-5';
+  if (!props.size) return icon() + ' w-5 h-5';
   // Если передан класс tailwind (w-6 h-6), возвращаем как есть
-  if (props.size.includes('w-')) return props.size;
+  if (props.size.includes('w-')) return icon() + ' ' + props.size;
   // Иначе интерпретируем как px (для обратной совместимости)
-  return `w-[${props.size}] h-[${props.size}]`;
+  return icon() + ` w-[${props.size}] h-[${props.size}]`;
 });
 </script>
 
 <template>
   <component 
     :is="iconComponent" 
-    :class="[sizeClass, 'inline-block flex-shrink-0']" 
+    :class="sizeClass" 
   />
 </template>

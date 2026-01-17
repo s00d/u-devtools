@@ -1,6 +1,11 @@
-import type { PluginClientInstance } from '@u-devtools/core';
-import { createApp } from 'vue';
+import type { PluginClientInstance, AppBridge } from '@u-devtools/core';
+import { createApp, h } from 'vue';
+import { createToast } from '@u-devtools/overlay';
+import { setupDevTools } from './context';
+import type { ConsoleProtocol } from './types';
 import ConsolePanel from './ui/ConsolePanel.vue';
+
+const clearSignal = { value: () => {} };
 
 const plugin: PluginClientInstance = {
   name: 'Console',
@@ -17,18 +22,25 @@ const plugin: PluginClientInstance = {
     },
   ],
 
-  renderMain(container, api) {
-    const app = createApp(ConsolePanel, {
-      api,
+  renderMain(container, api, { bridge }) {
+    // Приводим тип bridge к нужному протоколу
+    const typedBridge = bridge as AppBridge<ConsoleProtocol>;
+    
+    // Инициализируем контекст (один раз!)
+    setupDevTools({ api, bridge: typedBridge, toast: createToast() });
+    
+    const app = createApp(() => h(ConsolePanel, {
       onRegisterClear: (fn: () => void) => {
         clearSignal.value = fn;
       },
-    });
+    }));
+    
     app.mount(container);
-    return () => app.unmount();
+    return () => {
+      app.unmount();
+      typedBridge.close();
+    };
   },
 };
-
-const clearSignal = { value: () => {} };
 
 export default plugin;

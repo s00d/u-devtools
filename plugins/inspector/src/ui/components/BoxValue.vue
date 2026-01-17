@@ -2,8 +2,8 @@
 import { ref, computed, nextTick } from 'vue';
 
 const props = defineProps<{
-  value: string | number; // Значение из computed styles (обычно "10px" или "0px")
-  prop: string; // Имя свойства (marginTop)
+  value: string | number | undefined; // Value from computed styles (usually "10px" or "0px", can be undefined)
+  prop: string; // Property name (marginTop)
 }>();
 
 const emit = defineEmits<(e: 'update', payload: { prop: string; value: string }) => void>();
@@ -12,18 +12,23 @@ const isEditing = ref(false);
 const inputRef = ref<HTMLInputElement | null>(null);
 const tempValue = ref('');
 
-// Форматируем для отображения: "0px" -> "-" для чистоты
+// Format for display: "0px" -> "-" for cleanliness
 const displayValue = computed(() => {
+  if (props.value === undefined || props.value === null) return '-';
   const v = String(props.value);
   if (!v || v === '0px' || v === '0') return '-';
-  // Округляем дробные пиксели для красоты (20.454px -> 20.45)
+  // Round fractional pixels for beauty (20.454px -> 20.45)
   return v.replace(/(\d+\.\d{2})\d+px/, '$1');
 });
 
 const startEdit = async () => {
-  // При редактировании показываем реальное значение, либо пустую строку если 0
-  const val = String(props.value);
-  tempValue.value = val === '0px' || val === '-' || val === '0' ? '' : val;
+  // When editing show real value, or empty string if 0 or undefined
+  if (props.value === undefined || props.value === null) {
+    tempValue.value = '';
+  } else {
+    const val = String(props.value);
+    tempValue.value = val === '0px' || val === '-' || val === '0' ? '' : val;
+  }
   isEditing.value = true;
   await nextTick();
   inputRef.value?.focus();
@@ -35,24 +40,25 @@ const save = () => {
 
   let val = tempValue.value.trim();
 
-  // Умная обработка единиц измерения
+  // Smart unit handling
   if (val !== '') {
-    // Если ввели просто число (не 0), добавляем px
+    // If entered just number (not 0), add px
     if (!Number.isNaN(Number(val)) && val !== '0') {
       val += 'px';
     }
-    // Если ввели 0, тоже добавляем px
+    // If entered 0, also add px
     if (val === '0') {
       val = '0px';
     }
-    // Если ввели auto, 50%, inherit и т.д. - оставляем как есть
+    // If entered auto, 50%, inherit etc. - leave as is
   } else {
-    // Если стерли всё, ставим 0px
+    // If cleared everything, set 0px
     val = '0px';
   }
 
-  // Эмитим только если значение изменилось
-  if (val !== String(props.value)) {
+  // Emit only if value changed
+  const currentValue = props.value === undefined || props.value === null ? '' : String(props.value);
+  if (val !== currentValue) {
     emit('update', { prop: props.prop, value: val });
   }
 

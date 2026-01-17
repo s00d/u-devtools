@@ -1,109 +1,124 @@
-import type { RpcMessage } from '@u-devtools/core';
-
-// Генератор ID
-const uuid = () => Math.random().toString(36).substring(2, 15);
+import { HmrTransport, WebSocketTransport, type Transport, validateRpcMessage } from '@u-devtools/core';
+import { extractErrorMessage } from '@u-devtools/utils';
 
 /**
- * КЛИЕНТСКАЯ ЧАСТЬ (Браузер)
- * Работает через import.meta.hot
+ * Client-side RPC implementation (Browser)
+ * Works through import.meta.hot with fallback to WebSocket
+ * Uses Transport abstraction for communication
  */
 export class ViteRpcClient {
-  private handlers = new Map<
-    string,
-    { resolve: (value: unknown) => void; reject: (error: Error) => void }
-  >();
-  private eventListeners = new Map<string, Set<(data: unknown) => void>>();
+  private transport: Transport | null = null;
+  private preferredTransport: 'hmr' | 'websocket' = 'hmr';
+  private wsUrl?: string;
 
   constructor(
-    private hot: {
+    hot?: {
       send: (event: string, data: unknown) => void;
       on: (event: string, handler: (data: unknown) => void) => void;
-    }
+      off?: (event: string, handler: (data: unknown) => void) => void;
+    },
+    wsUrl?: string
   ) {
-    if (!hot) throw new Error('Hot Module Replacement is required for DevTools');
+    this.wsUrl = wsUrl || this.getDefaultWsUrl();
 
-    // Слушаем ответы от сервера
-    hot.on('u-devtools:response', (data: unknown) => {
-      const msg = data as RpcMessage;
-      const handler = this.handlers.get(msg.id);
-      if (handler) {
-        if (msg.error) {
-          handler.reject(new Error(String(msg.error)));
-        } else {
-          handler.resolve(msg.payload);
-        }
-        this.handlers.delete(msg.id);
+    // Try to use HMR if available
+    if (hot) {
+      try {
+        this.transport = new HmrTransport(hot);
+        this.preferredTransport = 'hmr';
+      } catch (err) {
+        console.warn('[ViteRpcClient] HMR transport failed, falling back to WebSocket:', err);
+        this.fallbackToWebSocket();
       }
-    });
-
-    // Слушаем события от сервера (push notifications)
-    hot.on('u-devtools:event', (data: unknown) => {
-      const msg = data as RpcMessage;
-      const listeners = this.eventListeners.get(msg.method || '');
-      if (listeners) {
-        for (const fn of listeners) {
-          fn(msg.payload);
-        }
-      }
-    });
-  }
-
-  // Вызов метода на сервере
-  call<T = unknown>(method: string, payload?: unknown): Promise<T> {
-    const id = uuid();
-    return new Promise<T>((resolve, reject) => {
-      this.handlers.set(id, {
-        resolve: resolve as (value: unknown) => void,
-        reject,
-      });
-      // Отправляем запрос через нативный канал Vite
-      this.hot.send('u-devtools:request', { id, method, payload });
-
-      // Таймаут на всякий случай
-      setTimeout(() => {
-        if (this.handlers.has(id)) {
-          this.handlers.delete(id);
-          const error = new Error(`RPC Timeout: ${method}`);
-          console.error('[RPC Timeout]', {
-            method,
-            payload,
-            stack: error.stack,
-            timestamp: new Date().toISOString(),
-          });
-          reject(error);
-        }
-      }, 5000);
-    });
-  }
-
-  // Подписка на события (возвращает функцию для отписки)
-  on(event: string, fn: (data: unknown) => void): () => void {
-    if (!this.eventListeners.has(event)) {
-      this.eventListeners.set(event, new Set());
+    } else {
+      // HMR is not available, use WebSocket
+      this.fallbackToWebSocket();
     }
-    this.eventListeners.get(event)?.add(fn);
-
-    // Возвращаем функцию для отписки
-    return () => {
-      const listeners = this.eventListeners.get(event);
-      if (listeners) {
-        listeners.delete(fn);
-      }
-    };
   }
 
-  // Отписка от событий
+  private getDefaultWsUrl(): string {
+    // Try to determine WebSocket server URL
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host;
+    return `${protocol}//${host}/__u-devtools-ws`;
+  }
+
+  private fallbackToWebSocket() {
+    if (!this.wsUrl) {
+      throw new Error('WebSocket URL is required when HMR is not available');
+    }
+
+    try {
+      this.transport = new WebSocketTransport(this.wsUrl);
+      this.preferredTransport = 'websocket';
+    } catch (err) {
+      throw new Error(`Failed to create WebSocket transport: ${err}`);
+    }
+  }
+
+  /**
+   * Call a method on the server
+   * @param method - Method name to call
+   * @param payload - Optional payload to send
+   * @returns Promise with the method result
+   */
+  call<T = unknown>(method: string, payload?: unknown): Promise<T> {
+    if (!this.transport) {
+      return Promise.reject(new Error('Transport is not initialized'));
+    }
+
+    // If HMR is unavailable and WebSocket is not connected, try to reconnect
+    if (
+      this.preferredTransport === 'websocket' &&
+      this.transport instanceof WebSocketTransport &&
+      !this.transport.isConnected()
+    ) {
+      // Try to reconnect
+      this.fallbackToWebSocket();
+    }
+
+    return this.transport.call<T>(method, payload);
+  }
+
+  /**
+   * Subscribe to events (returns unsubscribe function)
+   * @param event - Event name to subscribe to
+   * @param fn - Event handler function
+   * @returns Function to unsubscribe
+   */
+  on(event: string, fn: (data: unknown) => void): () => void {
+    if (!this.transport) {
+      return () => {};
+    }
+    return this.transport.on(event, fn);
+  }
+
+  /**
+   * Unsubscribe from events
+   * @param event - Event name to unsubscribe from
+   * @param fn - Event handler function to remove
+   */
   off(event: string, fn: (data: unknown) => void) {
-    const listeners = this.eventListeners.get(event);
-    if (listeners) {
-      listeners.delete(fn);
+    if (!this.transport) {
+      return;
+    }
+    this.transport.off(event, fn);
+  }
+
+  /**
+   * Clean up all handlers and subscriptions.
+   * Should be called on HMR dispose to prevent memory leaks.
+   */
+  dispose() {
+    if (this.transport) {
+      this.transport.dispose();
     }
   }
 }
 
 /**
- * СЕРВЕРНАЯ ЧАСТЬ (Node.js)
- * Работает через server.ws
+ * Server-side RPC implementation (Node.js)
+ * Works through server.ws
  */
 export class ViteRpcServer {
   private methods = new Map<string, (payload: unknown) => Promise<unknown> | unknown>();
@@ -117,11 +132,21 @@ export class ViteRpcServer {
       send: (event: string, data: unknown) => void;
     }
   ) {
-    // Слушаем запросы от клиента
+    // Listen for requests from client
     ws.on(
       'u-devtools:request',
       async (data: unknown, client: { send: (event: string, data: unknown) => void }) => {
-        const msg = data as RpcMessage;
+        // Validate RPC message structure using Zod
+        const msg = validateRpcMessage(data);
+        if (!msg) {
+          console.warn('[ViteRpcServer] Invalid RPC message structure:', data);
+          client.send('u-devtools:response', {
+            id: 'unknown',
+            type: 'response',
+            error: 'Invalid RPC message structure',
+          });
+          return;
+        }
         const { id, method, payload } = msg;
 
         try {
@@ -134,14 +159,14 @@ export class ViteRpcServer {
 
           const result = await fn(payload);
 
-          // Отправляем ответ конкретному клиенту
+          // Send response to specific client
           client.send('u-devtools:response', {
             id,
             type: 'response',
             payload: result,
           });
         } catch (e) {
-          const error = e instanceof Error ? e.message : String(e);
+          const error = extractErrorMessage(e);
           client.send('u-devtools:response', {
             id,
             type: 'response',
@@ -152,10 +177,20 @@ export class ViteRpcServer {
     );
   }
 
+  /**
+   * Register a method handler
+   * @param method - Method name to handle
+   * @param fn - Handler function
+   */
   handle(method: string, fn: (payload: unknown) => Promise<unknown> | unknown) {
     this.methods.set(method, fn);
   }
 
+  /**
+   * Broadcast an event to all connected clients
+   * @param event - Event name
+   * @param payload - Optional event payload
+   */
   broadcast(event: string, payload?: unknown) {
     this.ws.send('u-devtools:event', {
       type: 'event',
@@ -164,10 +199,18 @@ export class ViteRpcServer {
     });
   }
 
+  /**
+   * Get the number of registered methods
+   * @returns Number of registered methods
+   */
   getMethodsCount(): number {
     return this.methods.size;
   }
 
+  /**
+   * Get list of all registered method names
+   * @returns Array of method names
+   */
   getMethods(): string[] {
     return Array.from(this.methods.keys());
   }
