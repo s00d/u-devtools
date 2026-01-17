@@ -78,6 +78,8 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
     "vite": "catalog:",
     "typescript": "catalog:",
     "vue-tsc": "catalog:"
