@@ -178,6 +178,7 @@
     "lit": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "rimraf": "catalog:",
     "solid-js": "catalog:",
     "svelte": "catalog:",
     "typescript": "catalog:",
