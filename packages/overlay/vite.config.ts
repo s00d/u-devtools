@@ -14,7 +14,7 @@ const baseConfig = createViteConfig({
   },
   dir: __dirname,
   useVue: true,
-  formats: ['es'],
+  formats: ['es', 'cjs'],
   fileName: (format, entryName) => {
     if (entryName === 'index') {
       return `index.${format === 'es' ? 'es' : 'cjs'}.js`;

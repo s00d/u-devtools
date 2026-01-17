@@ -12,7 +12,7 @@ const baseConfig = createViteConfig({
   dir: __dirname,
   clearScreen: false,
   useVue: true,
-  formats: ['es'], // Важно: ES модуль
+  formats: ['es', 'cjs'],
   // Убираем cssCodeSplit, чтобы Vite не генерировал отдельные CSS файлы
   cssCodeSplit: false,
   dtsOptions: {

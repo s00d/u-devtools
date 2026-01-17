@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/client",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Client-side UI shell for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",
@@ -28,13 +28,14 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.es.js",
+    "main": "./dist/index.cjs.js",
     "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "import": "./dist/index.es.js"
+        "import": "./dist/index.es.js",
+        "require": "./dist/index.cjs.js"
       },
       "./src/router": "./src/router/index.ts",
       "./src/composables/useDevToolsState": "./src/composables/useDevToolsState.ts",
