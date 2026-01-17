@@ -9,7 +9,7 @@ export default defineConfig({
   description: 'Framework-agnostic DevTools Kit for building custom debugging tools',
   lastUpdated: true,
   cleanUrls: true,
-  base: process.env.NODE_ENV === 'production' ? '/vite-devtools/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/u-devtools/' : '/',
   ignoreDeadLinks: [
     /^\.\/_media\//,
     /^\.\/LICENSE$/

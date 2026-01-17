@@ -142,13 +142,16 @@ export function createViteConfig({
     define: {
       'import.meta.hot': 'import.meta.hot',
     },
-    resolve: resolveAlias
-      ? {
-          alias: Object.fromEntries(
-            Object.entries(resolveAlias).map(([key, value]) => [key, resolve(dir, value)])
-          ),
-        }
-      : undefined,
+    resolve: {
+      extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+      ...(resolveAlias
+        ? {
+            alias: Object.fromEntries(
+              Object.entries(resolveAlias).map(([key, value]) => [key, resolve(dir, value)])
+            ),
+          }
+        : {}),
+    },
     build: {
       lib: {
         entry: entryResolved,
