@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-security",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Security Auditor plugin for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",

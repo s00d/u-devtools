@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-repo2txt",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "repo2txt plugin",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -77,4 +77,3 @@
     "vue-tsc": "catalog:"
   }
 }
-

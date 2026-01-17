@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-seo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SEO Studio plugin for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",

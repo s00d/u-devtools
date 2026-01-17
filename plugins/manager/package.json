@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/plugin-manager",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Plugin Manager for Universal DevTools",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/client",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Client-side UI shell for Universal DevTools",
   "type": "module",
   "main": "./src/index.ts",
