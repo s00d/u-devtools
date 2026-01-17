@@ -1,6 +1,6 @@
 {
   "name": "@u-devtools/core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Core types and interfaces for Universal DevTools",
   "keywords": [
     "devtools",
@@ -17,14 +17,15 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "./dist/index.cjs.js",
+    "main": "./dist/index.es.js",
     "module": "./dist/index.es.js",
     "types": "./dist/index.d.ts",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.es.js",
-        "require": "./dist/index.cjs.js"
+        "require": "./dist/index.cjs.js",
+        "default": "./dist/index.es.js"
       },
       "./vite/vite.config.base": {
         "types": "./dist/vite/vite.config.base.d.ts",
